@@ -112,6 +112,7 @@ runs:
       run: |
         if [ "${{ runner.os }}" = "Windows" ]; then
           echo "run_path=$DEST/run.exe" >> $GITHUB_OUTPUT
+          
         else
           echo "run_path=$DEST/run" >> $GITHUB_OUTPUT
         fi
