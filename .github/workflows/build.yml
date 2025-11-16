@@ -32,6 +32,9 @@ on:
         description: "VOICEVOX Resource 的版本。可指定标签名或分支名（例如：0.25.0）" # 更改为中文
         required: false
         default: "0.25.0" # 默认使用 0.25.0 版本的 Resource
+        
+permissions:
+  contents: write
 
 env:
   # 优先使用 workflow_dispatch 输入，否则回退到默认值
