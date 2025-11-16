@@ -41,7 +41,7 @@ env:
   PNPM_HOME: C:\Users\runneradmin\setup-pnpm\node_modules\.bin
   TEMPDIR: D:/a/_temp/download-engine
   DEST: D:/a/VOICEVOX/VOICEVOX/voicevox_engine
-  ENGINE_VERSION: 0.25.0
+  ENGINE_VERSION: 0.25.0 #?
 
 defaults:
   run:
@@ -96,12 +96,12 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24.11.1
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
-          version: 8
+          version: 10.22.0
           run_install: false
 
       - name: Get pnpm store directory
@@ -138,17 +138,6 @@ jobs:
         run: pnpm electron-builder --publish never --config .electron-builder.config.cjs
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Generate Release Body
-        id: generate_release_body
-        run: |
-          cp templates/release_body.md release_body_final.md
-
-          sed -i "s|{{EDITOR_VERSION}}|${{ env.VOICEVOX_EDITOR_VERSION }}|g" release_body_final.md
-          sed -i "s|{{ENGINE_VERSION}}|${{ env.VOICEVOX_ENGINE_VERSION }}|g" release_body_final.md
-          sed -i "s|{{RESOURCE_VERSION}}|${{ env.VOICEVOX_RESOURCE_VERSION }}|g" release_body_final.md
-          sed -i "s|{{CONTRIBUTORS}}|感谢所有贡献者！|g" release_body_final.md
-        shell: bash
 
       - name: Upload Artifact to Release
         if: (github.event.release.tag_name || github.event.inputs.voicevox_editor_version) != ''
