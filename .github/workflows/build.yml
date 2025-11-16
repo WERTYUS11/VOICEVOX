@@ -9,34 +9,39 @@ on:
       - created
   workflow_dispatch:
     inputs:
+      voicevox_engine_version:
+        description: 'VOICEVOX Engine 的版本 (例如: 0.25.0)'
+        required: false
+        default: 'latest'
       voicevox_resource_version:
-        description: 'VOICEVOX 的版本（原版）'
+        description: 'VOICEVOX 原版版本 (例如: 0.25.0)'
         required: false
         default: '0.25.0'
       voicevox_editor_version:
-        description: 'VOICEVOX的新版本（汉化）'
+        description: 'VOICEVOX 中翻版本 (例如: 0.25.0)'
         required: false
         default: ''
       prerelease:
         description: '是否为预发布版本'
         required: false
         type: boolean
-        default: false
+        default: true # 默认设置为预发布
 
 permissions:
-  contents: write
+  contents: write # 授予写入仓库内容的权限，包括创建/修改 Release
 
 env:
-  VOICEVOX_ENGINE_VERSION: ${{ github.event.inputs.voicevox_engine_version || '' }}
+  VOICEVOX_ENGINE_VERSION: ${{ github.event.inputs.voicevox_engine_version || 'latest' }}
   VOICEVOX_RESOURCE_VERSION: ${{ github.event.inputs.voicevox_resource_version || '' }}
   VOICEVOX_EDITOR_VERSION: ${{ github.event.release.tag_name || github.event.inputs.voicevox_editor_version }}
   ELECTRON_CACHE: .cache/electron
   ELECTRON_BUILDER_CACHE: .cache/electron-builder
   cache-version: v2
   sed: sed
-  PNPM_HOME: C:\Users\runneradmin\setup-pnpm\node_modules\.bin # 针对 Windows runner
+  PNPM_HOME: C:\Users\runneradmin\setup-pnpm\node_modules\.bin
   TEMPDIR: D:/a/_temp/download-engine
   DEST: D:/a/VOICEVOX/VOICEVOX/voicevox_engine
+  ENGINE_VERSION: 0.25.0
 
 defaults:
   run:
@@ -137,26 +142,24 @@ jobs:
       - name: Generate Release Body
         id: generate_release_body
         run: |
-          cp release_body/release_body.md release_body_final.md
-          
-          sed -i "s|{{EDITOR_VERSION}}|${{ env.VOICEVOX_EDITOR_VERSION }}|g" release_body_final.md
-          sed -i "s|{{RESOURCE_VERSION}}|${{ env.VOICEVOX_RESOURCE_VERSION }}|g" release_body_final.md
+          cp templates/release_body.md release_body_final.md
 
-          sed -i "感谢所有贡献者!" release_body_final.md
+          sed -i "s|{{EDITOR_VERSION}}|${{ env.VOICEVOX_EDITOR_VERSION }}|g" release_body_final.md
+          sed -i "s|{{ENGINE_VERSION}}|${{ env.VOICEVOX_ENGINE_VERSION }}|g" release_body_final.md
+          sed -i "s|{{RESOURCE_VERSION}}|${{ env.VOICEVOX_RESOURCE_VERSION }}|g" release_body_final.md
+          sed -i "s|{{CONTRIBUTORS}}|感谢所有贡献者！|g" release_body_final.md
         shell: bash
 
       - name: Upload Artifact to Release
-        # 这个 if 条件确保只有在需要发布时才执行
         if: (github.event.release.tag_name || github.event.inputs.voicevox_editor_version) != ''
         uses: softprops/action-gh-release@v2
         with:
           prerelease: ${{ github.event.inputs.prerelease }}
           tag_name: ${{ env.VOICEVOX_EDITOR_VERSION }}
           files: |-
-
             voicevox-${{ matrix.artifact_name }}-${{ env.VOICEVOX_EDITOR_VERSION }}.zip
           target_commitish: ${{ github.sha }}
-          overwrite_files: true
+          overwrite_files: true # 允许覆盖现有文件，这对于矩阵构建很重要
           body_path: release_body_final.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
