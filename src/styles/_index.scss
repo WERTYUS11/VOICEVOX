@@ -1,0 +1,289 @@
+@use "./variables" as vars;
+@use "./colors" as colors;
+@use "./v2/variables" as vars-v2;
+@use "./v2/colors" as colors-v2;
+@use "./v2/sing-colors"; // ソング用カラー
+@use "./v2/cursor"; // カーソル
+@use "fonts";
+
+// 優先度を強引に上げる
+body:not(#dummy) {
+  user-select: none;
+  color: colors.$display;
+  background: colors.$background;
+
+  // Storybookでは枠線を付けない
+  &:not(.sb-show-main) {
+    border-left: solid #{vars.$window-border-width} #{colors.$splitter};
+    border-right: solid #{vars.$window-border-width} #{colors.$splitter};
+    border-bottom: solid #{vars.$window-border-width} #{colors.$splitter};
+  }
+}
+
+body[data-editor-font="default"] {
+  font-family: "Unhinted Rounded M+ 1p", sans-serif;
+}
+
+img {
+  pointer-events: none;
+}
+
+// スクロールバーのデザイン
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+  background-color: rgba(colors.$primary-rgb, 0.2);
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgba(colors.$primary-rgb, 0.6);
+  border-radius: 5px;
+  &:hover {
+    background-color: rgba(colors.$primary-rgb, 0.7);
+  }
+  &:active {
+    background-color: rgba(colors.$primary-rgb, 0.8);
+  }
+}
+::-webkit-scrollbar-corner {
+  background: colors.$background;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+}
+
+.relative-absolute-wrapper {
+  position: relative;
+  > div {
+    position: absolute;
+    inset: 0;
+  }
+}
+
+// ホバー色
+.q-hoverable {
+  &:hover > .q-focus-helper {
+    background-color: colors.$primary !important;
+    opacity: 0.3 !important;
+  }
+  &.bg-primary:hover > .q-focus-helper {
+    background-color: colors.$background !important;
+    opacity: 0.2 !important;
+  }
+}
+
+// リプル色
+.q-ripple > .q-ripple__inner {
+  background-color: colors.$primary;
+}
+.bg-primary > .q-ripple > .q-ripple__inner {
+  background-color: colors.$background;
+}
+
+// 無効時の色
+.q-btn {
+  &.disabled {
+    opacity: 0.6 !important;
+  }
+}
+
+// ダイアログ
+.q-dialog,
+#q-loading {
+  .q-dialog__backdrop,
+  .q-dialog__inner,
+  .q-loading,
+  .q-loading__backdrop {
+    top: vars.$menubar-height;
+    left: vars.$window-border-width;
+    right: vars.$window-border-width;
+    bottom: vars.$window-border-width;
+  }
+  .q-layout-container {
+    box-shadow: none;
+  }
+}
+
+.transparent-backdrop > .q-dialog__backdrop {
+  background: transparent; // デフォルトの設定だと全画面ダイアログが出る際に黒背景がちらつく
+}
+
+// トースト通知と通知内にあるボタン
+.text-toast-display,
+.text-toast-display-warning,
+.q-notification__actions .q-btn {
+  font-weight: bold;
+}
+
+// 設定とかのヘッダーの色
+.q-layout__section--marginal {
+  background: colors.$toolbar !important;
+}
+
+// Markdown
+.markdown-body {
+  min-height: max-content;
+  color: colors.$display;
+  background: colors.$background;
+  a {
+    color: colors.$display-hyperlink;
+  }
+}
+.markdown {
+  // h1-h6のスタイルをデフォルトに戻す
+  // https://www.w3schools.com/tags/tag_hn.asp
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    display: block;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
+  }
+  h1 {
+    font-size: 2rem;
+    margin-top: 0.67rem;
+    margin-bottom: 0.67rem;
+  }
+  h2 {
+    font-size: 1.5rem;
+    margin-top: 0.83rem;
+    margin-bottom: 0.83rem;
+  }
+  h3 {
+    font-size: 1.17rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+  h4 {
+    font-size: 1rem;
+    margin-top: 1.33rem;
+    margin-bottom: 1.33rem;
+  }
+  h5 {
+    font-size: 0.83rem;
+    margin-top: 1.67rem;
+    margin-bottom: 1.67rem;
+  }
+  h6 {
+    font-size: 0.67rem;
+    margin-top: 2.33rem;
+    margin-bottom: 2.33rem;
+  }
+}
+
+// Quasar用のカラー設定
+.text-primary {
+  color: colors.$primary;
+}
+.bg-primary {
+  background: colors.$primary;
+}
+
+.text-display {
+  color: colors.$display;
+}
+.bg-display {
+  background: colors.$display;
+}
+
+.text-display-hyperlink {
+  color: colors.$display-hyperlink;
+}
+.bg-display-hyperlink {
+  background: colors.$display-hyperlink;
+}
+
+.text-display-on-primary {
+  color: colors.$display-on-primary;
+}
+.bg-display-on-primary {
+  background: colors.$display-on-primary;
+}
+
+.text-background {
+  color: colors.$background;
+}
+.bg-background {
+  background: colors.$background;
+}
+
+.text-surface {
+  color: colors.$surface;
+}
+.bg-surface {
+  background: colors.$surface;
+}
+
+.text-warning {
+  color: colors.$warning;
+}
+.bg-warning {
+  background: colors.$warning;
+}
+
+.text-toolbar {
+  color: colors.$toolbar;
+}
+.bg-toolbar {
+  background: colors.$toolbar;
+}
+
+.text-toolbar-button {
+  color: colors.$toolbar-button;
+}
+.bg-toolbar-button {
+  background: colors.$toolbar-button;
+}
+
+.text-toolbar-button-display {
+  color: colors.$toolbar-button-display;
+}
+.bg-toolbar-button-display {
+  background: colors.$toolbar-button-display;
+}
+
+.bg-toast {
+  background: colors.$toast;
+}
+.text-toast-display {
+  color: colors.$toast-display;
+}
+.text-toast-button-display {
+  color: colors.$toast-button-display;
+}
+
+.bg-toast-warning {
+  background: colors.$toast-warning;
+}
+.text-toast-display-warning {
+  color: colors.$toast-display-warning;
+}
+.text-toast-button-display-warning {
+  color: colors.$toast-button-display-warning;
+}
+
+// ダイアログのサイズ
+.dialog-card {
+  width: 700px;
+  max-width: 80vw;
+}
+
+.material-symbols-outlined {
+  font-family: "Material Symbols Outlined";
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px; /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+}

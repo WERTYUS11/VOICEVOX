@@ -1,0 +1,110 @@
+$primary: var(--color-primary);
+$primary-rgb: var(--color-primary-rgb);
+
+$display: var(--color-display);
+$display-rgb: var(--color-display-rgb);
+
+$display-on-primary: var(--color-display-on-primary);
+$display-on-primary-rgb: var(--color-display-on-primary-rgb);
+
+$display-hyperlink: var(--color-display-hyperlink);
+$display-hyperlink-rgb: var(--color-display-hyperlink-rgb);
+
+$background: var(--color-background);
+$background-rgb: var(--color-background-rgb);
+
+$surface: var(--color-surface);
+$surface-rgb: var(--color-surface-rgb);
+
+$warning: var(--color-warning);
+$warning-rgb: var(--color-warning-rgb);
+
+$text-splitter-hover: var(--color-text-splitter-hover);
+$text-splitter-hover-rgb: var(--color-text-splitter-hover-rgb);
+
+$active-point-focus: var(--color-active-point-focus);
+$active-point-focus-rgb: var(--color-active-point-focus-rgb);
+
+$active-point-hover: var(--color-active-point-hover);
+$active-point-hover-rgb: var(--color-active-point-hover-rgb);
+
+$sequencer-whitekey-cell: var(--color-sequencer-whitekey-cell);
+$sequencer-blackkey-cell: var(--color-sequencer-blackkey-cell);
+$sequencer-main-divider: var(--color-sequencer-main-divider);
+$sequencer-main-divider-rgb: var(--color-sequencer-main-divider-rgb);
+$sequencer-sub-divider: var(--color-sequencer-sub-divider);
+$sequencer-sub-divider-rgb: var(--color-sequencer-sub-divider-rgb);
+$sequencer-white-key: var(--color-sequencer-white-key);
+$sequencer-black-key: var(--color-sequencer-black-key);
+
+// ダークテーマと通常テーマで変わる色
+:root {
+  --color-toolbar: var(--color-primary);
+  --color-toolbar-rgb: var(--color-primary-rgb);
+  --color-sing-toolbar: var(--color-background);
+
+  --color-toolbar-button: var(--color-background);
+  --color-toolbar-button-rgb: var(--color-background-rgb);
+
+  --color-toolbar-button-display: var(--color-display);
+  --color-toolbar-button-display-rgb: var(--color-display-rgb);
+
+  --color-splitter: var(--color-primary);
+  --color-splitter-rgb: var(--color-primary-rgb);
+
+  --color-toast: rgba(var(--color-mix-primary-background-rgb), 0.85);
+  --color-toast-display: var(--color-display);
+  --color-toast-button-display: rgba(var(--color-display-rgb), 0.6);
+
+  --color-toast-warning: rgba(var(--color-mix-warning-background-rgb), 0.85);
+  --color-toast-display-warning: var(--color-display);
+  --color-toast-button-display-warning: rgba(var(--color-display-rgb), 0.6);
+}
+
+:root[is-dark-theme="true"] {
+  --color-toolbar: var(--color-surface);
+  --color-toolbar-rgb: var(--color-surface-rgb);
+  --color-sing-toolbar: var(--color-surface);
+
+  --color-toolbar-button: var(--color-primary);
+  --color-toolbar-button-rgb: var(--color-primary-rgb);
+
+  --color-toolbar-button-display: var(--color-display-on-primary);
+  --color-toolbar-button-display-rgb: var(--color-display-on-primary-rgb);
+
+  --color-splitter: var(--color-surface);
+  --color-splitter-rgb: var(--color-surface-rgb);
+
+  --color-toast: rgba(var(--color-mix-primary-background-rgb), 0.8);
+  --color-toast-display: var(--color-display);
+  --color-toast-button-display: var(--color-primary);
+
+  --color-toast-warning: rgba(var(--color-mix-warning-background-rgb), 0.85);
+  --color-toast-display-warning: var(--color-display);
+  --color-toast-button-display-warning: var(--color-warning);
+}
+
+$toolbar: var(--color-toolbar);
+$toolbar-rgb: var(--color-toolbar-rgb);
+
+$sing-toolbar: var(--color-sing-toolbar);
+
+$toolbar-button: var(--color-toolbar-button);
+$toolbar-button-rgb: var(--color-toolbar-button-rgb);
+
+$toolbar-button-display: var(--color-toolbar-button-display);
+$toolbar-button-display-rgb: var(--color-toolbar-button-display-rgb);
+
+$splitter: var(--color-splitter);
+$splitter-rgb: var(--color-splitter-rgb);
+
+$warning: var(--color-warning);
+$warning-rgb: var(--color-warning-rgb);
+
+$toast: var(--color-toast);
+$toast-display: var(--color-toast-display);
+$toast-button-display: var(--color-toast-button-display);
+
+$toast-warning: var(--color-toast-warning);
+$toast-display-warning: var(--color-toast-display-warning);
+$toast-button-display-warning: var(--color-toast-button-display-warning);
