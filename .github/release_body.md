@@ -6,7 +6,6 @@
 
 ## 包含的组件版本
 *   **VOICEVOX版本**: v{{EDITOR_VERSION}}
-*   **VOICEVOX Engine版本**: v{{ENGINE_VERSION}}
 *   **原VOICEVOX版本**: v{{RESOURCE_VERSION}}
 ---
 ## 贡献者
@@ -20,3 +19,4 @@
 # 原仓库链接：[原版](https://github.com/VOICEVOX/voicevox)
 # 本仓库连接：[中翻](https://github.com/WERTYUS11/voicevox)
 如果觉得好用，请点个Star！
+
