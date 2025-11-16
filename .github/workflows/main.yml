@@ -10,36 +10,32 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "VOICEVOX Editor のバージョン情報（A.BB.C / A.BB.C-preview.D）"
+        description: "VOICEVOX Editor 的版本信息（例如：A.BB.C 或 A.BB.C-preview.D）" # 更改为中文
         required: true
       prerelease:
-        description: "プレリリースかどうか"
+        description: "是否为预发布版本" # 更改为中文
         type: boolean
         default: true
       code_signing:
-        description: "コード署名する"
+        description: "是否进行代码签名" # 更改为中文
         type: boolean
         default: false
       upload_artifact:
-        description: "デバッグ用に成果物をartifactにアップロードするか"
+        description: "是否将构建产物上传为 Artifacts（用于调试）" # 更改为中文
         type: boolean
         default: false
-      # --- 新增的输入 ---
       voicevox_engine_version: # 允许指定 VOICEVOX Engine 版本
-        description: "VOICEVOX ENGINE のバージョン。latest（默认）、prerelease-latest、またはバージョン番号（例：0.14.4）"
+        description: "VOICEVOX Engine 的版本。可指定 `latest`（最新稳定版）、`prerelease-latest`（最新预发布版）或具体的版本号（例如：0.14.4）" # 更改为中文
         required: false
         default: "latest" # 默认使用最新稳定版 Engine
       voicevox_resource_version: # 允许指定 VOICEVOX Resource 版本
-        description: "VOICEVOX RESOURCE のバージョン。タグ名またはブランチ名（例：0.25.0）"
+        description: "VOICEVOX Resource 的版本。可指定标签名或分支名（例如：0.25.0）" # 更改为中文
         required: false
         default: "0.25.0" # 默认使用 0.25.0 版本的 Resource
-      # --- 新增的输入结束 ---
 
 env:
-  # --- 修改 VOICEVOX_ENGINE_VERSION 和 VOICEVOX_RESOURCE_VERSION 的获取方式 ---
   VOICEVOX_ENGINE_VERSION: ${{ github.event.inputs.voicevox_engine_version || 'latest' }}
   VOICEVOX_RESOURCE_VERSION: ${{ github.event.inputs.voicevox_resource_version || '0.25.0' }}
-  # --- 修改结束 ---
   VOICEVOX_EDITOR_VERSION:
     |- # releaseタグ名か、workflow_dispatchでのバージョン名か、999.999.999-developが入る
     ${{ github.event.release.tag_name || github.event.inputs.version || '999.999.999-develop' }}
@@ -213,9 +209,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: VOICEVOX/voicevox_resource
-          # --- 使用 env.VOICEVOX_RESOURCE_VERSION ---
           ref: ${{ env.VOICEVOX_RESOURCE_VERSION }}
-          # --- 结束 ---
           path: resource
 
       - name: Create and replace software resources
@@ -300,9 +294,7 @@ jobs:
         id: download-engine
         uses: ./.github/actions/download-engine
         with:
-          # --- 使用 env.VOICEVOX_ENGINE_VERSION ---
           version: ${{ env.VOICEVOX_ENGINE_VERSION }}
-          # --- 结束 ---
           dest: ${{ github.workspace }}/voicevox_engine
           target: ${{ matrix.voicevox_engine_asset_name }}
 
