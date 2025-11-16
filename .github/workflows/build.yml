@@ -44,6 +44,9 @@ env:
 defaults:
   run:
     shell: bash
+    
+permissions:
+  contents: write
 
 jobs:
   build-and-upload:
