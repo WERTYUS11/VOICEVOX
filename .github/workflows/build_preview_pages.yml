@@ -12,7 +12,7 @@ on:
 
 jobs:
   # このJobの名前を変更したときは、voicevox/preview-pages側のscripts/collect.tsも変更すること。
-  build_preview_pages:
+  build-preview-pages:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
