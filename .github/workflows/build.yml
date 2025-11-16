@@ -1,6 +1,12 @@
 name: Build
 
 on:
+  push:
+    branches:
+      - main
+  release:
+    types:
+      - created
   workflow_dispatch:
     inputs:
       voicevox_resource_version:
@@ -131,7 +137,7 @@ jobs:
       - name: Generate Release Body
         id: generate_release_body
         run: |
-          cp .github/release_body.md release_body_final.md
+          cp release_body/release_body.md release_body_final.md
           
           sed -i "s|{{EDITOR_VERSION}}|${{ env.VOICEVOX_EDITOR_VERSION }}|g" release_body_final.md
           sed -i "s|{{RESOURCE_VERSION}}|${{ env.VOICEVOX_RESOURCE_VERSION }}|g" release_body_final.md
