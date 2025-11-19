@@ -1,4 +1,3 @@
- ```
 # VOICEVOX
 
 [![发布版本](https://img.shields.io/github/v/release/VOICEVOX/voicevox?label=Release)](https://github.com/WERTYUS11/Voicevox-Chinese/releases)
