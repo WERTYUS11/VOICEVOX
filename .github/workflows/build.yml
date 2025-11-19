@@ -210,6 +210,9 @@ jobs:
       - name: Install dependencies
         run: pnpm i --frozen-lockfile
 
+      - name: Install dependencies
+        run: node zh-cn.js
+        
       # 修复：将 Download VOICEVOX ENGINE 步骤提前，在 Checkout Product Version Resource 之前
       - name: Download VOICEVOX ENGINE
         id: download-engine
