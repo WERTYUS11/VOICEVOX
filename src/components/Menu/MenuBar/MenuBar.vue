@@ -83,7 +83,7 @@ const titleText = computed(
     "VOICEVOX" +
     (" - Ver. " + getAppInfos().version) +
     (extraVersionInfo ? ` (${extraVersionInfo})` : "") +
-    (isMultiEngineOffMode.value ? " - マルチ引擎オフ" : "") +
+    (isMultiEngineOffMode.value ? " - 关闭多引擎" : "") +
     (defaultEngineAltPortTo.value != null
       ? ` - Port: ${defaultEngineAltPortTo.value}`
       : ""),

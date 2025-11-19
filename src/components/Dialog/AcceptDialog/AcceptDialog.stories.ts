@@ -7,11 +7,11 @@ const meta: Meta<typeof AcceptDialog> = {
   component: AcceptDialog,
   args: {
     dialogOpened: false,
-    title: "タイトル",
-    heading: "見出し",
-    terms: "# 見出し1\n文章文章文章\n## 見出し2\n文章文章文章",
-    rejectLabel: "拒否",
-    acceptLabel: "承諾",
+    title: "标题",
+    heading: "小标题",
+    terms: "# 小标题1\n文章文章文章\n## 小标题2\n文章文章文章",
+    rejectLabel: "拒绝",
+    acceptLabel: "同意",
     onAccept: fn(),
     onReject: fn(),
     "onUpdate:dialogOpened": fn(),
@@ -23,43 +23,43 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Opened: Story = {
-  name: "開いている",
+  name: "打开状态",
   args: {
     dialogOpened: true,
   },
 };
 
 export const Accept: Story = {
-  name: "承諾ボタンを押す",
+  name: "同意ボタンを押す",
   args: { ...Opened.args },
   play: async ({ args }) => {
     const canvas = within(document.body); // ダイアログなので例外的にdocument.bodyを使う
 
-    const button = canvas.getByRole("button", { name: /承諾/ });
+    const button = canvas.getByRole("button", { name: /同意/ });
     await userEvent.click(button);
 
-    // 承諾イベントが呼ばれる
+    // 同意イベントが呼ばれる
     await expect(args["onAccept"]).toBeCalledWith();
   },
 };
 
 export const Reject: Story = {
-  name: "拒否ボタンを押す",
+  name: "拒绝ボタンを押す",
   args: {
     ...Opened.args,
   },
   play: async ({ args }) => {
     const canvas = within(document.body); // ダイアログなので例外的にdocument.bodyを使う
 
-    const button = canvas.getByRole("button", { name: /拒否/ });
+    const button = canvas.getByRole("button", { name: /拒绝/ });
     await userEvent.click(button);
 
-    // 拒否イベントが呼ばれる
+    // 拒绝イベントが呼ばれる
     await expect(args["onReject"]).toBeCalledWith();
   },
 };
 
 export const Closed: Story = {
-  name: "閉じている",
+  name: "关闭状态",
   tags: ["skip-screenshot"],
 };

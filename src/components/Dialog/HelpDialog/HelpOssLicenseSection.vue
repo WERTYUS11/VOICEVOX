@@ -2,7 +2,7 @@
   <div v-if="detailIndex == undefined" class="container">
     <BaseScrollArea>
       <div class="inner inner-list">
-        <h1 class="title">ライセンス情報</h1>
+        <h1 class="title">许可证信息</h1>
         <div class="list">
           <BaseRowCard
             v-for="(license, index) in props.licenses"
@@ -25,7 +25,7 @@
       <div class="inner">
         <div>
           <BaseButton
-            label="戻る"
+            label="返回"
             icon="keyboard_arrow_left"
             @click="selectLicenseIndex(undefined)"
           />

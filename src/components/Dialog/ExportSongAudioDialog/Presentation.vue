@@ -2,15 +2,15 @@
   <QDialog ref="dialogRef" v-model="dialogOpened">
     <QCard class="q-py-sm q-px-md dialog-card">
       <QCardSection>
-        <div class="text-h5">音声書き出し</div>
+        <div class="text-h5">音频导出</div>
       </QCardSection>
 
       <QSeparator />
 
       <QCardSection>
         <BaseCell
-          title="書き出し方法"
-          description="すべてのトラックをまとめて１つの音声ファイルを書き出すか、トラックごとに音声ファイルを書き出すか選べます。"
+          title="导出方式"
+          description="可选择将所有轨道合并导出为一个音频文件，或按轨道分别导出。"
         >
           <QBtnToggle
             v-model="exportTarget"
@@ -25,14 +25,14 @@
           />
         </BaseCell>
         <BaseCell
-          title="モノラルで書き出し"
-          description="ONの場合、パンが無効化され、1つのチャンネルにまとめられて書き出されます。"
+          title="以单声道导出"
+          description="开启时，将禁用声像并合并为单声道导出。"
         >
           <QToggle v-model="isMono" />
         </BaseCell>
         <BaseCell
-          title="音声のサンプリングレート"
-          description="音声のサンプリングレートを変更できます。"
+          title="音频采样率"
+          description="音频采样率を変更できます。"
         >
           <QSelect
             v-model="samplingRate"
@@ -44,14 +44,14 @@
           </QSelect>
         </BaseCell>
         <BaseCell
-          title="音量を制限する"
-          description="ONの場合、音量が0dBを極力超えないように音声を調整します。"
+          title="限制音量"
+          description="开启时，会调整音量以尽量不超过 0dB。"
         >
           <QToggle v-model="withLimiter" />
         </BaseCell>
         <BaseCell
-          title="適用するトラックパラメーター"
-          description="パン、ボリューム、ミュートのうち、どのパラメーターを書き出し時に適用するか選べます。"
+          title="应用的轨道参数"
+          description="可选择在导出时应用哪些参数（声像、音量、静音）。"
         >
           <QOptionGroup
             v-model="withTrackParameters"
@@ -69,7 +69,7 @@
         <QBtn
           unelevated
           align="right"
-          label="キャンセル"
+          label="取消"
           color="toolbar-button"
           textColor="toolbar-button-display"
           class="text-no-wrap text-bold q-mr-sm"
@@ -78,7 +78,7 @@
         <QBtn
           unelevated
           align="right"
-          label="書き出す"
+          label="导出"
           color="toolbar-button"
           textColor="toolbar-button-display"
           class="text-no-wrap text-bold q-mr-sm"
@@ -105,14 +105,14 @@ const emit = defineEmits<{
   exportAudio: [exportTarget: ExportTarget, setting: SongExportSetting];
 }>();
 
-// 書き出し方法選択
+// 导出方式選択
 const exportTargets = [
   {
-    label: "まとめる（ミックス）",
+    label: "合并（混音）",
     value: "master",
   },
   {
-    label: "トラック別",
+    label: "按轨道",
     value: "stem",
   },
 ];
@@ -129,7 +129,7 @@ const renderSamplingRateLabel = (rate: number) => `${rate} Hz`;
 // リミッター
 const withLimiter = ref<boolean>(true);
 
-// パン・ボリューム・ミュート
+// 声像・音量・ミュート
 const withTrackParametersInner = ref<(keyof TrackParameters)[]>([
   "pan",
   "gain",
@@ -146,16 +146,16 @@ const withTrackParameters = computed({
 });
 const trackParameterOptions = computed(() => [
   {
-    label: "パン",
+    label: "声像",
     value: "pan",
     disable: isMono.value,
   },
   {
-    label: "ボリューム",
+    label: "音量",
     value: "gain",
   },
   {
-    label: "ソロ・ミュート",
+    label: "独奏 / 静音",
     value: "soloAndMute",
   },
 ]);
@@ -174,7 +174,7 @@ const handleExportTrack = () => {
   });
 };
 
-// キャンセルボタンクリック時
+// 取消ボタンクリック時
 const handleCancel = () => {
   onDialogCancel();
   dialogOpened.value = false;

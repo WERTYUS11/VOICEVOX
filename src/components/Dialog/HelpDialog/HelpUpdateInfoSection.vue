@@ -3,12 +3,12 @@
     <BaseScrollArea>
       <div class="inner">
         <BaseDocumentView>
-          <h1>アップデート履歴</h1>
+          <h1>更新历史</h1>
           <div v-if="props.isUpdateAvailable" class="info">
             <div class="info-title">
-              最新バージョン {{ props.latestVersion }} が見つかりました
+              最新版本 {{ props.latestVersion }} 已找到
             </div>
-            <a :href="props.downloadLink" target="_blank">ダウンロードページ</a>
+            <a :href="props.downloadLink" target="_blank">下载页面</a>
           </div>
           <template
             v-for="(info, infoIndex) of props.updateInfos"
@@ -23,7 +23,7 @@
                 {{ item }}
               </li>
             </ul>
-            <h3 v-if="info.contributors.length > 0">貢献者リスト</h3>
+            <h3 v-if="info.contributors.length > 0">贡献者列表</h3>
             <p>
               <template
                 v-for="(item, contributorIndex) of info.contributors"

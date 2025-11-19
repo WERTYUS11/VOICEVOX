@@ -1,16 +1,16 @@
 <template>
   <AcceptDialog
     v-model:dialogOpened="dialogOpened"
-    title="利用規約に関するお知らせ"
-    rejectLabel="同意せずに終了"
-    acceptLabel="同意して使用開始"
-    heading="利用規約"
+    title="关于使用条款的通知"
+    rejectLabel="不同意并退出"
+    acceptLabel="同意并开始使用"
+    heading="使用条款"
     :terms
     @reject="handler(false)"
     @accept="handler(true)"
   >
     <p>
-      多くの人が安心して VOICEVOX を使えるよう、利用規約への同意をお願いします。
+      多くの人が安心して VOICEVOX を使えるよう、使用条款への同意をお願いします。
     </p>
   </AcceptDialog>
 </template>

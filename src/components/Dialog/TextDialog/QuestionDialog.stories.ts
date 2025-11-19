@@ -9,8 +9,8 @@ const meta: Meta<typeof QuestionDialog> = {
   args: {
     type: "info",
     modelValue: true,
-    title: "タイトル",
-    message: "メッセージ",
+    title: "标题",
+    message: "留言",
     buttons: ["A", "B", "C"],
 
     "onUpdate:modelValue": fn(),
@@ -24,22 +24,22 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Opened: Story = {
-  name: "開いている",
+  name: "开启中",
   args: {
     modelValue: true,
   },
 };
 
 export const OpenedMultiline: Story = {
-  name: "開いている：複数行",
+  name: "开启中：多行",
   args: {
     ...Opened.args,
-    message: "メッセージ\n複数行",
+    message: "留言\n多行",
   },
 };
 
 export const OpenedButtonColor: Story = {
-  name: "開いている：ボタン色を変える",
+  name: "开启中：ボタン色を変える",
   args: {
     ...Opened.args,
     buttons: [
@@ -51,7 +51,7 @@ export const OpenedButtonColor: Story = {
 };
 
 export const Close: Story = {
-  name: "Aを押す",
+  name: "按A",
   args: { ...Opened.args },
   play: async ({ args }) => {
     const canvas = within(document.body); // ダイアログなので例外的にdocument.bodyを使う
@@ -65,7 +65,7 @@ export const Close: Story = {
 };
 
 export const ClickBackdropWithoutCancel: Story = {
-  name: "persistent: trueで背景を押してもキャンセル扱いにならない",
+  name: "persistent: true按下背景不会被取消",
   args: { ...Opened.args },
   play: async ({ args }) => {
     const backdrop = document.body.querySelector(".DialogOverlay");
@@ -78,7 +78,7 @@ export const ClickBackdropWithoutCancel: Story = {
 };
 
 export const ClickBackdropWithCancel: Story = {
-  name: "persistent: falseで背景を押すとキャンセル扱いになる",
+  name: "persistent: false按背景将被取消",
   args: { ...Opened.args, buttons: ["A", "キャンセル"], persistent: false },
   play: async ({ args }) => {
     const backdrop = document.body.querySelector(".DialogOverlay");
@@ -91,7 +91,7 @@ export const ClickBackdropWithCancel: Story = {
 };
 
 export const Closed: Story = {
-  name: "閉じている",
+  name: "关闭",
   tags: ["skip-screenshot"],
   args: {
     modelValue: false,

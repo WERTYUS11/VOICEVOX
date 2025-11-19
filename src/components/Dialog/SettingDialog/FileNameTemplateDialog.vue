@@ -2,11 +2,12 @@
   <QDialog v-model="dialogOpened" @beforeShow="initializeInput">
     <QCard class="q-pa-md dialog-card">
       <QCardSection>
-        <div class="text-h5">書き出しファイル名パターン</div>
+        <div class="text-h5">导出文件名模式</div>
         <div class="text-body2 text-grey-8">
-          「$キャラ$」のようなタグを使って書き出すファイル名をカスタマイズできます。
+          「$キャラ$」您可以使用类似的标签来自定义导出的文件名
         </div>
       </QCardSection>
+
       <QCardActions class="setting-card q-px-md q-py-sm">
         <div class="row full-width justify-between">
           <div class="col">
@@ -16,15 +17,15 @@
               dense
               outlined
               bgColor="background"
-              label="ファイル名パターン"
+              label="文件名模式"
               :suffix="props.extension"
               :maxlength="maxLength"
               :error="hasError"
-              :errorMessage
+              :errorMessage="errorMessage"
             >
               <template #after>
                 <QBtn
-                  label="デフォルトにリセット"
+                  label="重置为默认"
                   outline
                   textColor="display"
                   class="text-no-wrap q-mr-sm"
@@ -34,9 +35,11 @@
             </QInput>
           </div>
         </div>
+
         <div class="text-body2 text-ellipsis">
-          出力例：{{ previewFileName }}
+          {{ previewFileName }}
         </div>
+
         <div class="row full-width q-my-md">
           <QBtn
             v-for="tagString in tagStrings"
@@ -48,16 +51,17 @@
             @click="insertTagToCurrentPosition(`$${tagString}$`)"
           />
         </div>
+
         <div class="row full-width justify-end">
           <QBtn
-            label="キャンセル"
+            label="取消"
             outline
             textColor="display"
             class="text-no-wrap text-bold q-mr-sm col-2"
             @click="dialogOpened = false"
           />
           <QBtn
-            label="確定"
+            label="确定"
             unelevated
             color="primary"
             textColor="display-on-primary"
@@ -78,16 +82,12 @@ import { replaceTagIdToTagString, sanitizeFileName } from "@/store/utility";
 import { UnreachableError } from "@/type/utility";
 
 const dialogOpened = defineModel<boolean>("dialogOpened", { default: false });
+
 const props = defineProps<{
-  /** デフォルトのテンプレート */
   defaultTemplate: string;
-  /** 使用可能なタグ */
   availableTags: (keyof typeof replaceTagIdToTagString)[];
-  /** 保存されているテンプレート */
   savedTemplate: string;
-  /** ファイル名を生成する関数 */
   fileNameBuilder: (pattern: string) => string;
-  /** ドットまで含んだ拡張子 */
   extension: string;
 }>();
 
@@ -95,11 +95,12 @@ const emit = defineEmits<{
   (e: "update:template", val: string): void;
 }>();
 
-const updateFileNamePattern = (pattern: string) =>
-  emit("update:template", pattern);
+const updateFileNamePattern = (pattern: string) => emit("update:template", pattern);
 
 const patternInput = ref<QInput>();
+
 const maxLength = 128;
+
 const tagStrings = computed(() =>
   props.availableTags.map((tag) => replaceTagIdToTagString[tag]),
 );
@@ -109,28 +110,35 @@ const temporaryTemplate = ref(props.savedTemplate);
 const missingIndexTagString = computed(
   () => !temporaryTemplate.value.includes(replaceTagIdToTagString["index"]),
 );
+
 const invalidChar = computed(() => {
   const current = temporaryTemplate.value;
   const sanitized = sanitizeFileName(current);
   return Array.from(current).find((char, i) => char !== sanitized[i]);
 });
+
 const errorMessage = computed(() => {
   if (temporaryTemplate.value === "") {
-    return "何か入力してください";
+    return "请输入内容";
   }
 
   const result: string[] = [];
-  if (invalidChar.value != undefined) {
-    result.push(`使用できない文字が含まれています：「${invalidChar.value}」`);
+
+  if (invalidChar.value !== undefined) {
+    result.push(`包含不可用字符：「${invalidChar.value}」`);
   }
+
   if (previewFileName.value.includes("$")) {
-    result.push(`不正なタグが存在するか、$が単体で含まれています`);
+    result.push(`存在非法标签或单独包含 '$'`);
   }
+
   if (missingIndexTagString.value) {
-    result.push(`$${replaceTagIdToTagString["index"]}$は必須です`);
+    result.push(`$${replaceTagIdToTagString["index"]}$ 是必需的`);
   }
+
   return result.join(", ");
 });
+
 const hasError = computed(() => errorMessage.value !== "");
 
 const previewFileName = computed(
@@ -139,11 +147,11 @@ const previewFileName = computed(
 
 const initializeInput = () => {
   temporaryTemplate.value = props.savedTemplate;
-
   if (temporaryTemplate.value === "") {
     temporaryTemplate.value = props.defaultTemplate;
   }
 };
+
 const resetToDefault = () => {
   temporaryTemplate.value = props.defaultTemplate;
   patternInput.value?.focus();
@@ -151,25 +159,23 @@ const resetToDefault = () => {
 
 const insertTagToCurrentPosition = (tag: string) => {
   const elem = patternInput.value?.nativeEl as HTMLInputElement;
-  if (elem) {
-    const text = elem.value;
+  if (!elem) return;
 
-    if (text.length + tag.length > maxLength) {
-      return;
-    }
+  const text = elem.value;
 
-    const from = elem.selectionStart ?? 0;
-    const to = elem.selectionEnd ?? 0;
-    const newText = text.substring(0, from) + tag + text.substring(to);
-    temporaryTemplate.value = newText;
+  if (text.length + tag.length > maxLength) return;
 
-    // キャレットの位置を挿入した後の位置にずらす
-    void nextTick(() => {
-      elem.selectionStart = from + tag.length;
-      elem.selectionEnd = from + tag.length;
-      elem.focus();
-    });
-  }
+  const from = elem.selectionStart ?? 0;
+  const to = elem.selectionEnd ?? 0;
+
+  const newText = text.substring(0, from) + tag + text.substring(to);
+  temporaryTemplate.value = newText;
+
+  void nextTick(() => {
+    elem.selectionStart = from + tag.length;
+    elem.selectionEnd = from + tag.length;
+    elem.focus();
+  });
 };
 
 const submit = async () => {

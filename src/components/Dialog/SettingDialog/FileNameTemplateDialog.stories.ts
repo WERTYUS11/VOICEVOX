@@ -32,16 +32,16 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Opened: Story = {
-  name: "開いている",
+  name: "打开状态",
   args: {
     dialogOpened: true,
   },
 };
 
-/** ファイル名パターンをクリアし、文字列を入力する */
+/** 文件名模式をクリアし、文字列を入力する */
 const clearAndInput = async (inputValue: string) => {
   const canvas = within(document.body); // ダイアログなので例外的にdocument.bodyを使う
-  const input = canvas.getByLabelText<HTMLInputElement>("ファイル名パターン");
+  const input = canvas.getByLabelText<HTMLInputElement>("文件名模式");
   await userEvent.clear(input);
   if (inputValue) {
     await userEvent.type(input, inputValue);
@@ -59,46 +59,46 @@ const createInvalidInputPlay =
   };
 
 export const EmptyInput: Story = {
-  name: "無効な入力：空欄",
+  name: "无效输入：空白",
   args: { ...Opened.args },
-  play: createInvalidInputPlay("", "何か入力してください"),
+  play: createInvalidInputPlay("", "请输入内容"),
 };
 
 export const ForbiddenInput: Story = {
-  name: "無効な入力：禁じられた文字",
+  name: "无效的输入：禁用字符",
   args: { ...Opened.args },
   play: createInvalidInputPlay(
     "$連番$/",
-    /^使用できない文字が含まれています：「.+」$/,
+    /^包含不可用字符：「.+」$/,
   ),
 };
 
 export const UnknownTagInput: Story = {
-  name: "無効な入力：不明なタグ",
+  name: "无效输入：未知标签",
   args: { ...Opened.args },
   play: createInvalidInputPlay(
-    "$連番$$テスト$",
-    "不正なタグが存在するか、$が単体で含まれています",
+    "$連番$测试$",
+    "存在非法标签或单独包含 '",
   ),
 };
 
 export const UnclosedTagInput: Story = {
-  name: "無効な入力：閉じられていないタグ",
+  name: "无效输入：未闭合的标签",
   args: { ...Opened.args },
   play: createInvalidInputPlay(
-    "$連番$$",
-    "不正なタグが存在するか、$が単体で含まれています",
+    "$連番$",
+    "存在非法标签或单独包含 '",
   ),
 };
 
 export const MissingIndexInput: Story = {
-  name: "無効な入力：連番がない",
+  name: "无效输入：没有序列号",
   args: { ...Opened.args },
-  play: createInvalidInputPlay("a", "$連番$は必須です"),
+  play: createInvalidInputPlay("a", "$序列号 $ 是必需的"),
 };
 
 export const Save: Story = {
-  name: "確定ボタンを押す",
+  name: "点击确定按钮",
   args: {
     ...Opened.args,
   },
@@ -107,47 +107,47 @@ export const Save: Story = {
 
     await clearAndInput("$連番$");
 
-    const button = canvas.getByRole("button", { name: "確定" });
+    const button = canvas.getByRole("button", { name: "确定" });
     await userEvent.click(button);
 
-    // 確定とダイアログを閉じるイベントが呼ばれる
+    // 确定とダイアログを閉じるイベントが呼ばれる
     await expect(args["onUpdate:template"]).toBeCalledWith("$連番$");
     await expect(args["onUpdate:dialogOpened"]).toBeCalledWith(false);
   },
 };
 
 export const Unsaveable: Story = {
-  name: "無効な入力だと確定ボタンが押せない",
+  name: "无效输入だと确定ボタンが押せない",
   args: { ...Opened.args },
   play: async () => {
     const canvas = within(document.body); // ダイアログなので例外的にdocument.bodyを使う
 
-    await clearAndInput("無効な入力");
+    await clearAndInput("无效输入");
 
-    const button = canvas.getByRole("button", { name: "確定" });
+    const button = canvas.getByRole("button", { name: "确定" });
     await expect(button).toBeDisabled();
   },
 };
 
 export const Close: Story = {
-  name: "キャンセルボタンを押す",
+  name: "点击取消按钮",
   args: {
     ...Opened.args,
   },
   play: async ({ args }) => {
     const canvas = within(document.body); // ダイアログなので例外的にdocument.bodyを使う
 
-    const button = canvas.getByRole("button", { name: "キャンセル" });
+    const button = canvas.getByRole("button", { name: "取消" });
     await userEvent.click(button);
 
-    // ダイアログを閉じるイベントが呼ばれる、確定イベントは呼ばれない
+    // ダイアログを閉じるイベントが呼ばれる、确定イベントは呼ばれない
     await expect(args["onUpdate:template"]).not.toBeCalled();
     await expect(args["onUpdate:dialogOpened"]).toBeCalledWith(false);
   },
 };
 
 export const Closed: Story = {
-  name: "閉じている",
+  name: "关闭",
   tags: ["skip-screenshot"],
   args: {
     dialogOpened: false,

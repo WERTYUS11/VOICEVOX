@@ -1,20 +1,20 @@
 <template>
   <AcceptDialog
     v-model:dialogOpened="dialogOpened"
-    title="使いやすさ向上のためのお願い"
-    rejectLabel="拒否"
-    acceptLabel="許可"
-    heading="プライバシーポリシー"
+    title="提升易用性的请求"
+    rejectLabel="拒绝"
+    acceptLabel="允许"
+    heading="隐私政策"
     :terms="privacyPolicy"
     @reject="handler(false)"
     @accept="handler(true)"
   >
-    <p>VOICEVOXはより使いやすいソフトウェアを目指して開発されています。</p>
+    <p>VOICEVOX 正在致力于成为更易用的软件。</p>
     <p>
-      ボタンの配置換えなどの方針を決める際は、各UIの利用率などの情報が重要になります。もしよろしければ、ソフトウェアの利用状況のデータ収集にご協力お願いします。
+      在决定按钮布局等方针时，各 UI 的使用率等信息非常重要。如果方便的话，请协助收集软件的使用数据。
     </p>
     <p>
-      （入力されたテキストデータや音声データの情報は収集しておりませんのでご安心ください。）
+      （我们不会收集输入的文本数据或音频数据，请放心。）
     </p>
   </AcceptDialog>
 </template>

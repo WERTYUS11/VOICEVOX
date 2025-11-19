@@ -2,7 +2,7 @@
   <div v-if="selectedInfo === undefined" class="container">
     <BaseScrollArea>
       <div class="inner inner-list">
-        <h1 class="title">音声ライブラリの利用規約</h1>
+        <h1 class="title">音频库使用条款</h1>
         <div class="list">
           <template
             v-for="(engineId, engineIndex) in sortedEngineInfos.map(
@@ -42,7 +42,7 @@
       <div class="inner">
         <div>
           <BaseButton
-            label="戻る"
+            label="返回"
             icon="keyboard_arrow_left"
             @click="selectCharacterInfo(undefined)"
           />

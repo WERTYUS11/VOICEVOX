@@ -11,7 +11,7 @@
         <QHeader class="q-pa-sm">
           <QToolbar>
             <QToolbarTitle class="text-display">
-              ヘルプ /
+              帮助 /
               {{ selectedPage.parent ? selectedPage.parent + " / " : ""
               }}{{ selectedPage.name }}
             </QToolbarTitle>
@@ -23,7 +23,7 @@
               class="text-no-wrap text-bold q-mr-sm"
               @click="openLogDirectory"
             >
-              ログフォルダを開く
+              打开日志文件夹
             </QBtn>
             <!-- close button -->
             <QBtn
@@ -31,7 +31,7 @@
               flat
               icon="close"
               color="display"
-              aria-label="ヘルプを閉じる"
+              aria-label="帮助を閉じる"
               @click="dialogOpened = false"
             />
           </QToolbar>
@@ -111,7 +111,7 @@ void store.actions.GET_UPDATE_INFOS().then((obj) => (updateInfos.value = obj));
 
 if (!import.meta.env.VITE_LATEST_UPDATE_INFOS_URL) {
   throw new Error(
-    "環境変数VITE_LATEST_UPDATE_INFOS_URLが設定されていません。.envに記載してください。",
+    "未设置环境变量 VITE_LATEST_UPDATE_INFOS_URL。请在 .env 中填写。",
   );
 }
 const newUpdateResult = useFetchNewUpdateInfos(
@@ -144,7 +144,7 @@ const pagedata = computed(() => {
   const data: PageData[] = [
     {
       type: "item",
-      name: "ソフトウェアの利用規約",
+      name: "软件使用条款",
       component: MarkdownView,
       props: {
         markdown: policy.value,
@@ -152,12 +152,12 @@ const pagedata = computed(() => {
     },
     {
       type: "item",
-      name: "音声ライブラリの利用規約",
+      name: "音频库使用条款",
       component: LibraryPolicy,
     },
     {
       type: "item",
-      name: "使い方",
+      name: "使用方法",
       component: MarkdownView,
       props: {
         markdown: howToUse.value,
@@ -165,7 +165,7 @@ const pagedata = computed(() => {
     },
     {
       type: "item",
-      name: "開発コミュニティ",
+      name: "开发社区",
       component: MarkdownView,
       props: {
         markdown: ossCommunityInfos.value,
@@ -173,7 +173,7 @@ const pagedata = computed(() => {
     },
     {
       type: "item",
-      name: "ライセンス情報",
+      name: "许可证信息",
       component: OssLicense,
       props: {
         licenses: licenses.value,
@@ -181,7 +181,7 @@ const pagedata = computed(() => {
     },
     {
       type: "item",
-      name: "アップデート情報",
+      name: "更新信息",
       component: UpdateInfo,
       props: {
         downloadLink: import.meta.env.VITE_OFFICIAL_WEBSITE_URL,
@@ -199,7 +199,7 @@ const pagedata = computed(() => {
     },
     {
       type: "item",
-      name: "よくあるご質問",
+      name: "常见问题",
       component: MarkdownView,
       props: {
         markdown: qAndA.value,
@@ -207,7 +207,7 @@ const pagedata = computed(() => {
     },
     {
       type: "item",
-      name: "お問い合わせ",
+      name: "联系我们",
       component: MarkdownView,
       props: {
         markdown: contact.value,
@@ -231,7 +231,7 @@ const pagedata = computed(() => {
         },
         {
           type: "item",
-          name: "利用規約",
+          name: "使用条款",
           parent: manifest.name,
           component: MarkdownView,
           props: {
@@ -240,7 +240,7 @@ const pagedata = computed(() => {
         },
         {
           type: "item",
-          name: "ライセンス情報",
+          name: "许可证信息",
           parent: manifest.name,
           component: OssLicense,
           props: {
@@ -249,7 +249,7 @@ const pagedata = computed(() => {
         },
         {
           type: "item",
-          name: "アップデート情報",
+          name: "更新信息",
           parent: manifest.name,
           component: UpdateInfo,
           props: {
@@ -271,7 +271,7 @@ const selectedPage = computed(() => {
   if (pagedata.value[selectedPageIndex.value].type == "item") {
     return pagedata.value[selectedPageIndex.value] as PageItem;
   } else {
-    throw new Error("selectedPageにはPageItem型の値を指定してください。");
+    throw new Error("请为 selectedPage 指定 PageItem 类型的值。");
   }
 });
 
