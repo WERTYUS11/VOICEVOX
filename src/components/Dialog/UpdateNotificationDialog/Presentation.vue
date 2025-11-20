@@ -2,9 +2,9 @@
   <QDialog v-model="dialogOpened">
     <QCard class="q-py-sm q-px-md dialog-card">
       <QCardSection>
-        <div class="text-h5">アップデートのお知らせ</div>
+        <div class="text-h5">更新通知</div>
         <div class="text-body2 text-grey-8">
-          公式サイトから最新バージョンをダウンロードできます。
+          可从官方网站下载最新版本
         </div>
       </QCardSection>
 
@@ -15,7 +15,7 @@
           v-for="(info, infoIndex) of props.newUpdateInfos"
           :key="infoIndex"
         >
-          <h3>バージョン {{ info.version }}</h3>
+          <h3>版本 {{ info.version }}</h3>
           <ul>
             <template
               v-for="(item, descriptionIndex) of info.descriptions"
@@ -33,7 +33,7 @@
         <QSpace />
         <QBtn
           padding="xs md"
-          label="閉じる"
+          label="关闭"
           unelevated
           color="surface"
           textColor="display"
@@ -42,7 +42,7 @@
         />
         <QBtn
           padding="xs md"
-          label="このバージョンをスキップ"
+          label="跳过此版本"
           unelevated
           color="surface"
           textColor="display"
@@ -54,7 +54,7 @@
         />
         <QBtn
           padding="xs md"
-          label="公式サイトを開く"
+          label="打开官网"
           unelevated
           color="primary"
           textColor="display-on-primary"
@@ -74,7 +74,7 @@ import { UpdateInfo } from "@/type/preload";
 
 const dialogOpened = defineModel<boolean>("dialogOpened", { default: false });
 const props = defineProps<{
-  /** 公開されている最新のバージョン */
+  /** 公開されている最新の版本 */
   latestVersion: string;
   /** 表示するアップデート情報 */
   newUpdateInfos: UpdateInfo[];

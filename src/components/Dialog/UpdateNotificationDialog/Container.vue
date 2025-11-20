@@ -39,7 +39,7 @@ const isDialogOpenComputed = computed({
 // エディタのアップデート確認
 if (!import.meta.env.VITE_LATEST_UPDATE_INFOS_URL) {
   throw new Error(
-    "環境変数VITE_LATEST_UPDATE_INFOS_URLが設定されていません。.envに記載してください。",
+    "未设置环境变量 VITE_LATEST_UPDATE_INFOS_URL。请在 .env 中进行配置",
   );
 }
 
@@ -50,7 +50,7 @@ const currentVersionGetter = async () => {
   await store.actions.WAIT_VUEX_READY({ timeout: 15000 });
   const skipUpdateVersion = store.state.skipUpdateVersion ?? "0.0.0";
   if (semver.valid(skipUpdateVersion) == undefined) {
-    throw new Error(`skipUpdateVersionが不正です: ${skipUpdateVersion}`);
+    throw new Error(`skipUpdateVersion 无效： ${skipUpdateVersion}`);
   }
 
   return semver.gt(appVersion, skipUpdateVersion)

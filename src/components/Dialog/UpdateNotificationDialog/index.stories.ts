@@ -11,13 +11,13 @@ const meta: Meta<typeof Presentation> = {
     newUpdateInfos: [
       {
         version: "1.1.0",
-        descriptions: ["追加機能１", "追加機能２"],
-        contributors: ["これは表示されないはず"],
+        descriptions: ["新增功能１", "新增功能２"],
+        contributors: ["不会被显示"],
       },
       {
         version: "1.0.1",
-        descriptions: ["バグ修正"],
-        contributors: ["これは表示されないはず"],
+        descriptions: ["错误修复"],
+        contributors: ["不会被显示"],
       },
     ],
     "onUpdate:dialogOpened": fn(),
@@ -30,28 +30,28 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Opened: Story = {
-  name: "開いている",
+  name: "已打开",
   args: {
     dialogOpened: true,
   },
 };
 
 export const Close: Story = {
-  name: "閉じるボタンを押す",
+  name: "按下关闭按钮",
   args: { ...Opened.args },
   play: async ({ args }) => {
     const canvas = within(document.body); // ダイアログなので例外的にdocument.bodyを使う
 
-    const button = canvas.getByRole("button", { name: /閉じる/ });
+    const button = canvas.getByRole("button", { name: /关闭/ });
     await userEvent.click(button);
 
-    // ダイアログを閉じるイベントが呼ばれる
+    // ダイアログを关闭イベントが呼ばれる
     await expect(args["onUpdate:dialogOpened"]).toBeCalledWith(false);
   },
 };
 
 export const SkipThisVersion: Story = {
-  name: "スキップボタンを押す",
+  name: "按下跳过按钮",
   args: {
     ...Opened.args,
   },
@@ -59,19 +59,19 @@ export const SkipThisVersion: Story = {
     const canvas = within(document.body); // ダイアログなので例外的にdocument.bodyを使う
 
     const button = canvas.getByRole("button", {
-      name: /このバージョンをスキップ/,
+      name: /跳过此版本/,
     });
     await userEvent.click(button);
 
     // スキップイベントが呼ばれる
     await expect(args["onSkipThisVersionClick"]).toBeCalledWith("1.0.0");
-    // ダイアログを閉じるイベントが呼ばれる
+    // ダイアログを关闭イベントが呼ばれる
     await expect(args["onUpdate:dialogOpened"]).toBeCalledWith(false);
   },
 };
 
 export const OpenOfficialSite: Story = {
-  name: "公式サイトを開くボタンを押す",
+  name: "按下打开官网按钮",
   args: { ...Opened.args },
   play: async ({ args }) => {
     window.open = fn();
@@ -79,7 +79,7 @@ export const OpenOfficialSite: Story = {
     const canvas = within(document.body); // ダイアログなので例外的にdocument.bodyを使う
 
     const button = canvas.getByRole("button", {
-      name: /公式サイトを開く/,
+      name: /打开官网/,
     });
     await userEvent.click(button);
 
@@ -88,7 +88,7 @@ export const OpenOfficialSite: Story = {
       "https://voicevox.hiroshiba.jp/",
       "_blank",
     );
-    // ダイアログを閉じるイベントが呼ばれる
+    // ダイアログを关闭イベントが呼ばれる
     await expect(args["onUpdate:dialogOpened"]).toBeCalledWith(false);
   },
 };
