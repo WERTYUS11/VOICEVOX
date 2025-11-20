@@ -1,6 +1,6 @@
 # VOICEVOX
 
-[![发布版本](https://img.shields.io/github/v/release/VOICEVOX/voicevox?label=Release)](https://github.com/WERTYUS11/Voicevox-Chinese/releases)
+[![发布版本](https://img.shields.io/github/v/release/VOICEVOX/voicevox?label=Release)](https://github.com/WERTYUS11/Voicevox/releases)
 
 （引擎是 [VOICEVOX ENGINE](https://github.com/VOICEVOX/voicevox_engine/)，
 核心是 [VOICEVOX CORE](https://github.com/VOICEVOX/voicevox_core/)，
@@ -21,7 +21,7 @@ VOICEVOX 项目欢迎有兴趣的人士参与。
 VOICEVOX 编辑器采用了 Electron、TypeScript、Vue、Vuex 等技术，整体架构可能不易理解。
 [代码导览](./docs/コードの歩き方.md)中介绍了其结构，希望能对开发有所帮助。
 
-在创建解决 Issue 的 Pull Request 时，为了避免与他人同时处理同一个 Issue，
+在创建解决 Issue 的 PR 时，为了避免与他人同时处理同一个 Issue，
 请在 Issue 中告知您已开始处理，或者首先创建一个 Draft Pull Request。
 
 在[VOICEVOX 非官方 Discord 服务器](https://discord.gg/WMwWetrzuh)中，我们进行开发讨论和闲聊。欢迎随时加入。
@@ -35,7 +35,7 @@ VOICEVOX 编辑器采用了 Electron、TypeScript、Vue、Vuex 等技术，整�
 请安装[.node-version](.node-version)中指定的 Node.js 版本。
 使用 Node.js 管理工具（如[nvs](https://github.com/jasongin/nvs)或[Volta](https://volta.sh)等）可以轻松安装，并能自动切换 Node.js 版本。
 
-安装 Node.js 后，请 Fork [此仓库](https://github.com/VOICEVOX/voicevox.git) 并 `git clone`。
+安装 Node.js 后，请 Fork [此仓库](https://github.com/WERTYUS11/voicevox.git) 并 `git clone`。
 
 ### 安装依赖库
 
@@ -79,7 +79,7 @@ pnpm run electron:serve --mode production
 pnpm run electron:serve -- ...
 ```
 
-语音合成引擎的仓库在此：<https://github.com/VOICEVOX/voicevox_engine>
+语音合成引擎的仓库在这里：<https://github.com/VOICEVOX/voicevox_engine>
 
 ### 运行 Storybook
 
@@ -91,6 +91,15 @@ pnpm run storybook
 
 main 分支的 Storybook 可在[VOICEVOX/preview-pages](https://github.com/VOICEVOX/preview-pages)查看。
 <https://voicevox.github.io/preview-pages/preview/editor/branch-main/storybook/index.html>
+
+### 中文翻译
+
+使用js文件来进行文件的全局翻译
+
+```bash
+node zh-cn.js
+```
+## 在处理任何关于此文件的issue时一定要告！知！
 
 ### 运行浏览器版（开发中）
 
