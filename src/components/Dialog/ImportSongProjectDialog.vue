@@ -2,7 +2,7 @@
   <QDialog ref="dialogRef" @beforeShow="initializeValues">
     <QCard class="q-py-sm q-px-md dialog-card">
       <QCardSection>
-        <div class="text-h5">インポート</div>
+        <div class="text-h5">导入</div>
       </QCardSection>
 
       <QSeparator />
@@ -10,16 +10,16 @@
       <QCardSection class="q-py-none">
         <QFile
           v-model="projectFile"
-          label="インポートするファイル"
+          label="导入文件"
           class="q-my-sm"
           :accept="acceptExtensions"
           :errorMessage="projectFileErrorMessage"
           :error="!!projectFileErrorMessage"
-          placeholder="ファイルを選択してください"
+          placeholder="请选择文件"
           @input="handleFileChange"
         />
         <div v-if="projectFile == null">
-          <span class="text-weight-bold">対応しているファイル形式</span>
+          <span class="text-weight-bold">支持的文件格式</span>
           <ul>
             <li
               v-for="[name, extensions] in projectNameToExtensions"
@@ -49,7 +49,7 @@
               <QItemLabel>
                 {{ index + 1 }}：{{ track.name || DEFAULT_TRACK_NAME }}
               </QItemLabel>
-              <QItemLabel caption>ノート数：{{ track.noteLength }}</QItemLabel>
+              <QItemLabel caption>音符数量：{{ track.noteLength }}</QItemLabel>
             </QItemSection>
           </QItem>
         </QList>
@@ -62,7 +62,7 @@
         <QBtn
           unelevated
           align="right"
-          label="キャンセル"
+          label="取消"
           color="toolbar-button"
           textColor="toolbar-button-display"
           class="text-no-wrap text-bold q-mr-sm"
@@ -71,7 +71,7 @@
         <QBtn
           unelevated
           align="right"
-          label="インポート"
+          label="导入"
           color="toolbar-button"
           textColor="toolbar-button-display"
           class="text-no-wrap text-bold q-mr-sm"
@@ -161,24 +161,24 @@ const projectFileErrorMessage = computed(() => {
   if (error.value) {
     switch (error.value) {
       case "emptyProject":
-        return "プロジェクトが空です";
+        return "项目为空";
       case "overlapping":
-        return "ノートが重なっています";
+        return "音符重叠";
       case "parseFailed":
-        return "ファイルの解析に失敗しました";
+        return "文件解析失败";
       case "oldProject":
-        return "古いプロジェクトファイルです";
+        return "这是旧版本的项目文件";
       case "unknown":
-        return "不明なエラーが発生しました";
+        return "发生未知错误";
     }
 
     throw new ExhaustiveError(error.value);
   } else if (project.value) {
     const tracks = getProjectTracks(project.value);
     if (tracks.length === 0) {
-      return "トラックがありません";
+      return "没有轨道";
     } else if (tracks.every((track) => track.noteLength === 0)) {
-      return "ノートがありません";
+      return "没有音符";
     }
   }
 
@@ -308,13 +308,13 @@ const handleFileChange = async (event: Event) => {
   }
 };
 
-// トラックインポート実行時
+// トラック导入実行時
 const handleImportTrack = () => {
   // ファイルまたは選択中のトラックが未設定の場合はエラー
   if (project.value == null || selectedTrackIndexes.value == null) {
     throw new Error("project or selected track is not set");
   }
-  // トラックをインポート
+  // トラックを导入
   const trackIndexes = selectedTrackIndexes.value.toSorted((a, b) => a - b);
   if (project.value.type === "vvproj") {
     void store.actions.COMMAND_IMPORT_VOICEVOX_PROJECT({
@@ -330,7 +330,7 @@ const handleImportTrack = () => {
   onDialogOK();
 };
 
-// キャンセルボタンクリック時
+// 取消ボタンクリック時
 const handleCancel = () => {
   onDialogCancel();
 };

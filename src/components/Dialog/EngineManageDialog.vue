@@ -11,7 +11,7 @@
       <QPageContainer>
         <QHeader class="q-pa-sm">
           <QToolbar>
-            <QToolbarTitle class="text-display">エンジンの管理</QToolbarTitle>
+            <QToolbarTitle class="text-display">引擎管理</QToolbarTitle>
             <QSpace />
             <!-- close button -->
             <QBtn
@@ -29,10 +29,10 @@
             <QSpinner color="primary" size="2.5rem" />
             <div class="q-mt-xs">
               <template v-if="uiLockedState === 'addingEngine'"
-                >追加中・・・</template
+                >添加中…</template
               >
               <template v-if="uiLockedState === 'deletingEngine'"
-                >削除中・・・</template
+                >删除中…</template
               >
             </div>
           </div>
@@ -41,9 +41,9 @@
           <template #sidebar>
             <div v-if="isAddingEngine" class="list-disable-overlay" />
             <div class="list-header">
-              <div class="list-title">エンジン一覧</div>
+              <div class="list-title">引擎列表</div>
               <BaseButton
-                label="追加"
+                label="添加"
                 icon="add"
                 :disable="uiLocked"
                 @click="toAddEngineState"
@@ -87,17 +87,17 @@
           <div v-if="isAddingEngine" class="detail">
             <BaseScrollArea>
               <div class="inner">
-                <div class="title">エンジンの追加</div>
+                <div class="title">添加引擎</div>
                 <BaseToggleGroup v-model="engineLoaderType" type="single">
                   <BaseToggleGroupItem label="VVPPファイル" value="vvpp" />
                   <BaseToggleGroupItem label="既存エンジン" value="dir" />
                 </BaseToggleGroup>
                 <section v-if="engineLoaderType === 'vvpp'" class="section">
-                  <div>VVPPファイルでエンジンをインストールします。</div>
+                  <div>通过 VVPP 文件安装引擎。</div>
                   <div class="flex-row">
                     <BaseTextField
                       v-model="vvppFilePath"
-                      placeholder="VVPPファイルの場所"
+                      placeholder="VVPP 文件位置"
                       readonly
                       :hasError="
                         newEngineDirValidationState != undefined &&
@@ -116,18 +116,18 @@
                       </template>
                     </BaseTextField>
                     <BaseButton
-                      label="ファイル選択"
+                      label="选择文件"
                       icon="folder_open"
                       @click="selectVvppFile"
                     />
                   </div>
                 </section>
                 <section v-if="engineLoaderType === 'dir'" class="section">
-                  <div>PC内にあるエンジンを追加します。</div>
+                  <div>添加电脑内的引擎。</div>
                   <div class="flex-row">
                     <BaseTextField
                       v-model="newEngineDir"
-                      placeholder="エンジンフォルダの場所"
+                      placeholder="引擎文件夹位置"
                       readonly
                       :hasError="
                         newEngineDirValidationState != undefined &&
@@ -146,16 +146,16 @@
                       </template>
                     </BaseTextField>
                     <BaseButton
-                      label="フォルダ選択"
+                      label="选择文件夹"
                       icon="folder_open"
                       @click="selectEngineDir"
                     />
                   </div>
                 </section>
                 <div class="footer">
-                  <BaseButton label="キャンセル" @click="toInitialState" />
+                  <BaseButton label="取消" @click="toInitialState" />
                   <BaseButton
-                    label="追加"
+                    label="添加"
                     icon="add"
                     variant="primary"
                     :disabled="!canAddEngine"
@@ -182,10 +182,10 @@
                 <section class="section">
                   <ul>
                     <li>
-                      バージョン：{{
+                      版本：{{
                         engineVersions[selectedId]
                           ? engineVersions[selectedId]
-                          : "（取得に失敗しました）"
+                          : "（获取失败）"
                       }}
                     </li>
                     <li>
@@ -197,12 +197,12 @@
                         target="_blank"
                         >{{ engineManifests[selectedId].url }}</a
                       >
-                      <span v-else>（取得に失敗しました）</span>
+                      <span v-else>（获取失败）</span>
                     </li>
                   </ul>
                 </section>
                 <section class="section">
-                  <div class="headline">機能</div>
+                  <div class="headline">功能</div>
                   <ul
                     v-if="
                       engineManifests[selectedId] &&
@@ -218,14 +218,14 @@
                       :class="value ? '' : 'text-warning'"
                     >
                       {{ getFeatureName(feature) }}：{{
-                        value ? "対応" : "非対応"
+                        value ? "支持" : "非支持"
                       }}
                     </li>
                   </ul>
-                  <span v-else>（取得に失敗しました）</span>
+                  <span v-else>（获取失败）</span>
                 </section>
                 <section class="section">
-                  <div class="headline">場所</div>
+                  <div class="headline">位置</div>
                   <div class="flex-row">
                     <BaseTextField
                       v-model="engineDir"
@@ -234,7 +234,7 @@
                     />
                     <BaseButton
                       icon="folder_open"
-                      label="フォルダを開く"
+                      label="打开文件夹"
                       :disabled="uiLocked || !engineInfos[selectedId].path"
                       @click="openSelectedEngineDirectory"
                     />
@@ -242,14 +242,14 @@
                 </section>
                 <div class="footer">
                   <BaseButton
-                    label="削除"
+                    label="删除"
                     icon="delete_outline"
                     :disabled="uiLocked || engineInfos[selectedId].isDefault"
                     variant="danger"
                     @click="deleteEngine"
                   />
                   <BaseButton
-                    label="再起動"
+                    label="重启"
                     icon="refresh"
                     :disabled="
                       uiLocked || engineStates[selectedId] === 'STARTING'
@@ -357,13 +357,13 @@ const selectedId = ref<EngineId | undefined>(undefined);
 
 const engineDir = computed(() => {
   if (selectedId.value == undefined) throw new Error("engine is not selected");
-  return engineInfos.value[selectedId.value]?.path || "（組み込み）";
+  return engineInfos.value[selectedId.value]?.path || "（内置）";
 });
 
 const getEngineTypeName = (name: string) => {
   const engineTypeMap = {
-    default: "デフォルトエンジン",
-    plugin: "追加エンジン",
+    default: "默认引擎",
+    plugin: "添加引擎",
   };
   return engineTypeMap[name as keyof typeof engineTypeMap];
 };
@@ -371,19 +371,19 @@ const getEngineTypeName = (name: string) => {
 const getFeatureName = (name: keyof SupportedFeatures) => {
   const featureNameMap: { [key in keyof Required<SupportedFeatures>]: string } =
     {
-      adjustMoraPitch: "モーラごとの音高の調整",
-      adjustPhonemeLength: "音素ごとの長さの調整",
-      adjustSpeedScale: "全体の話速の調整",
-      adjustPitchScale: "全体の音高の調整",
-      adjustIntonationScale: "全体の抑揚の調整",
-      adjustVolumeScale: "全体の音量の調整",
-      adjustPauseLength: "句読点などの無音時間の調整",
+      adjustMoraPitch: "按音拍调整音高",
+      adjustPhonemeLength: "按音素调整时长",
+      adjustSpeedScale: "调整整体语速",
+      adjustPitchScale: "调整整体音高",
+      adjustIntonationScale: "调整整体语调",
+      adjustVolumeScale: "调整整体音量",
+      adjustPauseLength: "调节标点等的静音时间",
       interrogativeUpspeak: "疑問文の自動調整",
-      synthesisMorphing: "2種類のスタイルでモーフィングした音声を合成",
+      synthesisMorphing: "使用两种风格进行变声合成",
       sing: "歌唱音声合成",
-      manageLibrary: "音声ライブラリのインストール・アンインストール",
-      returnResourceUrl: "キャラクター情報のリソースをURLで返送",
-      applyKatakanaEnglish: "未知の英単語をカタカナ読みに変換",
+      manageLibrary: "语音库的安装与卸载",
+      returnResourceUrl: "通过 URL 返回角色信息资源",
+      applyKatakanaEnglish: "将未知英文单词转换为片假名读音",
     };
   return featureNameMap[name];
 };
@@ -392,11 +392,11 @@ const getEngineDirValidationMessage = (result: EngineDirValidationResult) => {
   const messageMap: {
     [key in EngineDirValidationResult]: string | undefined;
   } = {
-    directoryNotFound: "フォルダが見つかりませんでした。",
-    notADirectory: "フォルダではありません。",
-    manifestNotFound: "engine_manifest.jsonが見つかりませんでした。",
-    invalidManifest: "engine_manifest.jsonの内容が不正です。",
-    alreadyExists: "同じIDのエンジンが既に登録されています。",
+    directoryNotFound: "未找到文件夹。",
+    notADirectory: "不是文件夹。",
+    manifestNotFound: "未找到 engine_manifest.json。",
+    invalidManifest: "engine_manifest.json 内容无效。",
+    alreadyExists: "已存在相同 ID 的引擎。",
     ok: undefined,
   };
   return messageMap[result];
@@ -404,10 +404,10 @@ const getEngineDirValidationMessage = (result: EngineDirValidationResult) => {
 
 const addEngine = async () => {
   const result = await store.actions.SHOW_WARNING_DIALOG({
-    title: "エンジンを追加しますか？",
+    title: "要添加引擎吗？",
     message:
-      "この操作はコンピュータに損害を与える可能性があります。エンジンの配布元が信頼できない場合は追加しないでください。",
-    actionName: "追加する",
+      "此操作可能会对电脑造成损害。如不信任引擎来源，请不要添加。",
+    actionName: "添加",
   });
   if (result === "OK") {
     if (engineLoaderType.value === "dir") {
@@ -419,7 +419,7 @@ const addEngine = async () => {
       );
 
       void requireReload(
-        "エンジンを追加しました。反映には再読み込みが必要です。",
+        "已添加引擎。需重新加载才能生效。",
       );
     } else {
       try {
@@ -429,12 +429,12 @@ const addEngine = async () => {
         );
 
         void requireReload(
-          "エンジンを追加しました。反映には再読み込みが必要です。",
+          "已添加引擎。需重新加载才能生效。",
         );
       } catch (e) {
         console.error(e);
         void store.actions.SHOW_ALERT_DIALOG({
-          title: "エンジンの追加に失敗しました",
+          title: "添加引擎失败",
           message: errorToMessage(e),
         });
       }
@@ -447,15 +447,15 @@ const deleteEngine = async () => {
 
   const engineInfo = engineInfos.value[engineId];
 
-  // 念の為デフォルトエンジンではないことを確認
+  // 念の為默认引擎ではないことを確認
   if (engineInfo.isDefault) {
     throw new Error("default engine cannot be deleted");
   }
 
   const result = await store.actions.SHOW_WARNING_DIALOG({
-    title: "エンジンを削除しますか？",
-    message: "選択中のエンジンを削除します。",
-    actionName: "削除する",
+    title: "要删除引擎吗？",
+    message: "将删除当前选择的引擎。",
+    actionName: "删除する",
     isWarningColorButton: true,
   });
   if (result === "OK") {
@@ -471,7 +471,7 @@ const deleteEngine = async () => {
           }),
         );
         void requireReload(
-          "エンジンを削除しました。反映には再読み込みが必要です。",
+          "已删除引擎。需重新加载才能生效。",
         );
         break;
       }
@@ -481,11 +481,11 @@ const deleteEngine = async () => {
             "deletingEngine",
             store.actions.UNINSTALL_VVPP_ENGINE(engineId),
           );
-          void requireReload("エンジンの削除には再読み込みが必要です。");
+          void requireReload("删除引擎需要重新加载。");
         } catch (e) {
           console.error(e);
           void store.actions.SHOW_ALERT_DIALOG({
-            title: "エンジンの削除に失敗しました",
+            title: "删除引擎失败",
             message: errorToMessage(e),
           });
         }
@@ -517,10 +517,10 @@ const restartSelectedEngine = () => {
 
 const requireReload = async (message: string) => {
   const result = await store.actions.SHOW_CONFIRM_DIALOG({
-    title: "再読み込みしますか？",
+    title: "要重新加载吗？",
     message: message,
-    actionName: "再読み込みする",
-    cancel: "後で",
+    actionName: "重新加载",
+    cancel: "稍后",
     isPrimaryColorButton: true,
   });
   toInitialState();
@@ -535,7 +535,7 @@ const newEngineDir = ref("");
 const newEngineDirValidationState = ref<EngineDirValidationResult | null>(null);
 const selectEngineDir = async () => {
   const path = await window.backend.showOpenDirectoryDialog({
-    title: "エンジンのフォルダを選択",
+    title: "选择引擎文件夹",
   });
   if (path) {
     newEngineDir.value = path;
@@ -554,7 +554,7 @@ const selectEngineDir = async () => {
 const vvppFilePath = ref("");
 const selectVvppFile = async () => {
   const path = await window.backend.showOpenFileDialog({
-    title: "vvppファイルを選択",
+    title: "选择 VVPP 文件",
     name: "VOICEVOX Plugin Package",
     mimeType: "application/octet-stream",
     extensions: ["vvpp", "vvppp"],
@@ -584,7 +584,7 @@ const toInitialState = () => {
   selectedId.value = undefined;
   isAddingEngine.value = false;
 };
-// エンジン追加状態
+// エンジン添加状態
 const toAddEngineState = () => {
   isAddingEngine.value = true;
   selectedId.value = undefined;

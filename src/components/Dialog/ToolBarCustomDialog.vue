@@ -11,7 +11,7 @@
         <QHeader class="q-py-sm">
           <QToolbar>
             <QToolbarTitle class="text-display"
-              >ツールバーのカスタマイズ</QToolbarTitle
+              >工具栏自定义</QToolbarTitle
             >
             <QSpace />
             <QBtn
@@ -21,7 +21,7 @@
               class="text-no-wrap text-bold q-mr-sm"
               :disable="isDefault"
               @click="applyDefaultSetting"
-              >デフォルトに戻す</QBtn
+              >恢复默认</QBtn
             >
             <QBtn
               unelevated
@@ -68,13 +68,13 @@
               </template>
             </Draggable>
             <div class="preview-toolbar-drag-hint">
-              ドラッグでボタンの並びを変更できます。
+              可通过拖动更改按钮顺序。
             </div>
           </QToolbar>
           <div class="container">
             <BaseScrollArea>
               <div class="inner">
-                <h1 class="title">表示するボタン</h1>
+                <h1 class="title">显示的按钮</h1>
                 <div class="list">
                   <BaseRowCard
                     v-for="(desc, key) in usableButtonsDesc"
@@ -87,8 +87,8 @@
                   >
                     <BaseSwitch
                       :checked="toolbarButtons.includes(key)"
-                      checkedLabel="表示する"
-                      uncheckedLabel="表示しない"
+                      checkedLabel="显示"
+                      uncheckedLabel="不显示"
                     />
                   </BaseRowCard>
                 </div>
@@ -150,20 +150,20 @@ const toggleToolbarButtons = (key: ToolbarButtonTagType) => {
 
 const usableButtonsDesc: Record<ToolbarButtonTagType, string> = {
   PLAY_CONTINUOUSLY:
-    "選択されているテキスト以降のすべてのテキストを読み上げます。",
-  STOP: "テキストが読み上げられているときに、それを止めます。",
+    "朗读从所选文本开始之后的所有文本。",
+  STOP: "在朗读文本时停止朗读。",
   EXPORT_AUDIO_SELECTED:
-    "選択されているテキストの読み上げを音声ファイルに書き出します。",
+    "将所选文本的朗读导出为音频文件。",
   EXPORT_AUDIO_ALL:
-    "入力されているすべてのテキストの読み上げを音声ファイルに書き出します。",
+    "将所有输入文本的朗读导出为音频文件。",
   EXPORT_AUDIO_CONNECT_ALL:
-    "入力されているすべてのテキストの読み上げを一つの音声ファイルに繋げて書き出します。",
+    "将所有输入文本的朗读连接为一个音频文件导出。",
   SAVE_PROJECT: "プロジェクトを上書き保存します。",
-  UNDO: "操作を一つ戻します。",
-  REDO: "元に戻した操作をやり直します。",
-  IMPORT_TEXT: "テキストファイル(.txt)を読み込みます。",
+  UNDO: "撤销一步操作。",
+  REDO: "重做被撤销的操作。",
+  IMPORT_TEXT: "读取文本文件 (.txt)。",
   EMPTY:
-    "これはボタンではありません。レイアウトの調整に使います。また、実際には表示されません。",
+    "这不是按钮，用于布局调整，实际不会显示。",
 };
 
 const isChanged = computed(() => {
@@ -199,9 +199,9 @@ watch(
 
 const applyDefaultSetting = async () => {
   const result = await store.actions.SHOW_CONFIRM_DIALOG({
-    title: "デフォルトに戻しますか？",
-    message: "ツールバーをデフォルトに戻します。",
-    actionName: "デフォルトに戻す",
+    title: "要恢复默认吗？",
+    message: "将工具栏恢复为默认。",
+    actionName: "恢复默认",
   });
   if (result === "OK") {
     toolbarButtons.value = [...defaultSetting];
@@ -217,10 +217,10 @@ const saveCustomToolbar = () => {
 const finishOrNotDialog = async () => {
   if (isChanged.value) {
     const result = await store.actions.SHOW_WARNING_DIALOG({
-      title: "カスタマイズを終了しますか？",
+      title: "要结束自定义吗？",
       message:
-        "保存せずに終了すると、カスタマイズは破棄されてリセットされます。",
-      actionName: "終了する",
+        "不保存就退出会丢弃自定义内容并重置。",
+      actionName: "结束",
     });
     if (result === "OK") {
       toolbarButtons.value = [...store.state.toolbarSetting];

@@ -10,13 +10,13 @@
       <QHeader class="q-py-sm">
         <QToolbar>
           <QToolbarTitle class="text-display"
-            >設定 / キー割り当て</QToolbarTitle
+            >设置 / 快捷键分配</QToolbarTitle
           >
           <QInput
             v-model="hotkeyFilter"
             hideBottomSpace
             dense
-            placeholder="検索"
+            placeholder="搜索"
             color="display"
             class="q-mr-sm search-box"
           >
@@ -51,7 +51,7 @@
                 <div class="table-header">
                   <div class="table-cell"></div>
                   <div class="table-cell">操作</div>
-                  <div class="table-cell">ショートカットキー</div>
+                  <div class="table-cell">快捷键</div>
                 </div>
                 <div
                   v-for="hotkeySetting in hotkeySettings.filter(
@@ -90,7 +90,7 @@
                   <div class="table-cell icon-buttons">
                     <BaseIconButton
                       icon="settings_backup_restore"
-                      label="デフォルトに戻す"
+                      label="恢复默认"
                       :disabled="
                         checkHotkeyReadonly(hotkeySetting.action) ||
                         isDefaultCombination(hotkeySetting.action)
@@ -190,8 +190,8 @@ const deleteHotkey = (action: string) => {
 };
 
 const getHotkeyText = (action: string, combo: string) => {
-  if (checkHotkeyReadonly(action)) return "（読み取り専用）" + combo;
-  if (combo == "") return "未割り当て";
+  if (checkHotkeyReadonly(action)) return "（只读）" + combo;
+  if (combo == "") return "未分配";
   return combo;
 };
 
@@ -228,9 +228,9 @@ const isDefaultCombination = (action: string) => {
 
 const resetHotkey = async (action: string) => {
   const result = await store.actions.SHOW_CONFIRM_DIALOG({
-    title: "デフォルトに戻しますか？",
-    message: `${action}のショートカットキーをデフォルトに戻します。`,
-    actionName: "デフォルトに戻す",
+    title: "要恢复为默认值吗？",
+    message: `${action}的快捷键将恢复为默认值。`,
+    actionName: "恢复默认",
   });
 
   if (result !== "OK") return;

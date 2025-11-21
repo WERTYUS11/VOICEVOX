@@ -12,8 +12,8 @@
           <div class="column">
             <QToolbarTitle class="text-display">{{
               hasNewCharacter
-                ? "追加キャラクターの紹介"
-                : "設定 / キャラクター並び替え・試聴"
+                ? "追加角色介绍"
+                : "设置 / 角色排序与试听"
             }}</QToolbarTitle>
           </div>
 
@@ -22,7 +22,7 @@
           <div class="row items-center no-wrap">
             <QBtn
               unelevated
-              label="完了"
+              label="完成"
               color="toolbar-button"
               textColor="toolbar-button-display"
               class="text-no-wrap"
@@ -47,7 +47,7 @@
       <QPageContainer>
         <QPage class="main">
           <div class="character-items-container">
-            <span class="text-h6 q-py-md">サンプルボイス一覧</span>
+            <span class="text-h6 q-py-md">示例语音列表</span>
             <div>
               <CharacterTryListenCard
                 v-for="characterInfo of characterInfos"
@@ -69,7 +69,7 @@
 
           <div class="character-order-container">
             <div class="text-subtitle1 text-weight-bold text-center q-py-md">
-              キャラクター並び替え
+              角色排序
             </div>
             <Draggable
               v-model="characterOrder"
@@ -131,7 +131,7 @@ const characterInfosMap = computed(() => {
 const newCharacters = ref<SpeakerId[]>([]);
 const hasNewCharacter = computed(() => newCharacters.value.length > 0);
 
-// サンプルボイス一覧のキャラクター順番
+// 示例语音列表のキャラクター順番
 const sampleCharacterOrder = ref<SpeakerId[]>([]);
 
 // 選択中のキャラクター

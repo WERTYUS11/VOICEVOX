@@ -8,7 +8,7 @@
   >
     <QCard class="q-py-sm q-px-md">
       <QCardSection align="center">
-        <div class="text-h6">ショートカットキーを入力してください</div>
+        <div class="text-h6">请输入快捷键</div>
       </QCardSection>
       <QCardSection align="center">
         <template v-for="(hotkey, index) in lastRecord.split(' ')" :key="index">
@@ -24,7 +24,7 @@
         <span v-if="lastRecord !== '' && confirmBtnEnabled"> +</span>
         <div v-if="duplicatedHotkey != undefined" class="text-warning q-mt-lg">
           <div class="text-warning">
-            ショートカットキーが次の操作と重複しています
+            快捷键与以下操作冲突
           </div>
           <div class="q-mt-sm text-weight-bold text-warning">
             「{{ duplicatedHotkey.action }}」
@@ -34,7 +34,7 @@
       <QCardActions align="center">
         <QBtn
           padding="xs md"
-          label="キャンセル"
+          label="取消"
           unelevated
           color="surface"
           textColor="display"
@@ -43,7 +43,7 @@
         />
         <QBtn
           padding="xs md"
-          label="ショートカットキーを未割り当てにする"
+          label="将快捷键设为未分配"
           unelevated
           color="surface"
           textColor="display"
@@ -67,7 +67,7 @@
         <QBtn
           v-else
           padding="xs md"
-          label="上書きする"
+          label="覆盖"
           unelevated
           color="primary"
           textColor="display-on-primary"

@@ -11,13 +11,13 @@ const meta: Meta<typeof SaveAllResultDialog> = {
     writeErrorArray: [
       {
         path: "/path/to/write_error.wav",
-        message: "書き込み権限がありません",
+        message: "没有写入权限",
       },
     ],
     engineErrorArray: [
       {
         path: "/path/to/engine_error.wav",
-        message: "エンジンの応答がありません",
+        message: "引擎无响应",
       },
     ],
   },
@@ -28,29 +28,29 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Opened: Story = {
-  name: "開いている",
+  name: "打开中",
   args: {},
 };
 
 export const Close: Story = {
-  name: "閉じるボタンを押す",
+  name: "按下关闭按钮",
   args: { ...Opened.args },
   play: async () => {
     const canvas = within(document.body); // ダイアログなので例外的にdocument.bodyを使う
 
-    const button = canvas.getByRole("button", { name: "閉じる" });
+    const button = canvas.getByRole("button", { name: "关闭" });
     await userEvent.click(button);
   },
 };
 
 export const SingleError: Story = {
-  name: "エラー１つだけ",
+  name: "仅一个错误",
   args: {
     successArray: [],
     writeErrorArray: [
       {
         path: "/path/to/error.wav",
-        message: "ディスク容量が不足しています",
+        message: "磁盘空间不足",
       },
     ],
     engineErrorArray: [],
@@ -58,30 +58,30 @@ export const SingleError: Story = {
 };
 
 export const Mixed: Story = {
-  name: "成功とエラーが混在している",
+  name: "成功与错误混杂",
   args: {
     successArray: ["/path/to/success1.wav", "/path/to/success2.wav"],
     writeErrorArray: [
       {
         path: "/path/to/write_error.wav",
-        message: "書き込み権限がありません",
+        message: "没有写入权限",
       },
     ],
     engineErrorArray: [
       {
         path: "/path/to/engine_error1.wav",
-        message: "エンジンの応答がありません",
+        message: "引擎无响应",
       },
       {
         path: "/path/to/engine_error2.wav",
-        message: "エンジンの応答がありません",
+        message: "引擎无响应",
       },
     ],
   },
 };
 
 export const Closed: Story = {
-  name: "閉じている",
+  name: "已关闭",
   tags: ["skip-screenshot"],
   args: {
     modelValue: false,

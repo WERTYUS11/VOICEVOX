@@ -27,7 +27,7 @@ export type ConfirmDialogOptions = {
   type?: DialogType;
   title: string;
   message: string;
-  actionName: string; // ボタンテキスト
+  actionName: string; // ボタン文本
   isPrimaryColorButton?: boolean; // ボタンをPrimary色にするか
   cancel?: string;
 };
@@ -35,7 +35,7 @@ export type WarningDialogOptions = {
   type?: DialogType;
   title: string;
   message: string;
-  actionName: string; // ボタンテキスト
+  actionName: string; // ボタン文本
   isWarningColorButton?: boolean; // ボタンをWarning色にするか
   cancel?: string;
 };
@@ -60,7 +60,7 @@ export type NotifyAndNotShowAgainButtonOption = {
 
 /** メッセージを知らせるダイアログ */
 export const showMessageDialog = async (options: MessageDialogOptions) => {
-  options.ok ??= "閉じる";
+  options.ok ??= "关闭";
 
   const { promise, resolve } = Promise.withResolvers<void>();
   Dialog.create({
@@ -98,7 +98,7 @@ export const showErrorDialog = async (title: string, e: unknown) => {
 
 /** 続行することが望まれそうな場合の質問ダイアログ */
 export const showConfirmDialog = async (options: ConfirmDialogOptions) => {
-  options.cancel ??= "キャンセル";
+  options.cancel ??= "取消";
 
   const { promise, resolve } = Promise.withResolvers<number>();
   Dialog.create({
@@ -122,9 +122,9 @@ export const showConfirmDialog = async (options: ConfirmDialogOptions) => {
   return index === 1 ? "OK" : "CANCEL";
 };
 
-/** キャンセルすることが望まれそうな場合の質問ダイアログ */
+/** 取消することが望まれそうな場合の質問ダイアログ */
 export const showWarningDialog = async (options: WarningDialogOptions) => {
-  options.cancel ??= "キャンセル";
+  options.cancel ??= "取消";
 
   const { promise, resolve } = Promise.withResolvers<number>();
   Dialog.create({
@@ -148,7 +148,7 @@ export const showWarningDialog = async (options: WarningDialogOptions) => {
   return index === 1 ? "OK" : "CANCEL";
 };
 
-/** キャンセル以外に複数の選択肢がある質問ダイアログ */
+/** 取消以外に複数の選択肢がある質問ダイアログ */
 export const showQuestionDialog = async (options: QuestionDialogOptions) => {
   const { promise, resolve } = Promise.withResolvers<number>();
   Dialog.create({
@@ -307,13 +307,13 @@ const showWriteSuccessNotify = ({
   actions: DotNotationDispatch<AllActions>;
 }): void => {
   const mediaTypeNames: Record<MediaType, string> = {
-    audio: "音声",
-    text: "テキスト",
-    project: "プロジェクト",
-    label: "labファイル",
+    audio: "音频",
+    text: "文本",
+    project: "项目",
+    label: "lab 文件",
   };
   void actions.SHOW_NOTIFY_AND_NOT_SHOW_AGAIN_BUTTON({
-    message: `${mediaTypeNames[mediaType]}を書き出しました`,
+    message: `${mediaTypeNames[mediaType]}已导出`,
     tipName: "notifyOnGenerate",
   });
 };
@@ -329,31 +329,31 @@ const showWriteErrorDialog = ({
   actions: DotNotationDispatch<AllActions>;
 }) => {
   if (mediaType === "text") {
-    // テキスト書き出し時のエラーを出力
+    // 文本書き出し時のエラーを出力
     void actions.SHOW_ALERT_DIALOG({
-      title: "テキストの書き出しに失敗しました。",
+      title: "文本导出失败。",
       message:
-        "書き込みエラーによって失敗しました。空き容量があることや、書き込み権限があることをご確認ください。",
+        "由于写入错误操作失败。请确认是否有可用空间以及写入权限。",
     });
   } else {
     const defaultErrorMessages: Partial<Record<SaveResult, string>> = {
       WRITE_ERROR:
-        "何らかの理由で書き出しに失敗しました。ログを参照してください。",
+        "因某些原因导出失败。请查看日志。",
       ENGINE_ERROR:
-        "エンジンのエラーによって失敗しました。エンジンの再起動をお試しください。",
+        "因引擎错误导致失败。请尝试重启引擎。",
       UNKNOWN_ERROR:
-        "何らかの理由で書き出しに失敗しました。ログを参照してください。",
+        "因某些原因导出失败。请查看日志。",
     };
 
-    // 音声書き出し時のエラーを出力
+    // 音频書き出し時のエラーを出力
     void actions.SHOW_ALERT_DIALOG({
-      title: "書き出しに失敗しました。",
+      title: "导出失败。",
       message: result.errorMessage ?? defaultErrorMessages[result.result] ?? "",
     });
   }
 };
 
-/** 保存結果に応じてユーザーに通知する。キャンセルされた場合は何もしない。 */
+/** 保存結果に応じてユーザーに通知する。取消された場合は何もしない。 */
 export const notifyResult = (
   result: SaveResultObject,
   mediaType: MediaType,
@@ -393,7 +393,7 @@ export const showNotifyAndNotShowAgainButton = (
     timeout: NOTIFY_TIMEOUT,
     actions: [
       {
-        label: "今後このメッセージを表示しない",
+        label: "今后不再显示此消息",
         textColor: "toast-button-display" + suffix,
         handler: () => {
           void actions.SET_CONFIRMED_TIP({
@@ -404,7 +404,7 @@ export const showNotifyAndNotShowAgainButton = (
         },
       },
       {
-        label: "閉じる",
+        label: "关闭",
         color: "toast-button-display" + suffix,
       },
     ],

@@ -16,11 +16,11 @@
       <BaseIconButton
         v-if="characterInfo.metas.styles.length > 1"
         icon="chevron_left"
-        label="前のスタイル"
+        label="上一个风格"
         @click.stop="rollStyleIndex(speakerUuid, -1)"
       />
       <div v-else></div>
-      <BaseTooltip label="サンプルボイスを再生">
+      <BaseTooltip label="播放示例语音">
         <BaseButton
           :icon="
             playing != undefined &&
@@ -36,7 +36,7 @@
       <BaseIconButton
         v-if="characterInfo.metas.styles.length > 1"
         icon="chevron_right"
-        label="次のスタイル"
+        label="下一个风格"
         @click.stop="rollStyleIndex(speakerUuid, 1)"
       />
     </div>

@@ -19,8 +19,8 @@
           <div class="column">
             <QToolbarTitle class="text-display">{{
               hasNewCharacter
-                ? "追加キャラクターの紹介"
-                : "設定 / キャラクター＆スタイルの管理"
+                ? "追加角色介绍"
+                : "设置 / 角色与风格管理"
             }}</QToolbarTitle>
           </div>
 
@@ -29,7 +29,7 @@
           <div class="row items-center no-wrap">
             <QBtn
               unelevated
-              label="完了"
+              label="完成"
               color="toolbar-button"
               textColor="toolbar-button-display"
               class="text-no-wrap"
@@ -46,12 +46,12 @@
             <BaseScrollArea :key="styleType">
               <div class="inner">
                 <div class="header">
-                  <span class="title">キャラクター一覧</span>
+                  <span class="title">角色列表</span>
                   <div class="header-controls">
-                    サンプル音声
+                    示例音频
                     <BaseToggleGroup v-model="styleType" type="single">
-                      <BaseToggleGroupItem label="トーク" value="talk" />
-                      <BaseToggleGroupItem label="ソング" value="singerLike" />
+                      <BaseToggleGroupItem label="对话" value="talk" />
+                      <BaseToggleGroupItem label="歌唱" value="singerLike" />
                     </BaseToggleGroup>
                   </div>
                 </div>
@@ -77,7 +77,7 @@
               </div>
             </BaseScrollArea>
             <div class="character-order-container">
-              <div class="character-order-headline">キャラクター並び替え</div>
+              <div class="character-order-headline">角色排序</div>
               <BaseScrollArea>
                 <Draggable
                   v-model="characterOrder"
@@ -148,7 +148,7 @@ const selectCharacter = (speakerUuid: SpeakerId) => {
     (characterInfo) => characterInfo.metas.speakerUuid == speakerUuid,
   );
   if (characterInfo == undefined)
-    throw new Error(`キャラクターが見つかりません: ${speakerUuid}`);
+    throw new Error(`未找到角色: ${speakerUuid}`);
   styleSelectDialogState.value = { isOpen: true, characterInfo };
 };
 

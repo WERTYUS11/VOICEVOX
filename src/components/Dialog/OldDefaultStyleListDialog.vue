@@ -23,7 +23,7 @@
         <QToolbar>
           <div class="column">
             <QToolbarTitle class="text-display"
-              >設定 / デフォルトスタイル・試聴</QToolbarTitle
+              >设置 / 默认风格・试听</QToolbarTitle
             >
           </div>
 
@@ -87,7 +87,7 @@
                       >全{{
                         characterInfosMap[speaker.metas.speakerUuid].metas
                           .styles.length
-                      }}スタイル</span
+                      }}风格</span
                     >
                   </div>
                 </div>
@@ -134,10 +134,10 @@ const characterInfosMap = computed(() => {
   return map;
 });
 
-// サンプルボイス一覧のキャラクター順番
+// 示例语音一覧のキャラクター順番
 const speakerWithMultipleStyles = ref<CharacterInfo[]>([]);
 
-// 選択中のスタイル
+// 選択中の风格
 const selectedStyleIndexes = ref<Record<SpeakerId, number>>({});
 const selectedStyles = computed(() => {
   const map: { [key: string]: StyleInfo } = {};
@@ -157,8 +157,8 @@ watch([dialogOpened], async ([newValue]) => {
       .map((speakerUuid) => characterInfosMap.value[speakerUuid])
       .filter((characterInfo) => characterInfo != undefined)
       .filter((characterInfo) => characterInfo.metas.styles.length > 1);
-    // FIXME: エンジン未起動状態でデフォルトスタイル選択ダイアログを開くと
-    // 未起動エンジンのキャラのデフォルトスタイルが消えてしまう
+    // FIXME: エンジン未起動状態でデフォルト风格選択ダイアログを開くと
+    // 未起動エンジンのキャラのデフォルト风格が消えてしまう
     selectedStyleIndexes.value = Object.fromEntries(
       [
         ...store.state.userCharacterOrder.map(

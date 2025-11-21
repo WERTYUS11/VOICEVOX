@@ -1,7 +1,7 @@
 <template>
   <div v-show="wordEditing" class="col-8 no-wrap text-no-wrap word-editor">
     <div class="row q-pl-md q-mt-md">
-      <div class="text-h6">単語</div>
+      <div class="text-h6">单词</div>
       <QInput
         ref="surfaceInput"
         v-model="surface"
@@ -22,7 +22,7 @@
       </QInput>
     </div>
     <div class="row q-pl-md q-pt-sm">
-      <div class="text-h6">読み</div>
+      <div class="text-h6">读音</div>
       <QInput
         ref="yomiInput"
         v-model="yomi"
@@ -35,7 +35,7 @@
         @keydown.enter="setYomiWhenEnter"
       >
         <template #error>
-          読みに使える文字はひらがなとカタカナのみです。
+          读音只能使用平假名和片假名。
         </template>
         <ContextMenu
           ref="yomiContextMenu"
@@ -46,9 +46,9 @@
         />
       </QInput>
     </div>
-    <div class="row q-pl-md q-mt-lg text-h6">アクセント調整</div>
+    <div class="row q-pl-md q-mt-lg text-h6">重音调整</div>
     <div class="row q-pl-md desc-row">
-      語尾のアクセントを考慮するため、「が」が自動で挿入されます。
+      为了考虑尾音的重音，会自动插入“が”。
     </div>
     <div class="row q-px-md" style="height: 130px">
       <div class="play-button">
@@ -104,9 +104,9 @@
         </div>
       </div>
     </div>
-    <div class="row q-pl-md q-pt-lg text-h6">単語優先度</div>
+    <div class="row q-pl-md q-pt-lg text-h6">单词优先级</div>
     <div class="row q-pl-md desc-row">
-      単語を登録しても反映されない場合は優先度を高くしてください。
+      如果注册单词后未生效，请提高优先级。
     </div>
     <div
       class="row q-px-md"
@@ -137,7 +137,7 @@
         class="text-no-wrap text-bold q-mr-sm"
         :disable="uiLocked"
         @click="discardOrNotDialog(cancel)"
-        >キャンセル</QBtn
+        >取消</QBtn
       >
       <QBtn
         v-show="!!selectedId"
@@ -146,7 +146,7 @@
         class="text-no-wrap text-bold q-mr-sm"
         :disable="uiLocked || !isWordChanged"
         @click="resetWord(selectedId)"
-        >リセット</QBtn
+        >重置</QBtn
       >
       <QBtn
         outline
@@ -225,8 +225,8 @@ const play = async () => {
     window.backend.logError(e);
     nowGenerating.value = false;
     void store.actions.SHOW_ALERT_DIALOG({
-      title: "生成に失敗しました",
-      message: "エンジンの再起動をお試しください。",
+      title: "生成失败",
+      message: "请尝试重启引擎。",
     });
     return;
   }
@@ -247,7 +247,7 @@ const yomiInput = ref<QInput>();
 const wordPriorityLabels = {
   0: "最低",
   3: "低",
-  5: "標準",
+  5: "标准",
   7: "高",
   10: "最高",
 };
@@ -293,8 +293,8 @@ const saveWord = async () => {
       });
     } catch (e) {
       void store.actions.SHOW_ALERT_DIALOG({
-        title: "単語の更新に失敗しました",
-        message: "エンジンの再起動をお試しください。",
+        title: "单词更新失败",
+        message: "请尝试重启引擎。",
       });
       throw e;
     }
@@ -310,8 +310,8 @@ const saveWord = async () => {
       );
     } catch (e) {
       void store.actions.SHOW_ALERT_DIALOG({
-        title: "単語の登録に失敗しました",
-        message: "エンジンの再起動をお試しください。",
+        title: "单词注册失败",
+        message: "请尝试重启引擎。",
       });
       throw e;
     }
@@ -322,11 +322,11 @@ const saveWord = async () => {
 
 const resetWord = async (id: string) => {
   const result = await store.actions.SHOW_WARNING_DIALOG({
-    title: "単語の変更をリセットしますか？",
-    message: "単語の変更は破棄されてリセットされます。",
-    actionName: "リセットする",
+    title: "要重置单词修改吗？",
+    message: "单词的修改将被丢弃并重置。",
+    actionName: "重置",
     isWarningColorButton: true,
-    cancel: "リセットしない",
+    cancel: "不重置",
   });
   if (result === "OK") {
     selectedId.value = id;

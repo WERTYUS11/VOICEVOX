@@ -12,7 +12,7 @@
         <QToolbar>
           <div class="column">
             <QToolbarTitle class="text-display"
-              >設定 / デフォルトスタイル・試聴 /
+              >设置 / 默认风格・试听 /
               {{ characterInfo.metas.speakerName }}</QToolbarTitle
             >
           </div>
@@ -22,7 +22,7 @@
           <div class="row items-center no-wrap">
             <QBtn
               unelevated
-              :label="isModified ? '保存' : '戻る'"
+              :label="isModified ? '保存' : '返回'"
               color="toolbar-button"
               textColor="toolbar-button-display"
               class="text-no-wrap"

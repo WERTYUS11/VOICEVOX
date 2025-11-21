@@ -2,11 +2,11 @@
   <QDialog ref="dialogRef" v-model="modelValue" persistent>
     <QLayout container view="hhh lpr fFf" class="q-dialog-plugin bg-background">
       <QPageContainer class="q-px-md">
-        <h5 class="text-h5 q-my-md">音声書き出し結果</h5>
+        <h5 class="text-h5 q-my-md">音频导出结果</h5>
         <QList separator bordered class="rounded-borders">
           <QExpansionItem
             v-if="props.writeErrorArray.length > 0"
-            :label="`${props.writeErrorArray.length}件の書き込みエラーによる失敗`"
+            :label="`${props.writeErrorArray.length}个因写入错误导致的失败`"
             bordered
             headerClass="text-warning text-bold"
             icon="warning"
@@ -14,13 +14,13 @@
             <QItem v-for="(value, index) in props.writeErrorArray" :key="index">
               <QItemSection>
                 <QItemLabel>{{ value.path }}</QItemLabel>
-                <QItemLabel>詳細：{{ value.message }}</QItemLabel>
+                <QItemLabel>详情：{{ value.message }}</QItemLabel>
               </QItemSection>
             </QItem>
           </QExpansionItem>
           <QExpansionItem
             v-if="props.engineErrorArray.length > 0"
-            :label="`${props.engineErrorArray.length}件のエンジンエラーによる失敗`"
+            :label="`${props.engineErrorArray.length}个因引擎错误导致的失败`"
             bordered
             headerClass="text-warning text-bold"
             icon="warning"
@@ -32,13 +32,13 @@
               <QItemSection>
                 <QItemLabel>{{ value.path }}</QItemLabel>
                 <QItemLabel v-if="value.message"
-                  >詳細：{{ value.message }}</QItemLabel
+                  >详情：{{ value.message }}</QItemLabel
                 >
               </QItemSection>
             </QItem>
           </QExpansionItem>
           <QExpansionItem
-            :label="`${props.successArray.length}件の成功`"
+            :label="`${props.successArray.length}个成功`"
             bordered
             icon="check"
             headerClass="text-bold"
@@ -59,7 +59,7 @@
           <QBtn
             unelevated
             align="right"
-            label="閉じる"
+            label="关闭"
             color="toolbar-button"
             textColor="toolbar-button-display"
             class="text-no-wrap text-bold q-mr-sm"

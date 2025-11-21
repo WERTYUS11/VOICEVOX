@@ -11,7 +11,7 @@
       <QHeader class="q-py-sm">
         <QToolbar>
           <QToolbarTitle class="text-display"
-            >設定 / キャラクター＆スタイルの管理 /
+            >设置 / 角色与风格管理 /
             {{ characterInfo.metas.speakerName }}</QToolbarTitle
           >
 
@@ -19,7 +19,7 @@
 
           <QBtn
             unelevated
-            label="戻る"
+            label="返回"
             color="toolbar-button"
             textColor="toolbar-button-display"
             class="text-no-wrap"
@@ -39,9 +39,9 @@
                     {{ characterInfo.metas.speakerName }}
                   </h1>
                   <section class="section">
-                    <h2 class="headline">デフォルトスタイル</h2>
+                    <h2 class="headline">默认风格</h2>
                     <div>
-                      デフォルトスタイル：{{
+                      默认风格：{{
                         characterInfo.metas.styles[selectedStyleIndex].styleName
                       }}
                     </div>
@@ -82,7 +82,7 @@
                                 ? 'stop'
                                 : 'play_arrow'
                             "
-                            :label="`サンプルボイス${voiceSampleIndex + 1}`"
+                            :label="`示例语音${voiceSampleIndex + 1}`"
                             @click.stop="
                               playing != undefined &&
                               characterInfo.metas.speakerUuid ===
@@ -102,7 +102,7 @@
                     </div>
                   </section>
                   <section class="section">
-                    <h2 class="headline">利用規約</h2>
+                    <h2 class="headline">使用条款</h2>
                     <BaseDocumentView class="character-policy">
                       <!-- eslint-disable-next-line vue/no-v-html -->
                       <div v-html="policyHtml"></div>

@@ -10,7 +10,7 @@
     <QLayout container view="hHh Lpr lff">
       <QHeader class="q-py-sm">
         <QToolbar>
-          <QToolbarTitle class="text-display">プリセットの管理</QToolbarTitle>
+          <QToolbarTitle class="text-display">预设管理</QToolbarTitle>
 
           <QSpace />
 
@@ -28,7 +28,7 @@
         <QPage class="main">
           <BaseNavigationView>
             <template #sidebar>
-              <div class="list-title">プリセット一覧</div>
+              <div class="list-title">预设列表</div>
               <Draggable
                 class="list-draggable"
                 :modelValue="previewPresetList"
@@ -47,7 +47,7 @@
                       <div class="listitem-icon">
                         <BaseIconButton
                           icon="delete_outline"
-                          label="削除"
+                          label="删除"
                           @click="deletePreset(item.key)"
                         />
                       </div>
@@ -64,7 +64,7 @@
                       {{ selected.preset.name }}
                     </h2>
                     <div class="preset-field">
-                      <label for="preset-name">プリセット名</label>
+                      <label for="preset-name">预设名称</label>
                       <BaseTextField
                         id="preset-name"
                         :modelValue="selected.preset.name"
@@ -87,11 +87,11 @@
                         :label="parameterLabels[sliderKey as ParameterType]"
                       />
                     </template>
-                    <!-- NOTE: モーフィング無効時にキャラ選択解除するといきなり非表示になってしまうが、稀なケースなため無対策 -->
+                    <!-- NOTE: 变声無効時にキャラ選択解除するといきなり非表示になってしまうが、稀なケースなため無対策 -->
                     <template
                       v-if="shouldShowMorphing || selected.preset.morphingInfo"
                     >
-                      <h3 class="parameter-headline">モーフィング</h3>
+                      <h3 class="parameter-headline">变声</h3>
                       <div class="mophing-style">
                         <CharacterButton
                           :selectedVoice="
@@ -117,7 +117,7 @@
                           {{
                             morphingTargetCharacterInfo
                               ? morphingTargetCharacterInfo.metas.speakerName
-                              : "未設定"
+                              : "未设置"
                           }}
                         </span>
                         <span
@@ -133,7 +133,7 @@
                         v-if="selected.preset.morphingInfo"
                         v-model="selected.preset.morphingInfo.rate"
                         sliderKey="morphingRate"
-                        label="割合"
+                        label="比例"
                         :min="SLIDER_PARAMETERS.morphingRate.min()"
                         :max="SLIDER_PARAMETERS.morphingRate.max()"
                         :step="SLIDER_PARAMETERS.morphingRate.step()"
@@ -212,13 +212,13 @@ const previewPresetList = computed(() =>
 
 type ParameterType = Exclude<PresetSliderKey, "morphingRate">;
 const parameterLabels: Record<ParameterType, string> = {
-  speedScale: "話速",
+  speedScale: "语速",
   pitchScale: "音高",
-  intonationScale: "抑揚",
+  intonationScale: "语调",
   volumeScale: "音量",
-  pauseLengthScale: "間の長さ",
-  prePhonemeLength: "開始無音",
-  postPhonemeLength: "終了無音",
+  pauseLengthScale: "间隔长度",
+  prePhonemeLength: "开始静音",
+  postPhonemeLength: "结束静音",
 };
 
 const selected = ref<undefined | { key: PresetKey; preset: Preset }>();
@@ -267,7 +267,7 @@ const reorderPreset = (featurePresetList: (Preset & { key: PresetKey })[]) => {
   previewPresetKeys.value = newPresetKeys;
   isPreview.value = true;
 
-  // デフォルトプリセットは表示するlistから除外しているので、末尾に追加しておかないと失われる
+  // デフォルト预设は表示するlistから除外しているので、末尾に追加しておかないと失われる
   const defaultPresetKeys = presetKeys.value.filter(isDefaultPresetKey);
 
   void store.actions
@@ -279,9 +279,9 @@ const reorderPreset = (featurePresetList: (Preset & { key: PresetKey })[]) => {
 
 const deletePreset = async (key: PresetKey) => {
   const result = await store.actions.SHOW_WARNING_DIALOG({
-    title: "プリセットを削除しますか？",
-    message: `プリセット "${presetItems.value[key].name}" を削除します。`,
-    actionName: "削除する",
+    title: "要删除预设吗？",
+    message: `预设 "${presetItems.value[key].name}" 将被删除。`,
+    actionName: "删除する",
     isWarningColorButton: true,
   });
   if (result === "OK") {

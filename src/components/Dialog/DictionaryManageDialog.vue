@@ -11,7 +11,7 @@
         <QHeader class="q-pa-sm">
           <QToolbar>
             <QToolbarTitle class="text-display"
-              >読み方＆アクセント辞書</QToolbarTitle
+              >读法与重音字典</QToolbarTitle
             >
             <QSpace />
             <!-- close button -->
@@ -31,10 +31,10 @@
               <QSpinner color="primary" size="2.5rem" />
               <div class="q-mt-xs">
                 <template v-if="loadingDictState === 'loading'"
-                  >読み込み中・・・</template
+                  >读取中…</template
                 >
                 <template v-if="loadingDictState === 'synchronizing'"
-                  >同期中・・・</template
+                  >同步中…</template
                 >
               </div>
             </div>
@@ -47,14 +47,14 @@
             />
             <div class="word-list-header text-no-wrap">
               <div class="row word-list-title">
-                <span class="text-h5 col-8">単語一覧</span>
+                <span class="text-h5 col-8">单词列表</span>
                 <QBtn
                   outline
                   textColor="display"
                   class="text-no-wrap text-bold col"
                   :disable="uiLocked"
                   @click="newWord"
-                  >追加</QBtn
+                  >添加</QBtn
                 >
               </div>
             </div>
@@ -95,7 +95,7 @@
                         editWord();
                       "
                     >
-                      <QTooltip :delay="500">編集</QTooltip>
+                      <QTooltip :delay="500">编辑</QTooltip>
                     </QBtn>
                     <QBtn
                       size="12px"
@@ -108,7 +108,7 @@
                         deleteWord();
                       "
                     >
-                      <QTooltip :delay="500">削除</QTooltip>
+                      <QTooltip :delay="500">删除</QTooltip>
                     </QBtn>
                   </div>
                 </QItemSection>
@@ -199,8 +199,8 @@ const loadingDictProcess = async () => {
     );
   } catch {
     const result = await store.actions.SHOW_ALERT_DIALOG({
-      title: "辞書の取得に失敗しました",
-      message: "エンジンの再起動をお試しください。",
+      title: "字典获取失败",
+      message: "请尝试重启引擎。",
     });
     if (result === "OK") {
       dialogOpened.value = false;
@@ -211,8 +211,8 @@ const loadingDictProcess = async () => {
     await createUILockAction(store.actions.SYNC_ALL_USER_DICT());
   } catch {
     await store.actions.SHOW_ALERT_DIALOG({
-      title: "辞書の同期に失敗しました",
-      message: "エンジンの再起動をお試しください。",
+      title: "字典同步失败",
+      message: "请尝试重启引擎。",
     });
   }
   loadingDictState.value = null;
@@ -288,7 +288,7 @@ const setYomi = async (text: string, changeWord?: boolean) => {
 };
 
 // accent phraseにあるaccentと実際に登録するアクセントには差が生まれる
-// アクセントが自動追加される「ガ」に指定されている場合、
+// アクセントが自動添加される「ガ」に指定されている場合、
 // 実際に登録するaccentの値は0となるので、そうなるように処理する
 const computeRegisteredAccent = () => {
   if (!accentPhrase.value) throw new Error();
@@ -297,7 +297,7 @@ const computeRegisteredAccent = () => {
   return accent;
 };
 // computeの逆
-// 辞書から得たaccentが0の場合に、自動で追加される「ガ」の位置にアクセントを表示させるように処理する
+// 辞書から得たaccentが0の場合に、自動で添加される「ガ」の位置にアクセントを表示させるように処理する
 const computeDisplayAccent = () => {
   if (!accentPhrase.value || !selectedId.value) throw new Error();
   let accent = userDict.value[selectedId.value].accentType;
@@ -328,11 +328,11 @@ const isWordChanged = computed(() => {
 
 const deleteWord = async () => {
   const result = await store.actions.SHOW_WARNING_DIALOG({
-    title: "単語を削除しますか？",
-    message: "削除された単語は元に戻せません。",
-    actionName: "削除する",
+    title: "要删除该单词吗？",
+    message: "已删除的单词无法恢复。",
+    actionName: "删除",
     isWarningColorButton: true,
-    cancel: "削除しない",
+    cancel: "不删除",
   });
   if (result === "OK") {
     try {
@@ -343,8 +343,8 @@ const deleteWord = async () => {
       );
     } catch {
       void store.actions.SHOW_ALERT_DIALOG({
-        title: "単語の削除に失敗しました",
-        message: "エンジンの再起動をお試しください。",
+        title: "单词删除失败",
+        message: "请尝试重启引擎。",
       });
       return;
     }
@@ -355,10 +355,10 @@ const deleteWord = async () => {
 const discardOrNotDialog = async (okCallback: () => void) => {
   if (isWordChanged.value) {
     const result = await store.actions.SHOW_WARNING_DIALOG({
-      title: "単語の追加・変更を破棄しますか？",
-      message: "変更を破棄すると、単語の追加・変更はリセットされます。",
-      actionName: "破棄する",
-      cancel: "破棄しない",
+      title: "要丢弃单词的新增或更改吗？",
+      message: "若丢弃更改，单词的新增与修改将被重置。",
+      actionName: "丢弃",
+      cancel: "不丢弃",
       isWarningColorButton: true,
     });
     if (result === "OK") {
@@ -405,7 +405,7 @@ const toInitialState = () => {
 const toWordSelectedState = () => {
   wordEditing.value = false;
 };
-// 単語が編集されている状態
+// 単語が编辑されている状態
 const toWordEditingState = () => {
   wordEditing.value = true;
   surfaceInput.value?.focus();
