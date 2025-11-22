@@ -218,7 +218,7 @@
                       :class="value ? '' : 'text-warning'"
                     >
                       {{ getFeatureName(feature) }}：{{
-                        value ? "支持" : "非支持"
+                        value ? "支持" : "不支持"
                       }}
                     </li>
                   </ul>
@@ -454,7 +454,7 @@ const deleteEngine = async () => {
 
   const result = await store.actions.SHOW_WARNING_DIALOG({
     title: "要删除引擎吗？",
-    message: "将删除当前选择的引擎。",
+    message: "選択中のエンジンを删除します。",
     actionName: "删除する",
     isWarningColorButton: true,
   });

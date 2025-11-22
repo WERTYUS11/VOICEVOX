@@ -31,7 +31,7 @@
               flat
               icon="close"
               color="display"
-              aria-label="帮助を閉じる"
+              aria-label="关闭帮助"
               @click="dialogOpened = false"
             />
           </QToolbar>

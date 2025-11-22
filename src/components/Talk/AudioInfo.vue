@@ -19,7 +19,7 @@
                   ></QAvatar>
                 </QItemSection>
                 <QItemSection>
-                  <QItemLabel>预设新規注册</QItemLabel>
+                  <QItemLabel>注册新预设</QItemLabel>
                 </QItemSection>
               </QItem>
               <QItem v-close-popup clickable @click="openPresetManageDialog()">
@@ -61,7 +61,7 @@
           <template #no-option>
             <QItem>
               <QItemSection class="text-grey">
-                预设はありません
+                没有预设
               </QItemSection>
             </QItem>
           </template>
@@ -120,7 +120,7 @@
       <QDialog v-model="showsPresetRewriteDialog" @beforeHide="closeAllDialog">
         <QCard>
           <QCardSection>
-            <div class="text-h6">预设の重新注册</div>
+            <div class="text-h6">重新注册预设</div>
           </QCardSection>
           <QCardSection>
             <QList>
@@ -129,14 +129,14 @@
                   <QAvatar icon="arrow_forward" textColor="blue" />
                 </QItemSection>
                 <QItemSection>
-                  预设を重新注册し、この预设が設定されたテキスト欄全てに再適用する
+                  重新注册预设，并将其重新应用于所有设置了该预设的文本框
                 </QItemSection>
               </QItem>
               <QItem clickable class="no-margin" @click="updatePreset(false)">
                 <QItemSection avatar>
                   <QAvatar icon="arrow_forward" textColor="blue" />
                 </QItemSection>
-                <QItemSection> 预设の重新注册のみ行う </QItemSection>
+                <QItemSection> 仅重新注册预设 </QItemSection>
               </QItem>
               <QItem
                 v-close-popup
@@ -741,7 +741,7 @@ const selectablePresetList = computed<PresetSelectModelType[]>(() => {
   if (isRegisteredPreset.value) {
     topPresetList.push({
       key: undefined,
-      label: "预设解除",
+      label: "解除预设",
     });
   }
 
@@ -763,7 +763,7 @@ const presetSelectModel = computed<PresetSelectModelType>({
   get: () => {
     if (!isRegisteredPreset.value)
       return {
-        label: "预设選択",
+        label: "选择预设",
         key: undefined,
       };
     if (audioPresetKey.value == undefined)

@@ -30,7 +30,7 @@ export const Opened: Story = {
 };
 
 export const Accept: Story = {
-  name: "同意ボタンを押す",
+  name: "点击同意按钮",
   args: { ...Opened.args },
   play: async ({ args }) => {
     const canvas = within(document.body); // ダイアログなので例外的にdocument.bodyを使う
@@ -44,7 +44,7 @@ export const Accept: Story = {
 };
 
 export const Reject: Story = {
-  name: "拒绝ボタンを押す",
+  name: "点击拒绝按钮",
   args: {
     ...Opened.args,
   },

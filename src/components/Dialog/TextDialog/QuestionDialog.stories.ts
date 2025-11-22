@@ -31,7 +31,7 @@ export const Opened: Story = {
 };
 
 export const OpenedMultiline: Story = {
-  name: "开启中：多行",
+  name: "打开：多行",
   args: {
     ...Opened.args,
     message: "留言\n多行",
@@ -39,7 +39,7 @@ export const OpenedMultiline: Story = {
 };
 
 export const OpenedButtonColor: Story = {
-  name: "开启中：ボタン色を変える",
+  name: "打开：改变按钮颜色",
   args: {
     ...Opened.args,
     buttons: [

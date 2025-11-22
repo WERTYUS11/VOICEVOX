@@ -250,8 +250,8 @@ const play = async () => {
   } catch (e) {
     const msg = handlePossiblyNotMorphableError(e);
     void store.actions.SHOW_ALERT_DIALOG({
-      title: "再生に失敗しました",
-      message: msg ?? "エンジンの再起動をお試しください。",
+      title: "播放失败",
+      message: msg ?? "请尝试重启引擎。",
     });
   }
 };

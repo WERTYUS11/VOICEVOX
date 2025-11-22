@@ -104,7 +104,7 @@ const migrations: [string, (store: Record<string, unknown>) => unknown][] = [
   [
     ">=0.15",
     (config) => {
-      // 只选择一个导出声音 → 导出所选声音
+      // 只选择一个导出声音 → 选择并导出声音
       const hotkeySettings =
         config.hotkeySettings as ConfigType["hotkeySettings"];
       const newHotkeySettings: ConfigType["hotkeySettings"] =

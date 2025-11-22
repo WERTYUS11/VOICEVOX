@@ -36,7 +36,7 @@
       size="8.5px"
       color="green"
       class="title-bar-buttons"
-      aria-label="最小化"
+      aria-label="最大化"
       @click="toggleMaximizeWindow()"
     ></QBtn>
   </QBadge>
@@ -62,7 +62,7 @@
       flat
       :icon="mdiWindowRestore"
       class="title-bar-buttons"
-      aria-label="最小化"
+      aria-label="最大化"
       @click="toggleMaximizeWindow()"
     >
     </QBtn>
@@ -73,7 +73,7 @@
       flat
       icon="crop_square"
       class="title-bar-buttons"
-      aria-label="最小化"
+      aria-label="最大化"
       @click="toggleMaximizeWindow()"
     ></QBtn>
 

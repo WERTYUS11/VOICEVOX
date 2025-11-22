@@ -2,7 +2,7 @@
   <!-- TODO: 複数エンジン対応 -->
   <!-- TODO: allEngineStateが "ERROR" のときエラーになったエンジンを探してトーストで案内 -->
   <div v-if="allEngineState === 'FAILED_STARTING'" class="waiting-engine">
-    <div></div>
+    <div>引擎启动失败。请尝试重新启动引擎。</div>
   </div>
   <div
     v-else-if="
@@ -15,21 +15,21 @@
       <div class="q-mt-xs">
         {{
           allEngineState === "STARTING"
-            ? ""
-            : ""
+            ? "引擎启动中……"
+            : "数据准备中……"
         }}
       </div>
 
       <template v-if="isEngineWaitingLong">
         <QSeparator spaced />
-        <br />
+        引擎启动耗时较长。<br />
         <QBtn
           v-if="isMultipleEngine"
           outline
           :disable="reloadingLocked"
           @click="reloadAppWithMultiEngineOffMode"
         >
-          </QBtn
+          关闭多引擎后重新加载</QBtn
         >
         <QBtn v-else outline @click="openQa">Q&Aを見る</QBtn>
       </template>

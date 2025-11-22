@@ -35,7 +35,7 @@
           class="warning-item row no-wrap items-center"
         >
           <span class="text-warning vertical-middle"
-            ></span
+            >未选择有效的样式</span
           >
         </QItem>
         <QItem
@@ -43,7 +43,7 @@
           class="warning-item row no-wrap items-center"
         >
           <span class="text-warning vertical-middle"
-            ></span
+            >没有可选择的样式</span
           >
         </QItem>
         <QItem v-if="emptiable" class="to-unselect-item q-pa-none">
@@ -55,7 +55,7 @@
             :class="selectedCharacter == undefined && 'selected-background'"
             @click="$emit('update:selectedVoice', undefined)"
           >
-            <span></span>
+            <span>取消选择</span>
           </QBtn>
         </QItem>
         <QItem
@@ -248,7 +248,7 @@ const selectedCharacter = computed(() => {
 
 const selectedVoiceInfoText = computed(() => {
   if (!selectedCharacter.value) {
-    return "";
+    return "未选择角色";
   }
 
   const speakerName = selectedCharacter.value.metas.speakerName;

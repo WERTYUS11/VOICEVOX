@@ -10,7 +10,7 @@
     @accept="handler(true)"
   >
     <p>
-      多くの人が安心して VOICEVOX を使えるよう、使用条款への同意をお願いします。
+      为了让更多人放心使用 VOICEVOX，请同意使用条款。
     </p>
   </AcceptDialog>
 </template>

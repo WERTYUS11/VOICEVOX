@@ -123,12 +123,12 @@
                       label: '翻页',
                       value: 'PAGE',
                       description:
-                        '現在の再生位置が表示範囲外にある場合にスクロールします。',
+                        '当当前播放位置超出显示范围时滚动。',
                     },
                     {
                       label: '关闭',
                       value: 'OFF',
-                      description: '自動でスクロールしません。',
+                      description: '禁止自动滚动',
                     },
                   ]"
                 />
@@ -316,11 +316,11 @@
               </div>
               <!-- Theme Card -->
               <div class="setting-card">
-                <h5 class="headline">外観</h5>
+                <h5 class="headline">主题</h5>
                 <ButtonToggleCell
                   v-model="currentThemeNameComputed"
                   title="主题"
-                  description="エディタの色を選べます。"
+                  description="可选择编辑器的颜色"
                   :options="availableThemeNameComputed"
                 />
                 <ButtonToggleCell
@@ -337,7 +337,7 @@
                 />
                 <ToggleCell
                   title="显示行号"
-                  description="ONの場合、テキスト欄の左側に行番号が表示されます。"
+                  description="打开时，行号将显示在文本字段的左侧。"
                   :modelValue="showTextLineNumber"
                   @update:modelValue="changeShowTextLineNumber"
                 />
@@ -393,7 +393,7 @@
                 >
                   <ToggleCell
                     v-model="enableKatakanaEnglish.enabled.value"
-                    title="未知の英単語をカタカナ読みに変換"
+                    title="将未知英文单词转换为片假名读音"
                     description="开启时，如果引擎支持，将未知英文单词转换为片假名读音。"
                   />
                 </BaseTooltip>
@@ -623,7 +623,7 @@ const undoableTrackOperations = computed({
   },
 });
 
-// 外観
+// 连续
 const currentThemeNameComputed = computed({
   get: () => store.state.currentTheme,
   set: (currentTheme: string) => {
