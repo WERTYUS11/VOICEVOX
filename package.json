@@ -1,7 +1,7 @@
 {
   "name": "voicevox",
   "version": "999.999.999",
-  "author": "Hiroshiba Kazuyuki",
+  "author": "Hiroshiba Kazuyuki & WERTYUS11",
   "private": true,
   "main": "./dist/main.js",
   "type": "module",
