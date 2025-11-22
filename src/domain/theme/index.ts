@@ -2,7 +2,7 @@ import { ThemeConf } from "@/type/preload";
 
 const light = {
   name: "Default",
-  displayName: "デフォルト",
+  displayName: "默认",
   order: 1,
   isDark: false,
   colors: {
@@ -21,7 +21,7 @@ const light = {
 
 const dark = {
   name: "Dark",
-  displayName: "ダーク",
+  displayName: "黑暗",
   order: 2,
   isDark: true,
   colors: {

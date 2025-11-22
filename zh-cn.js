@@ -1032,3 +1032,8 @@ replaceInFile("src/components/Dialog/ToolBarCustomDialog.vue", {
 "表示する": "显示",
 "表示しない": "不显示",
 });
+
+replaceInFile("src/domain/theme/index.ts", {
+"デフォルト": "默认",
+"ダーク": "黑暗",
+});
