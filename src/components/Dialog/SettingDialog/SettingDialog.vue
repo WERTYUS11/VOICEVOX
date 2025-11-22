@@ -123,7 +123,7 @@
                       label: '翻页',
                       value: 'PAGE',
                       description:
-                        '当当前播放位置超出显示范围时滚动。',
+                        '現在の再生位置が表示範囲外にある場合にスクロールします。',
                     },
                     {
                       label: '关闭',
@@ -393,7 +393,7 @@
                 >
                   <ToggleCell
                     v-model="enableKatakanaEnglish.enabled.value"
-                    title="将未知英文单词转换为片假名读音"
+                    title="未知の英単語をカタカナ読みに変換"
                     description="开启时，如果引擎支持，将未知英文单词转换为片假名读音。"
                   />
                 </BaseTooltip>
@@ -774,10 +774,10 @@ const acceptRetrieveTelemetryComputed = computed({
     }
 
     void store.actions.SHOW_ALERT_DIALOG({
-      title: "ソフトウェア利用状況の数据收集の無効化",
+      title: "禁用软件使用情况数据收集",
       message:
         "要完全禁用软件使用情况数据收集，需要重新启动 VOICEVOX",
-      ok: "确定",
+      ok: "OK",
     });
   },
 });
