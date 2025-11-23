@@ -56,9 +56,9 @@ pnpm i
 请注意，路径分隔符是`/`而不是`\`。
 
 如果使用 macOS 版本的`VOICEVOX.app`，请指定为`/path/to/VOICEVOX.app/Resources/MacOS/vv-engine/run`。
+如果是 AppImage 版本，可以通过`$ /path/to/VOICEVOX.AppImage --appimage-mount`挂载文件系统。
 
 对于 Linux，请指定从[Releases](https://github.com/VOICEVOX/voicevox/releases/)获取的 tar.gz 版本中包含的`vv-engine/run`命令。
-如果是 AppImage 版本，可以通过`$ /path/to/VOICEVOX.AppImage --appimage-mount`挂载文件系统。
 
 如果除了运行 VOICEVOX 编辑器之外，您还单独启动了引擎 API 服务器，则无需指定`executionFilePath`，
 但请将`executionEnabled`设置为`false`。
@@ -99,7 +99,13 @@ main 分支的 Storybook 可在[VOICEVOX/preview-pages](https://github.com/VOICE
 ```bash
 node zh-cn.js
 ```
-## 在处理任何关于此文件的issue时一定要告！知！在！issues！
+### 在处理任何关于此文件的issue时一定要注意，若翻译的句子中包含了翻译的词语，比如"infoはアイコンなし"和"info",那么info的翻译一定要在"infoはアイコンなし"之下
+```
+...
+"infoはアイコンなし"
+"info"
+...
+```
 
 ### 运行浏览器版（开发中）
 
