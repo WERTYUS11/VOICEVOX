@@ -4,24 +4,24 @@ import { MenuItemData } from "@/components/Menu/type";
 
 const menuItemData1: MenuItemData = {
   type: "button",
-  label: "音声書き出し",
+  label: "语音导出",
   onClick: () => {},
   disableWhenUiLocked: true,
 };
 const menuItemData2: MenuItemData = {
   type: "button",
-  label: "選択音声を書き出し",
+  label: "选择导出声音",
   onClick: () => {},
   disableWhenUiLocked: true,
 };
 const menuItemData3: MenuItemData = {
   type: "button",
-  label: "プロジェクトをインポート",
+  label: "导入项目",
   onClick: () => {},
   disableWhenUiLocked: true,
 };
 describe("concatMenuBarData", () => {
-  test("MenuItemDataを割り当てる", () => {
+  test("指定MenuItemData", () => {
     expect(
       concatMenuBarData([
         {
@@ -35,7 +35,7 @@ describe("concatMenuBarData", () => {
     });
   });
 
-  test("Separatorを入れる", () => {
+  test("输入分隔符", () => {
     expect(
       concatMenuBarData([
         {
@@ -50,7 +50,7 @@ describe("concatMenuBarData", () => {
     });
   });
 
-  test("複数場所にまたがったMenuItemDataを結合する", () => {
+  test("合并跨多个位置的MenuItemData", () => {
     expect(
       concatMenuBarData([
         {

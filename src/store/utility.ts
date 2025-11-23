@@ -446,15 +446,15 @@ export async function generateTempUniqueId(serializable: unknown) {
 
 export const getToolbarButtonName = (tag: ToolbarButtonTagType): string => {
   const tag2NameObj: Record<ToolbarButtonTagType, string> = {
-    PLAY_CONTINUOUSLY: "連続再生",
+    PLAY_CONTINUOUSLY: "连续播放",
     STOP: "停止",
-    EXPORT_AUDIO_SELECTED: "選択音声を書き出し",
-    EXPORT_AUDIO_ALL: "全部書き出し",
-    EXPORT_AUDIO_CONNECT_ALL: "音声を繋げて書き出し",
-    SAVE_PROJECT: "プロジェクト保存",
-    UNDO: "元に戻す",
-    REDO: "やり直す",
-    IMPORT_TEXT: "テキスト読み込み",
+    EXPORT_AUDIO_SELECTED: "选择导出声音",
+    EXPORT_AUDIO_ALL: "全部导出",
+    EXPORT_AUDIO_CONNECT_ALL: "连接声音并写出",
+    SAVE_PROJECT: "项目保存",
+    UNDO: "撤消",
+    REDO: "重做",
+    IMPORT_TEXT: "文本加载",
     EMPTY: "空白",
   };
   return tag2NameObj[tag];

@@ -34,107 +34,107 @@ exports[`0.13.0からマイグレーションできる 1`] = `
   },
   "hotkeySettings": [
     {
-      "action": "音声書き出し",
+      "action": "语音导出",
       "combination": "Ctrl E",
     },
     {
-      "action": "選択音声を書き出し",
+      "action": "选择并导出声音",
       "combination": "E",
     },
     {
-      "action": "音声を繋げて書き出し",
+      "action": "剪辑并导出声音",
       "combination": "",
     },
     {
-      "action": "再生/停止",
+      "action": "播放/停止",
       "combination": "Space",
     },
     {
-      "action": "連続再生/停止",
+      "action": "连续播放/停止",
       "combination": "Shift Space",
     },
     {
-      "action": "ｱｸｾﾝﾄ欄を表示",
+      "action": "显示重音栏",
       "combination": "1",
     },
     {
-      "action": "ｲﾝﾄﾈｰｼｮﾝ欄を表示",
+      "action": "显示语调字段",
       "combination": "2",
     },
     {
-      "action": "長さ欄を表示",
+      "action": "显示长度栏",
       "combination": "3",
     },
     {
-      "action": "テキスト欄を追加",
+      "action": "添加文本栏",
       "combination": "Shift Enter",
     },
     {
-      "action": "テキスト欄を複製",
+      "action": "复制文本字段",
       "combination": "Ctrl D",
     },
     {
-      "action": "テキスト欄を削除",
+      "action": "删除文本字段",
       "combination": "Shift Delete",
     },
     {
-      "action": "テキスト欄からフォーカスを外す",
+      "action": "从文本字段移出焦点",
       "combination": "Escape",
     },
     {
-      "action": "テキスト欄にフォーカスを戻す",
+      "action": "重新聚焦文本字段",
       "combination": "Enter",
     },
     {
-      "action": "元に戻す",
+      "action": "恢复",
       "combination": "Ctrl Z",
     },
     {
-      "action": "やり直す",
+      "action": "重新开始",
       "combination": "Ctrl Y",
     },
     {
-      "action": "拡大",
+      "action": "放大",
       "combination": "",
     },
     {
-      "action": "縮小",
+      "action": "缩小",
       "combination": "",
     },
     {
-      "action": "拡大率のリセット",
+      "action": "重置放大率",
       "combination": "",
     },
     {
-      "action": "新規プロジェクト",
+      "action": "新项目",
       "combination": "Ctrl N",
     },
     {
-      "action": "全画面表示を切り替え",
+      "action": "全屏显示",
       "combination": "F11",
     },
     {
-      "action": "プロジェクトを上書き保存",
+      "action": "保存并覆盖项目",
       "combination": "Ctrl S",
     },
     {
-      "action": "プロジェクトを名前を付けて保存",
+      "action": "命名并保存项目",
       "combination": "Ctrl Shift S",
     },
     {
-      "action": "プロジェクトの複製を保存",
+      "action": "保存项目副本",
       "combination": "Ctrl Alt S",
     },
     {
-      "action": "プロジェクトを読み込む",
+      "action": "加载项目",
       "combination": "Ctrl O",
     },
     {
-      "action": "テキストを読み込む",
+      "action": "加载文本",
       "combination": "",
     },
     {
-      "action": "全体のイントネーションをリセット",
+      "action": "重置语调",
       "combination": "Ctrl G",
     },
     {
@@ -142,63 +142,63 @@ exports[`0.13.0からマイグレーションできる 1`] = `
       "combination": "R",
     },
     {
-      "action": "コピー",
+      "action": "复制",
       "combination": "Ctrl C",
     },
     {
-      "action": "切り取り",
+      "action": "剪切",
       "combination": "Ctrl X",
     },
     {
-      "action": "貼り付け",
+      "action": "粘贴",
       "combination": "Ctrl V",
     },
     {
-      "action": "すべて選択",
+      "action": "全选",
       "combination": "Ctrl A",
     },
     {
-      "action": "選択解除",
+      "action": "取消选择",
       "combination": "",
     },
     {
-      "action": "1番目のキャラクターを選択",
+      "action": "选择第 1 个角色",
       "combination": "Ctrl 1",
     },
     {
-      "action": "2番目のキャラクターを選択",
+      "action": "选择第 2 个角色",
       "combination": "Ctrl 2",
     },
     {
-      "action": "3番目のキャラクターを選択",
+      "action": "选择第 3 个角色",
       "combination": "Ctrl 3",
     },
     {
-      "action": "4番目のキャラクターを選択",
+      "action": "选择第 4 个角色",
       "combination": "Ctrl 4",
     },
     {
-      "action": "5番目のキャラクターを選択",
+      "action": "选择第 5 个角色",
       "combination": "Ctrl 5",
     },
     {
-      "action": "6番目のキャラクターを選択",
+      "action": "选择第 6 个角色",
       "combination": "Ctrl 6",
     },
     {
-      "action": "7番目のキャラクターを選択",
+      "action": "选择第 7 个角色",
       "combination": "Ctrl 7",
     },
     {
-      "action": "8番目のキャラクターを選択",
+      "action": "选择第 8 个角色",
       "combination": "Ctrl 8",
     },
     {
-      "action": "9番目のキャラクターを選択",
+      "action": "选择第 9 个角色",
       "combination": "Ctrl 9",
     },
     {
-      "action": "10番目のキャラクターを選択",
+      "action": "选择第 10 个角色",
       "combination": "Ctrl 0",
     },
   ],

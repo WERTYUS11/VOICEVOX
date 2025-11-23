@@ -24,7 +24,7 @@ export const useElectronMenuBarData = (
       singleEngineSubMenuData = [
         {
           type: "button",
-          label: "再起動",
+          label: "重新启动",
           onClick: () => {
             void store.actions.RESTART_ENGINES({
               engineIds: [engineIds.value[0]],
@@ -45,7 +45,7 @@ export const useElectronMenuBarData = (
           subMenu: removeNullableAndBoolean([
             !engineInfo.isDefault && {
               type: "button",
-              label: "フォルダを開く",
+              label: "打开文件夹",
               onClick: () => {
                 void store.actions.OPEN_ENGINE_DIRECTORY({
                   engineId: engineInfo.uuid,
@@ -55,7 +55,7 @@ export const useElectronMenuBarData = (
             },
             {
               type: "button",
-              label: "再起動",
+              label: "重新启动",
               onClick: () => {
                 void store.actions.RESTART_ENGINES({
                   engineIds: [engineInfo.uuid],
@@ -72,7 +72,7 @@ export const useElectronMenuBarData = (
       ? removeNullableAndBoolean<MenuItemData>([
           {
             type: "button",
-            label: "全てのエンジンを再起動",
+            label: "重启所有引擎",
             onClick: () => {
               void store.actions.RESTART_ENGINES({
                 engineIds: engineIds.value,
@@ -82,7 +82,7 @@ export const useElectronMenuBarData = (
           },
           {
             type: "button",
-            label: "エンジンの管理",
+            label: "引擎管理",
             onClick: () => {
               void store.actions.SET_DIALOG_OPEN({
                 isEngineManageDialogOpen: true,
@@ -92,7 +92,7 @@ export const useElectronMenuBarData = (
           },
           store.state.isMultiEngineOffMode && {
             type: "button",
-            label: "マルチエンジンをオンにして再読み込み",
+            label: "开启多引擎后重载",
             onClick() {
               void store.actions.RELOAD_APP({
                 isMultiEngineOffMode: false,
