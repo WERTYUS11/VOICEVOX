@@ -185,6 +185,17 @@ jobs:
           node-version-file: ".node-version"
           cache: "pnpm"
 
+      - uses: actions/checkout@v4
+      
+      - name: Debug - List files and check pnpm-lock.yaml
+        run: |
+          echo "Current working directory: $(pwd)"
+          echo "Listing files in current directory:"
+          ls -lA # 列出当前目录所有文件和权限
+          echo "Searching for pnpm-lock.yaml:"
+          find . -name "pnpm-lock.yaml" -ls # 查找文件并显示其详细信息，包括权限
+          echo "Attempting to read pnpm-lock.yaml content (first 10 lines):"
+
       - name: Cache Electron
         uses: actions/cache@v4
         with:
@@ -197,7 +208,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ env.ELECTRON_BUILDER_CACHE }}
-          key: ${{ env.cache-version }}-${{ runner.os }}--electron-builder-cache-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ env.cache-version }}-${{ runner.os }}--electron-builder-cache-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ env.cache-version }}-${{ runner.os }}--electron-builder-cache-
 
