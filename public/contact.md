@@ -1,38 +1,42 @@
-# お問い合わせ
+ # 联系方式
 
-## ご感想・ご要望
+## 意见与需求
 
-ぜひ X（旧 Twitter）にてハッシュタグ `#VOICEVOX` を付けてポストしてください。開発の励みになります。
+欢迎在 X（原 Twitter）上添加话题标签 `#VOICEVOX` 进行发布。您的反馈将成为开发的动力。
 
-## 不具合・バグ報告
+## 故障与错误报告
 
-以下の内容を添えてハッシュタグ `#VOICEVOX` を付けてポストしていただくか、VOICEVOX 公式（[@voicevox_pj](https://x.com/voicevox_pj)）までご報告ください。
+请在发布内容中添加话题标签 `#VOICEVOX`，并附上以下信息，或联系 VOICEVOX 官方账号（[@voicevox_pj](https://x.com/voicevox_pj)）进行反馈。
 
-- 不具合の内容
-- 再現手順（動画や写真があれば添付してください）
-- OS の種類・VOICEVOX のバージョン
-- 解決のために試されたこと
-- ウイルス対策ソフトなどの有無（関係がありそうであれば）
-- エラーログ
+- 故障内容  
+- 重现步骤（如有视频等请一并附上）  
+- 使用的操作系统类型与 VOICEVOX 版本  
+- 为解决问题已尝试的措施  
+- 是否安装了防病毒软件等（如可能相关）  
+- 错误日志  
 
-エラーログは VOICEVOX ソフトウェア内のヘルプ → お問い合わせ → 「ログフォルダを開く」ボタンから確認できます。
+错误日志可在 VOICEVOX 软件内通过：帮助 → 联系方式 → 「打开日志文件夹」按钮查看。
 
-エラーログには PC ユーザー名などのシステム情報が含まれる場合があります。頂いたデータは問題解決のためのみに使用し、プライバシーは厳重に保護します。
+错误日志中可能包含 PC 用户名等系统信息。我们收到的数据仅用于问题解决，并将严格保护您的隐私。
 
-開発者の方は GitHub Issue にてご報告・ご連絡ください。
+若您是开发者，请通过 GitHub Issue 进行反馈与联系。
 
-- [VOICEVOX 全体構成](https://github.com/VOICEVOX/voicevox/blob/main/docs/%E5%85%A8%E4%BD%93%E6%A7%8B%E6%88%90.md)
-- [VOICEVOX エディター](https://github.com/VOICEVOX/voicevox)
-- [VOICEVOX エンジン](https://github.com/VOICEVOX/voicevox_engine)
-- [VOICEVOX コア](https://github.com/VOICEVOX/voicevox_core)
+- [VOICEVOX 整体结构](https://github.com/VOICEVOX/voicevox/blob/main/docs/%E5%85%A8%E4%BD%93%E6%A7%8B%E6%88%90.md)  
+- [VOICEVOX 编辑器](https://github.com/VOICEVOX/voicevox)  
+- [VOICEVOX 引擎](https://github.com/VOICEVOX/voicevox_engine)  
+- [VOICEVOX 核心](https://github.com/VOICEVOX/voicevox_core)
 
-## その他
+## 其他
 
-[Q&A](https://voicevox.hiroshiba.jp/qa) に掲載されていないご質問があれば VOICEVOX 公式（[@voicevox_pj](https://x.com/voicevox_pj)）にお問い合わせください。
+若在 [Q&A](https://voicevox.hiroshiba.jp/qa) 中未找到您的问题，请联系 VOICEVOX 官方账号（[@voicevox_pj](https://x.com/voicevox_pj)）。
 
-## クレジット
+## 版权信息
 
-VOICEVOX ホームページ：[https://voicevox.hiroshiba.jp](https://voicevox.hiroshiba.jp)  
+VOICEVOX 官网：<https://voicevox.hiroshiba.jp>  
 Copyright ©︎ Hiroshiba Kazuyuki  
-VOICEVOX 公式：[@voicevox_pj](https://x.com/voicevox_pj)  
-開発者：[@hiho_karuta](https://x.com/hiho_karuta)
+
+---
+
+VOICEVOX 官方：[@voicevox_pj](https://x.com/voicevox_pj)  
+开发者：[@hiho_karuta](https://x.com/hiho_karuta)  
+翻译：[@WERTYUS11](https://space.bilibili.com/1177535270)

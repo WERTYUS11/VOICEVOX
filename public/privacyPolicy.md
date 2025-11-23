@@ -1,6 +1,7 @@
-# ダミーポリシー
+# 数据收集
 
-開発版はデフォルト動作でデータ収集を行いません。
+开发版在默认设置下不会进行数据收集。
 
-[Google アナリティクス利用規約](https://marketingplatform.google.com/about/analytics/terms/jp/)  
-[Google ポリシーと規約ページ](https://policies.google.com/technologies/ads?hl=ja)
+[Google Analytics 使用条款](https://marketingplatform.google.com/about/analytics/terms/jp/)  
+[Google 政策与条款页面](https://policies.google.com/technologies/ads?hl=ja)
+

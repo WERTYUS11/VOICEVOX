@@ -1,24 +1,24 @@
-# 開発コミュニティ
+# 如何参加开发
 
-本ソフトウェアはオープンソース版の VOICEVOX をもとに構築されており、誰でも機能追加や改善に参加できます。
+本软件基于 VOICEVOX 的开源版本构建，任何人都可以参与功能扩展和改进。
 
-一緒に VOICEVOX を作ってみませんか？
+要不要一起来打造 VOICEVOX 呢？
 
-## [VOICEVOX エディター](https://github.com/VOICEVOX/voicevox)
+## [VOICEVOX 编辑器](https://github.com/VOICEVOX/voicevox)
 
-GUI を表示するためのモジュールで、アプリケーションの形で提供しています。
-TypeScript や Electron や Vue で構成されています。
+用于呈现 GUI 的模块，并以应用程序形式提供。  
+主要由 TypeScript、Electron 和 Vue 构成。
 
-## [VOICEVOX エンジン](https://github.com/VOICEVOX/voicevox_engine)
+## [VOICEVOX 引擎](https://github.com/VOICEVOX/voicevox_engine)
 
-テキスト音声合成 API を公開するためのモジュールで、Web サーバーの形で提供しています。
-Python や FastAPI や OpenJTalk で構成されています。
+用于对外提供文本语音合成 API 的模块，并以 Web 服务器形式提供。  
+主要由 Python、FastAPI 和 OpenJTalk 构成。
 
-## [VOICEVOX コア](https://github.com/VOICEVOX/voicevox_core)
+## [VOICEVOX 核心](https://github.com/VOICEVOX/voicevox_core)
 
-音声合成に必要な計算を実行するためのモジュールで、動的ライブラリの形で提供しています。
-Rust や onnxruntime で構成されています。
+用于执行语音合成所需计算的模块，并以动态库的形式提供。  
+主要由 Rust 和 onnxruntime 构成。
 
 ---
 
-VOICEVOX の全体構成は [こちら](https://github.com/VOICEVOX/voicevox/blob/main/docs/%E5%85%A8%E4%BD%93%E6%A7%8B%E6%88%90.md) に詳細があります。
+VOICEVOX 的整体架构可在[此处](https://github.com/VOICEVOX/voicevox/blob/main/docs/%E5%85%A8%E4%BD%93%E6%A7%8B%E6%88%90.md)查看详细信息。
