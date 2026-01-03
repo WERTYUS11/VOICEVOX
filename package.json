@@ -1,7 +1,7 @@
 {
   "name": "voicevox",
   "version": "999.999.999",
-  "author": "Hiroshiba Kazuyuki & WERTYUS11",
+  "author": "Hiroshiba Kazuyuki",
   "private": true,
   "main": "./dist/main.js",
   "type": "module",
@@ -51,8 +51,7 @@
     "postinstall": "pnpm run postinstall:packages && pnpm run postinstall:download-scripts",
     "postinstall:packages": "electron-builder install-app-deps && playwright install chromium",
     "postinstall:download-scripts": "tsx tools/download7z.ts && tsx tools/downloadTypos.ts && tsx tools/downloadAppimagetool.ts",
-    "postuninstall": "electron-builder install-app-deps",
-    "autotranslanguagezhcn": "node zh-cn.js"
+    "postuninstall": "electron-builder install-app-deps"
   },
   "dependencies": {
     "@gtm-support/vue-gtm": "3.1.0",

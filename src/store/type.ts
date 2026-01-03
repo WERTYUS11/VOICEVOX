@@ -76,6 +76,7 @@ import type {
   Track,
 } from "@/domain/project/type";
 import { LatestProjectType } from "@/infrastructures/projectFile/type";
+import { WavFormat } from "@/helpers/fileDataGenerator";
 
 /**
  * エディタ用のAudioQuery
@@ -847,6 +848,9 @@ export type NoteEditTool = "SELECT_FIRST" | "EDIT_FIRST";
 export type PitchEditTool = "DRAW" | "ERASE";
 // ボリューム編集ツール（VolumeEditor 専用）
 export type VolumeEditTool = "DRAW" | "ERASE";
+// パラメータパネル内の編集対象
+// NOTE: 音素タイミング編集などを追加する際に拡張
+export type ParameterPanelEditTarget = "VOLUME";
 
 // プロジェクトの書き出しに使えるファイル形式
 export type ExportSongProjectFileType =
@@ -862,6 +866,7 @@ export type TrackParameters = {
 export type SongExportSetting = {
   isMono: boolean;
   sampleRate: number;
+  format: WavFormat;
   withLimiter: boolean;
   withTrackParameters: TrackParameters;
 };
@@ -892,6 +897,7 @@ export type SingingStoreState = {
   sequencerNoteTool: NoteEditTool;
   sequencerPitchTool: PitchEditTool;
   sequencerVolumeTool: VolumeEditTool;
+  parameterPanelEditTarget: ParameterPanelEditTarget;
   sequencerVolumeVisible: boolean;
   _selectedNoteIds: Set<NoteId>;
   editingLyricNoteId?: NoteId;
@@ -1029,11 +1035,29 @@ export type SingingStoreTypes = {
     }): void;
   };
 
+  SET_VOLUME_EDIT_DATA: {
+    mutation: { volumeArray: number[]; startFrame: number; trackId: TrackId };
+    action(payload: {
+      volumeArray: number[];
+      startFrame: number;
+      trackId: TrackId;
+    }): void;
+  };
+
   ERASE_PITCH_EDIT_DATA: {
     mutation: { startFrame: number; frameLength: number; trackId: TrackId };
   };
 
+  ERASE_VOLUME_EDIT_DATA: {
+    mutation: { startFrame: number; frameLength: number; trackId: TrackId };
+  };
+
   CLEAR_PITCH_EDIT_DATA: {
+    mutation: { trackId: TrackId };
+    action(payload: { trackId: TrackId }): void;
+  };
+
+  CLEAR_VOLUME_EDIT_DATA: {
     mutation: { trackId: TrackId };
     action(payload: { trackId: TrackId }): void;
   };
@@ -1169,6 +1193,11 @@ export type SingingStoreTypes = {
   SET_SEQUENCER_VOLUME_TOOL: {
     mutation: { sequencerVolumeTool: VolumeEditTool };
     action(payload: { sequencerVolumeTool: VolumeEditTool }): void;
+  };
+
+  SET_PARAMETER_PANEL_EDIT_TARGET: {
+    mutation: { editTarget: ParameterPanelEditTarget };
+    action(payload: { editTarget: ParameterPanelEditTarget }): void;
   };
 
   SET_SEQUENCER_VOLUME_VISIBLE: {
@@ -1522,7 +1551,25 @@ export type SingingCommandStoreTypes = {
     }): void;
   };
 
+  COMMAND_SET_VOLUME_EDIT_DATA: {
+    mutation: { volumeArray: number[]; startFrame: number; trackId: TrackId };
+    action(payload: {
+      volumeArray: number[];
+      startFrame: number;
+      trackId: TrackId;
+    }): void;
+  };
+
   COMMAND_ERASE_PITCH_EDIT_DATA: {
+    mutation: { startFrame: number; frameLength: number; trackId: TrackId };
+    action(payload: {
+      startFrame: number;
+      frameLength: number;
+      trackId: TrackId;
+    }): void;
+  };
+
+  COMMAND_ERASE_VOLUME_EDIT_DATA: {
     mutation: { startFrame: number; frameLength: number; trackId: TrackId };
     action(payload: {
       startFrame: number;

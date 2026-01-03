@@ -87,7 +87,7 @@ export const UnclosedTagInput: Story = {
   args: { ...Opened.args },
   play: createInvalidInputPlay(
     "$連番$",
-    "存在非法标签或单独包含 '",
+    "不正なタグが存在するか、$が単体で含まれています",
   ),
 };
 

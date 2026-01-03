@@ -254,7 +254,7 @@ export const showOpenFilePickerImpl = async (options: {
 // 指定した疑似パスのファイルを読み込む
 export const readFileImpl = async (filePath: string) => {
   if (!isFakePath(filePath)) {
-    return failure(new Error(`此路径是绝对路径： ${filePath}`));
+    return failure(new Error(`此路径是绝对路径：${filePath}`));
   }
   const fileHandle = fileHandleMap.get(filePath);
   if (fileHandle == undefined) {

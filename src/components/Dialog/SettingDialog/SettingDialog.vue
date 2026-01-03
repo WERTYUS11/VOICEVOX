@@ -47,7 +47,7 @@
                 <BaseTooltip
                   :label="
                     engineInfos[selectedEngineId].name +
-                    '是 CPU 版本，无法使用 GPU 模式。'
+                    'CPU 版本的VOICEVOX无法使用 GPU 模式。'
                   "
                   :disabled="gpuSwitchEnabled(selectedEngineId)"
                 >
@@ -280,7 +280,7 @@
                 />
                 <ButtonToggleCell
                   title="字符编码"
-                  description="选择导出文本文件时的字符编码(请注意：Shitf_JIS仅限于日语字符，若无特殊要求请选择UTF-8)"
+                  description="选择导出文本文件时的字符编码(请注意：Shift_JIS仅限于日语字符，若无特殊要求请选择UTF-8)"
                   :modelValue="savingSetting.fileEncoding"
                   :options="[
                     { label: 'UTF-8', value: 'UTF-8' },
@@ -316,7 +316,7 @@
               </div>
               <!-- Theme Card -->
               <div class="setting-card">
-                <h5 class="headline">主题</h5>
+                <h5 class="headline">外观</h5>
                 <ButtonToggleCell
                   v-model="currentThemeNameComputed"
                   title="主题"
@@ -623,7 +623,7 @@ const undoableTrackOperations = computed({
   },
 });
 
-// 连续
+// 外观
 const currentThemeNameComputed = computed({
   get: () => store.state.currentTheme,
   set: (currentTheme: string) => {

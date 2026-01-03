@@ -22,6 +22,7 @@ import { registerIpcMainHandle, ipcMainSendProxy, IpcMainHandle } from "./ipc";
 import { getConfigManager } from "./electronConfig";
 import { getEngineAndVvppController } from "./engineAndVvppController";
 import { getIpcMainHandle } from "./ipcMainHandle";
+import { getAppStateController } from "./appStateController";
 import { assertNonNullable } from "@/type/utility";
 import { EngineInfo } from "@/type/preload";
 import { isMac, isProduction } from "@/helpers/platform";
@@ -116,20 +117,20 @@ process.on("unhandledRejection", (reason) => {
 
 function getAppPaths() {
   let appDirPath: string;
-  let __static: string;
+  let staticDir: string;
 
   if (isDevelopment) {
     // import.meta.dirnameはdist_electronを指しているので、一つ上のディレクトリに移動する
     appDirPath = path.resolve(import.meta.dirname, "..");
-    __static = path.join(appDirPath, "public");
+    staticDir = path.join(appDirPath, "public");
   } else {
     appDirPath = path.dirname(app.getPath("exe"));
-    __static = import.meta.dirname;
+    staticDir = import.meta.dirname;
   }
 
-  return { appDirPath, __static };
+  return { appDirPath, staticDir };
 }
-const { appDirPath, __static } = getAppPaths();
+const { appDirPath, staticDir } = getAppPaths();
 
 // 製品版はカレントディレクトリを.exeのパスにする
 // TODO: ディレクトリを移動しないようにしたい
@@ -209,15 +210,10 @@ const onEngineProcessError = (engineInfo: EngineInfo, error: Error) => {
   dialog.showErrorBox("音声合成エンジンエラー", error.message);
 };
 
-const appState = {
-  willQuit: false,
-};
-
 initializeWindowManager({
-  appStateGetter: () => appState,
   isDevelopment,
   isTest,
-  staticDir: __static,
+  staticDir: staticDir,
 });
 initializeRuntimeInfoManager({
   runtimeInfoPath: path.join(app.getPath("userData"), "runtime-info.json"),
@@ -300,8 +296,7 @@ if (isMac) {
 // プロセス間通信
 registerIpcMainHandle<IpcMainHandle>(
   getIpcMainHandle({
-    appStateGetter: () => appState,
-    staticDirPath: __static,
+    staticDirPath: staticDir,
     appDirPath,
     initialFilePathGetter: () => initialFilePath,
   }),
@@ -332,49 +327,9 @@ app.on("web-contents-created", (_e, contents) => {
 
 // Called before window closing
 app.on("before-quit", async (event) => {
-  if (!appState.willQuit) {
-    event.preventDefault();
-    ipcMainSendProxy.CHECK_EDITED_AND_NOT_SAVE(windowManager.getWindow(), {
-      closeOrReload: "close",
-    });
-    return;
-  }
-
-  log.info("Checking ENGINE status before app quit");
-  const { engineCleanupResult, configSavedResult } =
-    engineAndVvppController.gracefulShutdown();
-
-  // - エンジンの停止
-  // - エンジン終了後処理
-  // - 設定ファイルの保存
-  // が完了している
-  if (
-    engineCleanupResult === "alreadyCompleted" &&
-    configSavedResult === "alreadySaved"
-  ) {
-    log.info("Post engine kill process and config save done. Quitting app");
-    return;
-  }
-
-  // すべてのエンジンプロセスのキルを開始
-
-  // 同期的にbefore-quitイベントをキャンセル
-  log.info("Interrupt app quit");
-  event.preventDefault();
-
-  if (engineCleanupResult !== "alreadyCompleted") {
-    log.info("Waiting for post engine kill process");
-    await engineCleanupResult;
-  }
-  if (configSavedResult !== "alreadySaved") {
-    log.info("Waiting for config save");
-    await configSavedResult;
-  }
-
-  // アプリケーションの終了を再試行する
-  log.info("Attempting to quit app again");
-  app.quit();
-  return;
+  void getAppStateController().onQuitRequest({
+    preventQuit: () => event.preventDefault(),
+  });
 });
 
 app.once("will-finish-launching", () => {
@@ -545,8 +500,7 @@ void app.whenReady().then(async () => {
   ) {
     log.info("VOICEVOX already running. Cancelling launch.");
     log.info(`File path sent: ${initialFilePath}`);
-    appState.willQuit = true;
-    app.quit();
+    getAppStateController().shutdown();
     return;
   }
 
