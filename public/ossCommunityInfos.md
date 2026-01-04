@@ -4,7 +4,7 @@
 
 要不要一起来打造 VOICEVOX 呢？
 
-## [VOICEVOX Chinese Script](https://github.com/WERTYUS11/voicevox/script)
+## [VOICEVOX Chinese Script](https://github.com/WERTYUS11/VOICEVOX/tree/main/Script)
 
 用于执行文字翻译符的转换模块。
 
