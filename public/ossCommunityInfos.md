@@ -4,6 +4,10 @@
 
 要不要一起来打造 VOICEVOX 呢？
 
+## [VOICEVOX Chinese Script](https://github.com/WERTYUS11/voicevox/script)
+
+用于执行文字翻译符的转换模块。
+
 ## [VOICEVOX 编辑器](https://github.com/VOICEVOX/voicevox)
 
 用于呈现 GUI 的模块，并以应用程序形式提供。  
@@ -22,3 +26,5 @@
 ---
 
 VOICEVOX 的整体架构可在[此处](https://github.com/VOICEVOX/voicevox/blob/main/docs/%E5%85%A8%E4%BD%93%E6%A7%8B%E6%88%90.md)查看详细信息。
+
+本项目不支持任何关于汉化的PR、Iussue。若需要可前往[项目官网](https://github.com/VOICEVOX/voicevox)提交。
