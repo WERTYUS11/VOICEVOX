@@ -342,6 +342,12 @@
                   @update:modelValue="changeShowTextLineNumber"
                 />
                 <ToggleCell
+                  title="音声の長さの表示"
+                  description="ONの場合、テキスト欄の右側に音声の長さが表示されます。"
+                  :modelValue="showAudioLength"
+                  @update:modelValue="changeShowAudioLength"
+                />
+                <ToggleCell
                   title="显示添加文本按钮"
                   description="关闭时，右下角不会显示添加文本按钮。（文本框可通过 Shift + Enter 添加）"
                   :modelValue="showAddAudioItemButton"
@@ -406,7 +412,11 @@
                       v-for="(value, key) in undoableTrackOperations"
                       :key
                       :checked="value"
-                      :label="undoableTrackOperationsLabels[key]"
+                      :label="
+                        undoableTrackOperationsLabels[
+                          key as keyof typeof undoableTrackOperationsLabels
+                        ]
+                      "
                       @update:checked="
                         (newValue) =>
                           (undoableTrackOperations = {
@@ -649,6 +659,11 @@ const [enableMultiEngine, setEnableMultiEngine] = useRootMiscSetting(
 const [showTextLineNumber, changeShowTextLineNumber] = useRootMiscSetting(
   store,
   "showTextLineNumber",
+);
+
+const [showAudioLength, changeShowAudioLength] = useRootMiscSetting(
+  store,
+  "showAudioLength",
 );
 
 const [_enableKatakanaEnglish, setEnableKatakanaEnglish] = useRootMiscSetting(
