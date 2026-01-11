@@ -1195,3 +1195,15 @@ replaceInFile("src/backend/electron/renderer/menuBarData.ts", {
    "エンジンの管理":"引擎管理",
    "マルチエンジンをオンにして再読み込み":"开启多引擎后重载",
 });
+
+// 以下是链接的替换
+
+replaceInFile(".env.production", {
+   "https://voicevox.hiroshiba.jp/":"https://github.com/WERTYUS11/VOICEVOX/",
+   "VITE_LATEST_UPDATE_INFOS_URL=https://github.com/WERTYUS11/VOICEVOX//updateInfos.json":"VITE_LATEST_UPDATE_INFOS_URL=https://voicevox.hiroshiba.jp/updateInfos.json"
+});
+
+replaceInFile("src/components/Dialog/UpdateNotificationDialog/index.stories.ts", {
+   "https://voicevox.hiroshiba.jp/":"https://github.com/WERTYUS11/VOICEVOX/",
+});
+
