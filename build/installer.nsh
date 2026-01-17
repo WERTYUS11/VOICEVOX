@@ -565,7 +565,7 @@ Function welcomePagePre
 FunctionEnd
 
 Function welcomePageShow
-  StrCpy $2 "此向导将安装 $(^Name) ${VERSION} 将引导您完成安装。"
+  StrCpy $2 "此向导将安装 $(^Name) ${VERSION} 在您的计算机上。"
 
   ${If} $additionalProcess == "None"
 
@@ -737,7 +737,7 @@ Function readyPageShow
     Abort
   ${EndIf}
 
-  ${NSD_CreateLabel} 0 0 100% 12u "按下“安装”将会把  $(^Name) ${VERSION}  安装入电脑"
+  ${NSD_CreateLabel} 0 0 100% 12u "按下“安装”将会启动  $(^Name) ${VERSION}  安装程序"
   Pop $0
 
   StrCpy $0 $installedSize
@@ -748,7 +748,7 @@ Function readyPageShow
     ${bytesToHumanReadable} $1 $1
     ${GetRoot} "$INSTDIR" $2
     StrCpy $2 $2 1 ; "C:" から "C" だけを取り出す
-    ${NSD_CreateLabel} 0 24u 100% 24u "安装需要 $0 以上の空きが必要です。$\r$\n（現在の磁盘$2上的可用空间：$1）"
+    ${NSD_CreateLabel} 0 24u 100% 24u "安装需要 $0 以上的空闲空间。$\r$\n（当前磁盘$2上的可用空间：$1）"
     Pop $0
   ${EndIf}
 
