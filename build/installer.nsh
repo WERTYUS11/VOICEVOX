@@ -595,7 +595,7 @@ Function welcomePageShow
     ${bytesToHumanReadable} $1 $1
     ${GetRoot} "$EXEDIR" $3
     StrCpy $3 $3 1 ; "C:" から "C" だけを取り出す
-    StrCpy $2 "$2$\r$\n安装程序所在的磁盘需要有 $0 以上の空きが必要です。$\r$\n（现在磁盘$3可用空间为： $1）"
+    StrCpy $2 "$2$\r$\n安装程序所在的磁盘需要有 $0 以上的空闲空间。$\r$\n（现在磁盘$3可用空间为： $1）"
   ${EndIf}
 
   StrCpy $2 "$2$\r$\n$\r$\n要继续，请点击 [下一步]。"
