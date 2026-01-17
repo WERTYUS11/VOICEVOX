@@ -2380,8 +2380,8 @@ export const singingStore = createPartialStore<SingingStoreTypes>({
             filePath = path.join(state.savingSetting.fixedExportDir, fileName);
           } else {
             filePath ??= await window.backend.showSaveFileDialog({
-              title: "音声を保存",
-              name: "WAV ファイル",
+              title: "保存语音",
+              name: "WAV 文件",
               extensions: ["wav"],
               defaultPath: fileName,
             });
@@ -2463,7 +2463,7 @@ export const singingStore = createPartialStore<SingingStoreTypes>({
             dirPath = state.savingSetting.fixedExportDir;
           } else {
             dirPath ??= await window.backend.showSaveDirectoryDialog({
-              title: "音声を保存",
+              title: "保存语音",
             });
           }
           if (!dirPath) {
@@ -2763,7 +2763,7 @@ export const singingStore = createPartialStore<SingingStoreTypes>({
                   path: filePath,
                   errorMessage:
                     (e instanceof Error ? e.message : String(e)) ||
-                    "不明なエラーが発生しました。",
+                    "发生未知错误。",
                 });
                 break; // 想定外のエラーなので書き出しを中断
               }
@@ -2865,7 +2865,7 @@ export const singingStore = createPartialStore<SingingStoreTypes>({
           path: filePath,
           errorMessage:
             (e instanceof Error ? e.message : String(e)) ||
-            "不明なエラーが発生しました。",
+            "发生未知错误。",
         };
       }
 
