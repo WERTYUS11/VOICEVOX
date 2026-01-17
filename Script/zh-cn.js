@@ -1216,6 +1216,17 @@ replaceInFile(".env.production", {
 replaceInFile("src/components/Dialog/UpdateNotificationDialog/index.stories.ts", {
    "https://voicevox.hiroshiba.jp/":"https://github.com/WERTYUS11/VOICEVOX/",
 });
+
+replaceInFile("tests/env/.env.test-electron", {
+   "https://voicevox.hiroshiba.jp/":"https://github.com/WERTYUS11/VOICEVOX/",
+   "https://github.com/WERTYUS11/VOICEVOX/updateInfos.json":"https://voicevox.hiroshiba.jp/updateInfos.json",
+});
+
+replaceInFile("tests/env/.env.test-electron", {
+   "https://voicevox.hiroshiba.jp/":"https://github.com/WERTYUS11/VOICEVOX/",
+   "https://https://github.com/WERTYUS11/VOICEVOX/nemoLatestDefaultEngineInfos.json":"https://voicevox.hiroshiba.jp/nemoLatestDefaultEngineInfos.json",
+   "https://github.com/WERTYUS11/VOICEVOX/updateInfos.json":"https://voicevox.hiroshiba.jp/updateInfos.json",
+});
 //---------------------------
 // 以上是链接的替换
 //---------------------------
