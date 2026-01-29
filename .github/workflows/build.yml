@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "VOICEVOX Editor 的版本信息（例如：A.BB.C 或 A.BB.C-preview.D）"
+        description: "VOICEVOX Editor 的版本信息 (例如：0.21.1)"
         required: true
       prerelease:
         description: "是否为预发布版本"
@@ -15,15 +15,15 @@ on:
         type: boolean
         default: false
       upload_artifact:
-        description: "是否将构建产物上传为 Artifacts（用于调试）"
+        description: "是否将构建产物上传为 Artifacts (用于调试)"
         type: boolean
         default: false
       voicevox_engine_version:
-        description: "VOICEVOX Engine 的版本。可指定 `latest`、`prerelease-latest` 或具体版本号"
+        description: "VOICEVOX Engine 版本。填 `latest` 自动抓取"
         required: false
         default: "latest"
       voicevox_resource_version:
-        description: "VOICEVOX Resource 的版本。填 `latest` 自动抓取最新发布版"
+        description: "VOICEVOX Resource 版本。填 `latest` 自动抓取"
         required: false
         default: "latest"
 
@@ -41,12 +41,7 @@ permissions:
 
 jobs:
   build-and-upload:
-    environment: ${{ github.event.inputs.code_signing == 'true' && 'code_signing' || '' }}
-    env:
-      ELECTRON_CACHE: .cache/electron
-      ELECTRON_BUILDER_CACHE: .cache/electron-builder
-      cache-version: v2
-      sed: ${{ startsWith(matrix.os, 'macos-') && 'gsed' || 'sed' }}
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
@@ -57,10 +52,7 @@ jobs:
             package_name: voicevox
             compressed_artifact_name: voicevox-linux-nvidia
             app_asar_dir: prepackage/resources
-            installer_artifact_name: linux-nvidia-appimage
-            linux_artifact_name: "VOICEVOX.${ext}"
             linux_executable_name: voicevox
-            linux_appimage_7z_name: VOICEVOX.AppImage
             os: ubuntu-22.04
           - artifact_name: linux-cpu-x64-prepackage
             artifact_path: dist_electron/linux-unpacked
@@ -68,39 +60,14 @@ jobs:
             package_name: voicevox-cpu
             compressed_artifact_name: voicevox-linux-cpu-x64
             app_asar_dir: prepackage/resources
-            installer_artifact_name: linux-cpu-x64-appimage
-            linux_artifact_name: "VOICEVOX.${version}-x64.${ext}"
             linux_executable_name: voicevox
-            linux_appimage_7z_name: VOICEVOX-CPU-X64.AppImage
             os: ubuntu-22.04
-          - artifact_name: linux-cpu-arm64-prepackage
-            artifact_path: dist_electron/linux-arm64-unpacked
-            voicevox_engine_asset_name: linux-cpu-arm64
-            package_name: voicevox-cpu
-            compressed_artifact_name: voicevox-linux-cpu-arm64
-            app_asar_dir: prepackage/resources
-            installer_artifact_name: linux-cpu-arm64-appimage
-            linux_artifact_name: "VOICEVOX.${version}-arm64.${ext}"
-            linux_executable_name: voicevox
-            linux_appimage_7z_name: VOICEVOX-CPU-ARM64.AppImage
-            os: ubuntu-22.04-arm
           - artifact_name: windows-nvidia-prepackage
             artifact_path: dist_electron/win-unpacked
             voicevox_engine_asset_name: windows-nvidia
             package_name: voicevox-cuda
             compressed_artifact_name: voicevox-windows-nvidia
             app_asar_dir: prepackage/resources
-            installer_artifact_name: windows-nvidia-nsis-web
-            nsis_web_artifact_name: "VOICEVOX-CUDA.Web.Setup.${version}.${ext}"
-            os: windows-2022
-          - artifact_name: windows-cpu-prepackage
-            artifact_path: dist_electron/win-unpacked
-            voicevox_engine_asset_name: windows-cpu
-            package_name: voicevox-cpu
-            compressed_artifact_name: voicevox-windows-cpu
-            app_asar_dir: prepackage/resources
-            installer_artifact_name: windows-cpu-nsis-web
-            nsis_web_artifact_name: "VOICEVOX-CPU.Web.Setup.${version}.${ext}"
             os: windows-2022
           - artifact_name: windows-directml-prepackage
             artifact_path: dist_electron/win-unpacked
@@ -108,46 +75,17 @@ jobs:
             package_name: voicevox
             compressed_artifact_name: voicevox-windows-directml
             app_asar_dir: prepackage/resources
-            installer_artifact_name: windows-directml-nsis-web
-            nsis_web_artifact_name: "VOICEVOX.Web.Setup.${version}.${ext}"
             os: windows-2022
-          - artifact_name: macos-cpu-x64-prepackage
-            artifact_path: dist_electron/mac
-            voicevox_engine_asset_name: macos-x64
-            package_name: voicevox-cpu
-            compressed_artifact_name: voicevox-macos-cpu-x64
-            app_asar_dir: prepackage/VOICEVOX.app/Contents/Resources
-            installer_artifact_name: macos-cpu-x64-dmg
-            macos_artifact_name: "VOICEVOX.${version}-x64.${ext}"
-            os: macos-15-intel
           - artifact_name: macos-cpu-arm64-prepackage
             artifact_path: dist_electron/mac-arm64
             voicevox_engine_asset_name: macos-arm64
             package_name: voicevox-cpu
             compressed_artifact_name: voicevox-macos-cpu-arm64
             app_asar_dir: prepackage/VOICEVOX.app/Contents/Resources
-            installer_artifact_name: macos-cpu-arm64-dmg
-            macos_artifact_name: "VOICEVOX.${version}-arm64.${ext}"
             os: macos-14
 
-    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-
-      - name: Install GNU sed on macOS
-        if: startsWith(matrix.os, 'macos-')
-        run: brew install gnu-sed
-
-      - name: Replace package name & version
-        run: |
-          $sed -i 's/"name": "voicevox"/"name": "${{ matrix.package_name }}"/' package.json
-          $sed -i 's/"version": "999.999.999"/"version": "${{ env.VOICEVOX_EDITOR_VERSION }}"/' package.json
-
-      - name: install desktop-file-utils
-        if: startsWith(matrix.artifact_name, 'linux-')
-        run: |
-          sudo apt-get update
-          sudo apt-get install desktop-file-utils
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -158,119 +96,83 @@ jobs:
           node-version-file: ".node-version"
           cache: "pnpm"
 
-      - name: Cache Electron
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.ELECTRON_CACHE }}
-          key: ${{ env.cache-version }}-${{ runner.os }}--electron-cache-fixed
-          restore-keys: |
-            ${{ env.cache-version }}-${{ runner.os }}--electron-cache-
+      - name: Install dependencies & Translation
+        run: |
+          pnpm i --no-frozen-lockfile
+          # 💡 解决 Linux 大小写敏感导致的脚本找不到问题
+          if [ -f "script/zh-cn.js" ]; then
+            node script/zh-cn.js
+          elif [ -f "scripts/zh-cn.js" ]; then
+            node scripts/zh-cn.js
+          else
+            echo "⚠️ Warning: zh-cn.js not found in script/ or scripts/"
+          fi
 
-      - name: Install dependencies
-        run: pnpm i --frozen-lockfile && node Script/zh-cn.js
-        
-      - name: Download VOICEVOX ENGINE
-        id: download-engine
-        uses: ./.github/actions/download-engine
-        with:
-          version: ${{ env.VOICEVOX_ENGINE_VERSION }}
-          dest: ${{ github.workspace }}/voicevox_engine
-          target: ${{ matrix.voicevox_engine_asset_name }}
-
-      # --- 关键修改：动态解析 Resource 版本 ---
       - name: Resolve VOICEVOX Resource Version
         id: resolve-resource
         run: |
           VERSION="${{ env.VOICEVOX_RESOURCE_VERSION }}"
           if [ "$VERSION" = "latest" ]; then
             VERSION=$(gh release --repo VOICEVOX/voicevox_resource view --json tagName --template '{{.tagName}}')
-            echo "检测到 latest，解析为最新发布版本: $VERSION"
           fi
           echo "resolved_version=$VERSION" >> $GITHUB_OUTPUT
         env:
           GH_TOKEN: ${{ github.token }}
 
-      - name: Checkout Product Version Resource
+      - name: Checkout Resource
         uses: actions/checkout@v4
         with:
           repository: VOICEVOX/voicevox_resource
           ref: ${{ steps.resolve-resource.outputs.resolved_version }}
           path: resource
-      # ---------------------------------------
 
-      - name: Create and replace software resources
-        run: |
-          rm build/README.txt
-          rm public/policy.md
-          {
-            cat resource/editor/README.md
-            echo
-            cat resource/editor/ACKNOWLEDGMENTS.md
-          } > build/README.txt
-          cp build/README.txt public/policy.md
-          cp resource/editor/PRIVACYPOLICY.md public/privacyPolicy.md
-
-      - name: Overwrite .env.production
-        run: |
-          if [[ "${{ matrix.os }}" == ubuntu-* ]]; then
-            $sed -i 's|run.exe|./run|g' .env.production
-          elif [[ "${{ matrix.os }}" == macos-* ]]; then
-            $sed -i 's|vv-engine/run.exe|../Resources/vv-engine/run|g' .env.production
-          fi
-
-      - name: Replace .env.production informations
-        run: |
-          gtm_id=$(jq -er '.gtm_container_id' resource/editor/metas.json)
-          $sed -i 's/VITE_GTM_CONTAINER_ID=.*/VITE_GTM_CONTAINER_ID='"$gtm_id"'/' .env.production
-
-      - name: Generate public/licenses.json
-        run: pnpm run license:generate -o public/licenses.json
+      - name: Download Engine
+        uses: ./.github/actions/download-engine
+        with:
+          version: ${{ env.VOICEVOX_ENGINE_VERSION }}
+          dest: ${{ github.workspace }}/voicevox_engine
+          target: ${{ matrix.voicevox_engine_asset_name }}
 
       - name: Build Electron
-        env:
-          NSIS_WEB_ARTIFACT_NAME: ${{ matrix.nsis_web_artifact_name }}
-          LINUX_ARTIFACT_NAME: ${{ matrix.linux_artifact_name }}
-          LINUX_EXECUTABLE_NAME: ${{ matrix.linux_executable_name }}
-          MACOS_ARTIFACT_NAME: ${{ matrix.macos_artifact_name }}
-          USE_HARD_LINKS: false
         run: pnpm run electron:build --dir
+        env:
+          USE_HARD_LINKS: false
 
-      - name: Rename NoEngine Prepackage
+      - name: Prepare Prepackage
         run: mv ${{ matrix.artifact_path }} ./prepackage
 
-      - name: Merge licenses.json (ENGINE, VOICEVOX)
+      - name: Merge Engine into Prepackage
         run: |
-          npx asar extract "${{ matrix.app_asar_dir }}/app.asar" "${{ matrix.app_asar_dir }}/app"
-          rm "${{ matrix.app_asar_dir }}/app.asar"
-          mv voicevox_engine/licenses.json engine_licenses.json
-          pnpm run license:merge -o "${{ matrix.app_asar_dir }}/app/dist/licenses.json" -i engine_licenses.json -i "${{ matrix.app_asar_dir }}/app/dist/licenses.json"
-          npx asar pack "${{ matrix.app_asar_dir }}/app" "${{ matrix.app_asar_dir }}/app.asar"
-          rm -rf "${{ matrix.app_asar_dir }}/app"
-
-      - name: Merge VOICEVOX ENGINE into prepackage
-        run: |
-          if [[ "${{ matrix.artifact_name }}" == macos-* ]]; then
+          if [[ "${{ matrix.os }}" == macos-* ]]; then
             mv voicevox_engine/ prepackage/VOICEVOX.app/Contents/Resources/vv-engine/
           else
             mv voicevox_engine/ prepackage/vv-engine/
           fi
 
-      - name: Recover file permissions
+      - name: Compress Output
         run: |
-          if [[ "${{ matrix.artifact_name }}" == linux-* ]]; then
-            chmod +x "prepackage/${{ matrix.linux_executable_name }}"
-            chmod +x "prepackage/vv-engine/run"
-          elif [[ "${{ matrix.artifact_name }}" == macos-* ]]; then
-            chmod +x "prepackage/VOICEVOX.app/Contents/Resources/vv-engine/run"
+          if [[ "${{ runner.os }}" == "Windows" ]]; then
+            7z a "${{ matrix.compressed_artifact_name }}.zip" ./prepackage/*
+          else
+            # Linux/Mac 使用 zip 保持权限
+            cd prepackage && zip -r "../${{ matrix.compressed_artifact_name }}.zip" ./*
           fi
 
-      - name: Create Artifacts and Upload
+      - name: Upload Artifact (Debug)
+        if: github.event.inputs.upload_artifact == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_name }}
+          path: ${{ matrix.compressed_artifact_name }}.zip
+
+      - name: Create Release and Upload
         if: (github.event.release.tag_name || github.event.inputs.version) != ''
         uses: softprops/action-gh-release@v2
         with:
           prerelease: ${{ github.event.inputs.prerelease }}
           tag_name: ${{ env.VOICEVOX_EDITOR_VERSION }}
           files: |
+            *.zip
             dist_electron/*.dmg
             dist_electron/*.exe
             dist_electron/*.AppImage
