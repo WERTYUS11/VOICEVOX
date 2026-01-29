@@ -3,7 +3,7 @@
 <template>
   <BaseRowCard :title :description>
     {{ props.currentValue }}
-    <BaseButton label="编辑" icon="edit" @click="emit('buttonClick')" />
+    <BaseButton label="编辑   " icon="edit" @click="emit('buttonClick')" />
   </BaseRowCard>
 </template>
 

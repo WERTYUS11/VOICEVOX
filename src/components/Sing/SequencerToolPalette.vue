@@ -71,7 +71,7 @@
         transitionShow=""
         transitionHide=""
       >
-        删除音高
+        删除音高   
       </QTooltip>
     </QBtn>
   </div>

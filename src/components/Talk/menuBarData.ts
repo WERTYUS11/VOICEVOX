@@ -64,7 +64,7 @@ export const useMenuBarData = (store: Store): MaybeComputedMenuBarContent => {
     guide: [
       {
         type: "button",
-        label: showTextLineNumber.value ? "隐藏行号" : "显示行号",
+        label: showTextLineNumber.value ? "隐藏行号" : "显示行号   ",
         onClick: () => {
           changeShowTextLineNumber(!showTextLineNumber.value);
         },

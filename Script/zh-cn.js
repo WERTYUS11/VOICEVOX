@@ -52,15 +52,15 @@ function replaceInFolder(folderPath, replacements) {
 
 replaceInFile("src/backend/browser/browserConfig.ts", {
    "マイグレーション処理が必要です。":"Bro的开发需要升级💀",
-   "設定ファイルが見つかりません":"找不到配置文件   "
+   "設定ファイルが見つかりません":"找不到配置文件"
 });
 
 replaceInFile("src/backend/browser/fileImpl.ts", {
-   "フォルダへのアクセス許可がありません。ファイルの読み書きのためにアクセス許可が必要です。   ":
+   "フォルダへのアクセス許可がありません。ファイルの読み書きのためにアクセス許可が必要です。":
    "文件夹访问无权限，但是需要权限来读取和写入文件",
    "フォルダへのアクセス許可がありません。アクセスしようとしたフォルダ名: ":"访问无权限: ",
    "疑似パスではありません: ":"此路径是绝对路径：",
-   "ファイルが見つかりません: ":"找不到文件:    "
+   "ファイルが見つかりません: ":"找不到文件: "
 });
 
 replaceInFile("src/backend/common/ConfigManager.ts", {
@@ -69,7 +69,7 @@ replaceInFile("src/backend/common/ConfigManager.ts", {
    "選択音声を書き出し":"选择并导出声音",
    "プロジェクト読み込み":"项目加载",
    "テキスト読み込む":"文本加载",
-   "テキストを読み込む":"加载文本   "
+   "テキストを読み込む":"加载文本"
 });
 
 replaceInFile("src/components/Menu/MenuBar/MenuBar.vue", {
@@ -85,17 +85,17 @@ replaceInFile("src/components/Menu/MenuBar/MenuBar.vue", {
 replaceInFile("src/components/Menu/MenuBar/MinMaxCloseButtons.vue", {
    "最小化":"最小化",
    "最大化":"最大化",
-   "閉じる":"关闭   "
+   "閉じる":"关闭"
 });
 
 replaceInFile("src/components/Menu/MenuBar/TitleBarButtons.vue", {
    "最前面固定を解除":"解除前方锁定",
-   "最前面に固定":"固定前方   "
+   "最前面に固定":"固定前方"
 });
 
 replaceInFile("src/components/Menu/MenuBar/TitleBarEditorSwitcher.vue", {
    "トーク":"对话模式",
-   "ソング":"歌曲模式   "
+   "ソング":"歌曲模式"
 });
 
 replaceInFile("src/components/Menu/MenuBar/useCommonMenuBarData.ts", {
@@ -175,6 +175,7 @@ replaceInFile("src/domain/hotkeyAction.ts", {
    "テキスト欄を追加":"添加文本栏",
    "テキスト欄を複製":"复制文本字段",
    "テキスト欄を削除":"删除文本字段",
+   "番目のキャラクターを選択":"号角色选择",
    "すべて選択":"全选",
    "キー割り当て":"热键分配",
    "再生/停止":"播放/停止",
@@ -191,7 +192,7 @@ replaceInFile("src/domain/hotkeyAction.ts", {
 });
 
 replaceInFile("src/components/Sing/ScoreSequencer.vue", {
-   "すべて選択   " :    "全选",
+   "すべて選択":"全选",
    "シーケンサ":"音序器",
    "切り取り":"剪切",
    "貼り付け":"粘贴",
@@ -216,13 +217,13 @@ replaceInFile("src/components/Talk/ToolBar.vue", {
 
 replaceInFile("src/components/Talk/TalkEditor.vue", {
    "テキスト欄からフォーカスを外す":"从文本字段移出焦点",
-   "テキスト欄にフォーカスを戻す   " :    "重新聚焦文本字段",
+   "テキスト欄にフォーカスを戻す":"重新聚焦文本字段",
    "選択音声を書き出し":"选择并导出声音",
    "音声を繋げて書き出し":"剪辑并导出声音",
    "連続再生/停止":"连续播放/停止",
    "テキストを読み込む":"加载文本",
    "音声書き出し":"语音导出",
-   "テキスト欄を複製   " :    "复制文本字段",
+   "テキスト欄を複製":"复制文本字段",
    "テキスト欄を追加":"添加文本栏",
    "テキスト欄を削除":"删除文本字段",
    "すべて選択":"全选",
@@ -257,7 +258,7 @@ replaceInFile("src/components/Sing/ChangeValueDialog/TempoChangeDialog.stories.t
 replaceInFile("src/components/Sing/ChangeValueDialog/TempoChangeDialog.vue", {
    "テンポの追加":"添加节奏",
    "テンポの編集":"编辑节奏",
-   "テンポ":"节奏   "
+   "テンポ":"节奏"
 });
 
 replaceInFile("src/components/Sing/ChangeValueDialog/TimeSignatureChangeDialog.stories.ts", {
@@ -313,7 +314,7 @@ replaceInFile("src/components/Sing/SideBar/SideBar.vue", {
 
 replaceInFile("src/components/Sing/SideBar/TrackItem.vue", {
    "トラック追加":"添加音轨",
-   "トラック削除":"删除音轨   "
+   "トラック削除":"删除音轨"
 });
 
 replaceInFile("src/components/Sing/ToolBar/EditTargetSwicher.vue", {
@@ -326,7 +327,7 @@ replaceInFile("src/components/Sing/ToolBar/ToolBar.vue", {
    "テンポ":"节奏",
    "音域":"音域",
    "声量":"音量",
-   "拍子":"拍号   "
+   "拍子":"拍号"
 });
 
 replaceInFile("src/components/Sing/ExportOverlay.vue", {
@@ -353,11 +354,11 @@ replaceInFile("src/components/Sing/menuBarData.ts", {
 
 replaceInFile("src/components/Sing/PlayheadPositionDisplay.vue", {
    "トラック削除":"删除音轨",
-   "小節.拍":"小节.拍   "
+   "小節.拍":"小节.拍"
 });
 
 replaceInFile("src/components/Sing/ScoreSequencer.vue", {
-   "すべて選択   " :    "全选",
+   "すべて選択":"全选",
    "シーケンサ":"音序器",
    "切り取り":"剪切",
    "貼り付け":"粘贴",
@@ -377,7 +378,7 @@ replaceInFile("src/components/Sing/SequencerToolPalette.vue", {
    "選択優先":"优先选择",
    "編集優先":"优先编辑",
    "ピッチ編集":"音高编辑",
-   "ピッチ削除":"删除音高   "
+   "ピッチ削除":"删除音高"
 });
 
 replaceInFile("src/components/Talk/AccentPhrase.vue", {
@@ -386,7 +387,7 @@ replaceInFile("src/components/Talk/AccentPhrase.vue", {
    "読みの変更はアクセント項目でのみ、":"读音的更改仅限于重音项，",
    "番目のアクセント区間の読み":"第N个重音短语的读音",
    "削除":"删除",
-   "ア":"啊   "
+   "ア":"啊"
 });
 
 replaceInFile("src/components/Talk/AudioCell.vue", {
@@ -405,25 +406,28 @@ replaceInFile("src/components/Talk/AudioCell.vue", {
 replaceInFile("src/components/Talk/AudioDetail.vue", {
    "選択中のアクセント句のイントネーションをリセット":"重置所选重音短语语调",
    "エンジンの再起動をお試しください。":"请尝试重启引擎。",
-   "全体のイントネーションをリセット   " :    "重置语调",
+   "全体のイントネーションをリセット":"重置语调",
    "スライダーを微調整できます。":"可以微调滑块。",
    "マウスホイールを使って":"使用鼠标滚轮",
    "再生に失敗しました":"播放失败",
    "ｱｸｾﾝﾄ欄を表示":"显示重音栏",
    "ｲﾝﾄﾈｰｼｮﾝ欄を表示":"显示语调字段",
-   "長さ欄を表示   " :    "显示长度栏",
+   "長さ欄を表示":"显示长度栏",
    "再生/停止":"播放/停止",
    "一括調整":"批量调整",
    "ｱｸｾﾝﾄ":"重音",
    "ｲﾝﾄﾈｰｼｮﾝ":"语调",
    "ホイール":"滚轮",
-   "長さ":"长度",
+});
+
+replaceInFile("src/components/Talk/AudioDetail.vue", {
+   "長さ":"长度"
 });
 
 replaceInFile("src/components/Talk/AudioInfo.vue", {
    "プリセットを再登録し、このプリセットが設定されたテキスト欄全てに再適用する":"重新注册预设，并将其重新应用于所有设置了该预设的文本框",
    "フォルダへのアクセス許可がありません。アクセスしようとしたフォルダ名: ":"访问无权限: ",
-   "フォルダへのアクセス許可がありません。ファイルの読み書きのためにアクセス許可が必要です。   ":
+   "フォルダへのアクセス許可がありません。ファイルの読み書きのためにアクセス許可が必要です。":
    "文件夹访问无权限，但是需要权限来读取和写入文件",
    "プリセットの再登録のみ行う":"仅重新注册预设",
    "プリセット新規登録":"注册新预设",
@@ -454,11 +458,11 @@ replaceInFile("src/components/Talk/AudioInfo.vue", {
 
 replaceInFile("src/components/Talk/AudioParameter.vue", {
    "無声化した音にイントネーションは存在しません":"清音化的音没有语调",
-   "テキストをクリックすることで無声化を解けます。":"点击文本可以解除清音化。   "
+   "テキストをクリックすることで無声化を解けます。":"点击文本可以解除清音化。"
 })
 
 replaceInFile("src/components/Talk/CharacterPortrait.vue", {
-   "（表示エラー）":"（显示错误）   "
+   "（表示エラー）":"（显示错误）"
 })
 
 replaceInFile("src/components/Talk/menuBarData.ts", {
@@ -468,21 +472,21 @@ replaceInFile("src/components/Talk/menuBarData.ts", {
    "テキスト読み込み":"文本加载",
    "音声書き出し":"语音导出",
    "行番号を非表示":"隐藏行号",
-   "行番号を表示":"显示行号   "
+   "行番号を表示":"显示行号"
 });
 
 replaceInFile("src/components/Talk/TalkEditor.vue", {
    "テキストファイル (.txt) とVOICEVOXプロジェクトファイル (.vvproj) に対応しています。":"支持文本文件 (.txt) 和VOICEVOX项目文件 (.vvproj)。",
    "${defaultPort}番ポートが使用中であるため ${engineName} は、${altPort}番ポートで起動しました":"${engineName} 在 ${altPort} 端口上启动，因为端口 ${defaultPort} 正在使用",
    "テキスト欄からフォーカスを外す":"从文本字段移出焦点",
-   "テキスト欄にフォーカスを戻す   " :    "重新聚焦文本字段",
+   "テキスト欄にフォーカスを戻す":"重新聚焦文本字段",
    "選択音声を書き出し":"选择并导出声音",
    "音声を繋げて書き出し":"剪辑并导出声音",
    "連続再生/停止":"连续播放/停止",
    "テキストを読み込む":"加载文本",
    "対応していないファイルです":"不支持的文件",
    "音声書き出し":"语音导出",
-   "テキスト欄を複製   " :    "复制文本字段",
+   "テキスト欄を複製":"复制文本字段",
    "テキスト欄を追加":"添加文本栏",
    "テキスト欄を削除":"删除文本字段",
    "すべて選択":"全选",
@@ -583,12 +587,12 @@ replaceInFile("src/components/Dialog/HelpDialog/HelpDialog.vue", {
 
 replaceInFile("src/components/Dialog/HelpDialog/HelpLibraryPolicySection.vue", {
    "音声ライブラリの利用規約":"音频库使用条款",
-   "戻る":"返回   "
+   "戻る":"返回"
 });
 
 replaceInFile("src/components/Dialog/HelpDialog/HelpOssLicenseSection.vue", {
    "ライセンス情報":"许可证信息",
-   "戻る":"返回   "
+   "戻る":"返回"
 });
 
 replaceInFile("src/components/Dialog/HelpDialog/HelpUpdateInfoSection.vue", {
@@ -600,7 +604,7 @@ replaceInFile("src/components/Dialog/HelpDialog/HelpUpdateInfoSection.vue", {
 });
 
 replaceInFile("src/components/Dialog/SettingDialog/EditButtonCell.vue", {
-   "編集する":"编辑   "
+   "編集する":"编辑"
 });
 
 replaceInFile("src/components/Dialog/SettingDialog/FileNameTemplateDialog.stories.ts", {
@@ -744,7 +748,7 @@ replaceInFile("src/components/Dialog/SettingDialog/SettingDialog.vue", {
 });
 
 replaceInFile("src/components/Dialog/TextDialog/common.ts", {
-   "infoはアイコンなし":"无图标   "
+   "infoはアイコンなし":"无图标"
 });
 
 replaceInFile("src/components/Dialog/TextDialog/common.ts", {
@@ -776,7 +780,7 @@ replaceInFile("src/components/Dialog/TextDialog/QuestionDialog.stories.ts", {
 
 replaceInFile("src/components/Dialog/UpdateNotificationDialog/Container.vue", {
    "環境変数VITE_LATEST_UPDATE_INFOS_URLが設定されていません。.envに記載してください。":"未设置环境变量 VITE_LATEST_UPDATE_INFOS_URL。请在 .env 中进行配置",
-   "skipUpdateVersionが不正です: ":"skipUpdateVersion 无效：   "
+   "skipUpdateVersionが不正です: ":"skipUpdateVersion 无效："
 });
 
 replaceInFile("src/components/Dialog/UpdateNotificationDialog/index.stories.ts", {

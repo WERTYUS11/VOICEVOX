@@ -13,7 +13,7 @@
     toggleColor="primary"
     :options="[
       { label: '对话模式', value: 'talk' },
-      { label: '歌曲模式', value: 'song' },
+      { label: '歌曲模式   ', value: 'song' },
     ]"
     @update:modelValue="switchEditor"
   />

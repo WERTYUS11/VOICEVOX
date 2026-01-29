@@ -1,47 +1,5 @@
 <template>
   <QBadge
-    v-if="$q.platform.is.mac"
-    transparent
-    color="transparent"
-    textColor="display"
-    class="full-height cursor-not-allowed no-border-radius"
-  >
-    <QBtn
-      dense
-      flat
-      round
-      icon="lens"
-      size="8.5px"
-      color="red"
-      class="title-bar-buttons"
-      aria-label="关闭"
-      @click="closeWindow()"
-    ></QBtn>
-    <QBtn
-      dense
-      flat
-      round
-      icon="lens"
-      size="8.5px"
-      color="yellow"
-      class="title-bar-buttons"
-      aria-label="最小化"
-      @click="minimizeWindow()"
-    ></QBtn>
-    <QBtn
-      dense
-      flat
-      round
-      icon="lens"
-      size="8.5px"
-      color="green"
-      class="title-bar-buttons"
-      aria-label="最大化"
-      @click="toggleMaximizeWindow()"
-    ></QBtn>
-  </QBadge>
-  <QBadge
-    v-else
     transparent
     color="transparent"
     textColor="display"
@@ -82,7 +40,7 @@
       flat
       icon="close"
       class="title-bar-buttons close"
-      aria-label="关闭"
+      aria-label="关闭   "
       @click="closeWindow()"
     ></QBtn>
   </QBadge>
@@ -91,14 +49,12 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { mdiWindowRestore } from "@quasar/extras/mdi-v5";
-import { useQuasar } from "quasar";
 import { useStore } from "@/store";
 
-const $q = useQuasar();
 const store = useStore();
 
 const closeWindow = async () => {
-  void store.actions.CHECK_EDITED_AND_NOT_SAVE({ closeOrReload: "close" });
+  void store.actions.CHECK_EDITED_AND_NOT_SAVE({ nextAction: "close" });
 };
 const minimizeWindow = () => window.backend.minimizeWindow();
 const toggleMaximizeWindow = () => window.backend.toggleMaximizeWindow();

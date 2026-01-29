@@ -103,7 +103,7 @@
       </div>
     </template>
     <!-- スライダーここまで -->
-    <!-- 読みテキスト・啊クセント句の分割と結合ここから -->
+    <!-- 読みテキスト・啊   クセント句の分割と結合ここから -->
     <template v-for="(mora, moraIndex) in accentPhrase.moras" :key="moraIndex">
       <div
         class="text-cell"
@@ -202,7 +202,7 @@
         @click.stop="uiLocked || toggleAccentPhraseSplit(true)"
       />
     </template>
-    <!-- 読みテキスト・啊クセント句の分割と結合ここまで -->
+    <!-- 読みテキスト・啊   クセント句の分割と結合ここまで -->
   </div>
 </template>
 
@@ -277,7 +277,7 @@ const handleChangePronounce = (newPronunciation: string) => {
       newPronunciation = newPronunciation.slice(0, -1);
     } else {
       // 生成エラー回避
-      newPronunciation += "啊";
+      newPronunciation += "啊   ";
       popUntilPause = true;
     }
   }
@@ -320,8 +320,8 @@ const isEditableMora = (vowel: string, moraIndex: number) => {
     return false;
   }
   if (props.selectedDetail == "accent") {
-    // クリック時の動作はその啊クセント句の読み変更。
-    // よって、いずれかのモーラがhoverされているならその啊クセント句を強調表示する。
+    // クリック時の動作はその啊   クセント句の読み変更。
+    // よって、いずれかのモーラがhoverされているならその啊   クセント句を強調表示する。
     return hoveredMoraIndex.value != undefined;
   }
   if (props.selectedDetail == "pitch") {
