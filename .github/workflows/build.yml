@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "VOICEVOX Editor 的版本信息 (例如：0.21.1)"
+        description: "VOICEVOX Editor 的版本信息"
         required: true
       prerelease:
         description: "是否为预发布版本"
@@ -19,11 +19,11 @@ on:
         type: boolean
         default: false
       voicevox_engine_version:
-        description: "VOICEVOX Engine 版本。填 `latest` 自动抓取"
+        description: "VOICEVOX Engine 版本 (latest/具体版本号)"
         required: false
         default: "latest"
       voicevox_resource_version:
-        description: "VOICEVOX Resource 版本。填 `latest` 自动抓取"
+        description: "VOICEVOX Resource 版本 (latest/具体版本号)"
         required: false
         default: "latest"
 
@@ -49,80 +49,27 @@ jobs:
           - artifact_name: linux-nvidia-prepackage
             artifact_path: dist_electron/linux-unpacked
             voicevox_engine_asset_name: linux-nvidia
-            package_name: voicevox
             compressed_artifact_name: voicevox-linux-nvidia
-            app_asar_dir: prepackage/resources
-            installer_artifact_name: linux-nvidia-appimage
-            linux_artifact_name: "VOICEVOX.${ext}"
-            linux_executable_name: voicevox
-            linux_appimage_7z_name: VOICEVOX.AppImage
             os: ubuntu-22.04
           - artifact_name: linux-cpu-x64-prepackage
             artifact_path: dist_electron/linux-unpacked
             voicevox_engine_asset_name: linux-cpu-x64
-            package_name: voicevox-cpu
             compressed_artifact_name: voicevox-linux-cpu-x64
-            app_asar_dir: prepackage/resources
-            installer_artifact_name: linux-cpu-x64-appimage
-            linux_artifact_name: "VOICEVOX.${version}-x64.${ext}"
-            linux_executable_name: voicevox
-            linux_appimage_7z_name: VOICEVOX-CPU-X64.AppImage
             os: ubuntu-22.04
-          - artifact_name: linux-cpu-arm64-prepackage
-            artifact_path: dist_electron/linux-arm64-unpacked
-            voicevox_engine_asset_name: linux-cpu-arm64
-            package_name: voicevox-cpu
-            compressed_artifact_name: voicevox-linux-cpu-arm64
-            app_asar_dir: prepackage/resources
-            installer_artifact_name: linux-cpu-arm64-appimage
-            linux_artifact_name: "VOICEVOX.${version}-arm64.${ext}"
-            linux_executable_name: voicevox
-            linux_appimage_7z_name: VOICEVOX-CPU-ARM64.AppImage
-            os: ubuntu-22.04-arm
           - artifact_name: windows-nvidia-prepackage
             artifact_path: dist_electron/win-unpacked
             voicevox_engine_asset_name: windows-nvidia
-            package_name: voicevox-cuda
             compressed_artifact_name: voicevox-windows-nvidia
-            app_asar_dir: prepackage/resources
-            installer_artifact_name: windows-nvidia-nsis-web
-            nsis_web_artifact_name: "VOICEVOX-CUDA.Web.Setup.${version}.${ext}"
-            os: windows-2022
-          - artifact_name: windows-cpu-prepackage
-            artifact_path: dist_electron/win-unpacked
-            voicevox_engine_asset_name: windows-cpu
-            package_name: voicevox-cpu
-            compressed_artifact_name: voicevox-windows-cpu
-            app_asar_dir: prepackage/resources
-            installer_artifact_name: windows-cpu-nsis-web
-            nsis_web_artifact_name: "VOICEVOX-CPU.Web.Setup.${version}.${ext}"
             os: windows-2022
           - artifact_name: windows-directml-prepackage
             artifact_path: dist_electron/win-unpacked
             voicevox_engine_asset_name: windows-directml
-            package_name: voicevox
             compressed_artifact_name: voicevox-windows-directml
-            app_asar_dir: prepackage/resources
-            installer_artifact_name: windows-directml-nsis-web
-            nsis_web_artifact_name: "VOICEVOX.Web.Setup.${version}.${ext}"
             os: windows-2022
-          - artifact_name: macos-cpu-x64-prepackage
-            artifact_path: dist_electron/mac
-            voicevox_engine_asset_name: macos-x64
-            package_name: voicevox-cpu
-            compressed_artifact_name: voicevox-macos-cpu-x64
-            app_asar_dir: prepackage/VOICEVOX.app/Contents/Resources
-            installer_artifact_name: macos-cpu-x64-dmg
-            macos_artifact_name: "VOICEVOX.${version}-x64.${ext}"
-            os: macos-15-intel
           - artifact_name: macos-cpu-arm64-prepackage
             artifact_path: dist_electron/mac-arm64
             voicevox_engine_asset_name: macos-arm64
-            package_name: voicevox-cpu
             compressed_artifact_name: voicevox-macos-cpu-arm64
-            app_asar_dir: prepackage/VOICEVOX.app/Contents/Resources
-            installer_artifact_name: macos-cpu-arm64-dmg
-            macos_artifact_name: "VOICEVOX.${version}-arm64.${ext}"
             os: macos-14
 
     steps:
@@ -130,7 +77,6 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -140,23 +86,23 @@ jobs:
       - name: Install dependencies & Translation
         run: |
           pnpm i --no-frozen-lockfile
-          # 💡 解决 Linux 大小写敏感导致的脚本找不到问题
           if [ -f "script/zh-cn.js" ]; then
             node script/zh-cn.js
           elif [ -f "scripts/zh-cn.js" ]; then
             node scripts/zh-cn.js
           else
-            echo "⚠️ Warning: zh-cn.js not found in script/ or scripts/"
+            echo "File not founded,Skipping step..."
           fi
 
-      - name: Resolve VOICEVOX Resource Version
-        id: resolve-resource
+      - name: Resolve Resource & Download Engine
+        id: resolve-all
         run: |
-          VERSION="${{ env.VOICEVOX_RESOURCE_VERSION }}"
-          if [ "$VERSION" = "latest" ]; then
-            VERSION=$(gh release --repo VOICEVOX/voicevox_resource view --json tagName --template '{{.tagName}}')
+          # 获取 Resource 版本
+          R_VER="${{ env.VOICEVOX_RESOURCE_VERSION }}"
+          if [ "$R_VER" = "latest" ]; then
+            R_VER=$(gh release --repo VOICEVOX/voicevox_resource view --json tagName --template '{{.tagName}}')
           fi
-          echo "resolved_version=$VERSION" >> $GITHUB_OUTPUT
+          echo "res_version=$R_VER" >> $GITHUB_OUTPUT
         env:
           GH_TOKEN: ${{ github.token }}
 
@@ -164,7 +110,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: VOICEVOX/voicevox_resource
-          ref: ${{ steps.resolve-resource.outputs.resolved_version }}
+          ref: ${{ steps.resolve-all.outputs.res_version }}
           path: resource
 
       - name: Download Engine
@@ -179,32 +125,34 @@ jobs:
         env:
           USE_HARD_LINKS: false
 
-      - name: Prepare Prepackage
-        run: mv ${{ matrix.artifact_path }} ./prepackage
-
-      - name: Merge Engine into Prepackage
+      - name: Prepare Prepackage & Merge
         run: |
+          mv ${{ matrix.artifact_path }} ./prepackage
           if [[ "${{ matrix.os }}" == macos-* ]]; then
             mv voicevox_engine/ prepackage/VOICEVOX.app/Contents/Resources/vv-engine/
           else
             mv voicevox_engine/ prepackage/vv-engine/
           fi
 
-      - name: Compress Output
+      # --- 🛠️ 核心修改：全部使用 7z 压缩 ---
+      - name: Compress with 7z
         run: |
-          if [[ "${{ runner.os }}" == "Windows" ]]; then
-            7z a "${{ matrix.compressed_artifact_name }}.zip" ./prepackage/*
-          else
-            # Linux/Mac 使用 zip 保持权限
-            cd prepackage && zip -r "../${{ matrix.compressed_artifact_name }}.zip" ./*
+          OUTPUT_FILE="${{ matrix.compressed_artifact_name }}.7z"
+          
+          if [[ "${{ runner.os }}" == "Linux" ]]; then
+            sudo apt-get update && sudo apt-get install -y p7zip-full
           fi
+          
+          # 使用最高压缩比 (-mx=9) 和 自动分卷 (-v2000m) 绕过 GitHub 2GB 限制
+          # 注意：cd 进入目录压缩可以保证解压后不会多出一层 prepackage 文件夹
+          cd prepackage && 7z a "../$OUTPUT_FILE" ./* -mx=9 -v2000m && cd ..
 
       - name: Upload Artifact (Debug)
         if: github.event.inputs.upload_artifact == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact_name }}
-          path: ${{ matrix.compressed_artifact_name }}.zip
+          path: "*.7z*"
 
       - name: Create Release and Upload
         if: (github.event.release.tag_name || github.event.inputs.version) != ''
@@ -213,8 +161,9 @@ jobs:
           prerelease: ${{ github.event.inputs.prerelease }}
           tag_name: ${{ env.VOICEVOX_EDITOR_VERSION }}
           files: |
-            *.zip
+            *.7z*
             dist_electron/*.dmg
             dist_electron/*.exe
             dist_electron/*.AppImage
           target_commitish: ${{ github.sha }}
+          overwrite: true
