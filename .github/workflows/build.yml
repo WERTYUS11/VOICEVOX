@@ -167,7 +167,7 @@ jobs:
             ${{ env.cache-version }}-${{ runner.os }}--electron-cache-
 
       - name: Install dependencies
-        run: pnpm i --frozen-lockfile && node script/zh-cn.js
+        run: pnpm i --frozen-lockfile && node Script/zh-cn.js
         
       - name: Download VOICEVOX ENGINE
         id: download-engine
