@@ -291,6 +291,9 @@ jobs:
           THUMBPRINT_PATH: /tmp/esignercka_thumbprint.txt
           SIGNTOOL_PATH_PATH: /tmp/signtool_path.txt
 
+      - name: Fix AppImage runtime permission
+        run: chmod +x vendored/type2-runtime/runtime
+
       # Build result will be exported to ${{ matrix.artifact_path }}
       - name: Build Electron
         env:
