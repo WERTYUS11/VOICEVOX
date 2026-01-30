@@ -57,6 +57,7 @@ jobs:
             linux_executable_name: voicevox
             linux_appimage_7z_name: VOICEVOX.AppImage
             os: ubuntu-22.04
+            build_appimage: true # 添加此标志
 
           # Linux CPU (x64)
           - artifact_name: linux-cpu-x64-prepackage
@@ -70,6 +71,7 @@ jobs:
             linux_executable_name: voicevox
             linux_appimage_7z_name: VOICEVOX-CPU-X64.AppImage
             os: ubuntu-22.04
+            build_appimage: true # 添加此标志
 
           # Linux CPU (arm64)
           - artifact_name: linux-cpu-arm64-prepackage
@@ -78,11 +80,12 @@ jobs:
             package_name: voicevox-cpu
             compressed_artifact_name: voicevox-linux-cpu-arm64
             app_asar_dir: prepackage/resources
-            installer_artifact_name: linux-cpu-arm64-appimage
-            linux_artifact_name: "VOICEVOX.${version}-arm64.${ext}"
+            installer_artifact_name: linux-cpu-arm64-tar # 更改安装器名称
+            linux_artifact_name: "VOICEVOX.${version}-arm64.tar.gz" # 直接指定为 .tar.gz
             linux_executable_name: voicevox
-            linux_appimage_7z_name: VOICEVOX-CPU-ARM64.AppImage
+            # linux_appimage_7z_name: VOICEVOX-CPU-ARM64.AppImage # 移除，因为不再构建 AppImage
             os: ubuntu-22.04-arm
+            build_appimage: false # 添加此标志
 
           # Windows CUDA
           - artifact_name: windows-nvidia-prepackage
@@ -256,7 +259,7 @@ jobs:
           SIGNTOOL_PATH_PATH: /tmp/signtool_path.txt
 
       # Build result will be exported to ${{ matrix.artifact_path }}
-      - name: Build Electron
+      - name: Build Electron (unpacked)
         env:
           NSIS_WEB_ARTIFACT_NAME: ${{ matrix.nsis_web_artifact_name }}
           LINUX_ARTIFACT_NAME: ${{ matrix.linux_artifact_name }}
@@ -345,7 +348,7 @@ jobs:
           name="${{ matrix.compressed_artifact_name }}-${{ env.VOICEVOX_EDITOR_VERSION }}"
           # Use archiver keeps file permissions
           mv prepackage VOICEVOX
-          tar czf ${name}.tar.gz VOICEVOX
+          tar czf "${name}.tar.gz" VOICEVOX # 确保文件名正确
           mv VOICEVOX prepackage
 
       - name: Upload Linux tar.gz (without nvidia) to Artifacts
@@ -420,8 +423,8 @@ jobs:
           SIGNTOOL_PATH_PATH: /tmp/signtool_path.txt
 
       # NOTE: prepackage can be removed before splitting nsis-web archive
-      - name: Build Electron
-        if: endsWith(matrix.installer_artifact_name, '-nsis-web') || endsWith(matrix.installer_artifact_name, '-appimage') # windows and linux
+      - name: Build Electron Installer (Windows and AppImage for Linux)
+        if: (endsWith(matrix.installer_artifact_name, '-nsis-web') || endsWith(matrix.installer_artifact_name, '-appimage'))
         env:
           NSIS_WEB_ARTIFACT_NAME: ${{ matrix.nsis_web_artifact_name }}
           LINUX_ARTIFACT_NAME: ${{ matrix.linux_artifact_name }}
@@ -429,7 +432,7 @@ jobs:
         run: |
           pnpm run electron:build:pack --prepackaged prepackage/
 
-      - name: Build Electron (for macOS)
+      - name: Build Electron Installer (for macOS)
         if: endsWith(matrix.installer_artifact_name, '-dmg') # macOS
         env:
           MACOS_ARTIFACT_NAME: ${{ matrix.macos_artifact_name }}
