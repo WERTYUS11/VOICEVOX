@@ -19,14 +19,12 @@ on:
         type: boolean
         default: false
 
-# 🛡️ 解决 403 权限问题：必须显式声明写权限才能创建 Release
-permissions:
-  contents: write
-
 env:
-  VOICEVOX_ENGINE_VERSION: latest
-  VOICEVOX_RESOURCE_VERSION: main
-  VOICEVOX_EDITOR_VERSION: ${{ github.event.inputs.version || '999.999.999-develop' }}
+  VOICEVOX_ENGINE_VERSION: 0.25.1
+  VOICEVOX_RESOURCE_VERSION: 0.25.1
+  VOICEVOX_EDITOR_VERSION:
+    |- # releaseタグ名か、workflow_dispatchでのバージョン名か、999.999.999-developが入る
+    ${{ github.event.release.tag_name || github.event.inputs.version || '999.999.999-develop' }}
 
 defaults:
   run:
@@ -34,13 +32,13 @@ defaults:
 
 jobs:
   build-and-upload:
-    environment: ${{ github.event.inputs.code_signing == 'true' && 'code_signing' || '' }}
+    environment: ${{ github.event.inputs.code_signing == 'true' && 'code_signing' || '' }} # コード署名用のenvironment（false時の挙動は2022年7月10日時点で未定義動作）
     env:
       ELECTRON_CACHE: .cache/electron
       ELECTRON_BUILDER_CACHE: .cache/electron-builder
       cache-version: v2
+      # GNUコマンド
       sed: ${{ startsWith(matrix.os, 'macos-') && 'gsed' || 'sed' }}
-
     strategy:
       fail-fast: false
       matrix:
@@ -57,7 +55,6 @@ jobs:
             linux_executable_name: voicevox
             linux_appimage_7z_name: VOICEVOX.AppImage
             os: ubuntu-22.04
-
           # Linux CPU (x64)
           - artifact_name: linux-cpu-x64-prepackage
             artifact_path: dist_electron/linux-unpacked
@@ -70,7 +67,6 @@ jobs:
             linux_executable_name: voicevox
             linux_appimage_7z_name: VOICEVOX-CPU-X64.AppImage
             os: ubuntu-22.04
-
           # Linux CPU (arm64)
           - artifact_name: linux-cpu-arm64-prepackage
             artifact_path: dist_electron/linux-arm64-unpacked
@@ -83,7 +79,6 @@ jobs:
             linux_executable_name: voicevox
             linux_appimage_7z_name: VOICEVOX-CPU-ARM64.AppImage
             os: ubuntu-22.04-arm
-
           # Windows CUDA
           - artifact_name: windows-nvidia-prepackage
             artifact_path: dist_electron/win-unpacked
@@ -94,7 +89,6 @@ jobs:
             installer_artifact_name: windows-nvidia-nsis-web
             nsis_web_artifact_name: "VOICEVOX-CUDA.Web.Setup.${version}.${ext}"
             os: windows-2022
-
           # Windows CPU
           - artifact_name: windows-cpu-prepackage
             artifact_path: dist_electron/win-unpacked
@@ -105,7 +99,6 @@ jobs:
             installer_artifact_name: windows-cpu-nsis-web
             nsis_web_artifact_name: "VOICEVOX-CPU.Web.Setup.${version}.${ext}"
             os: windows-2022
-
           # Windows DirectML
           - artifact_name: windows-directml-prepackage
             artifact_path: dist_electron/win-unpacked
@@ -116,7 +109,6 @@ jobs:
             installer_artifact_name: windows-directml-nsis-web
             nsis_web_artifact_name: "VOICEVOX.Web.Setup.${version}.${ext}"
             os: windows-2022
-
           # macOS CPU (x64)
           - artifact_name: macos-cpu-x64-prepackage
             artifact_path: dist_electron/mac
@@ -127,7 +119,6 @@ jobs:
             installer_artifact_name: macos-cpu-x64-dmg
             macos_artifact_name: "VOICEVOX.${version}-x64.${ext}"
             os: macos-15-intel
-
           # macOS CPU (arm64)
           - artifact_name: macos-cpu-arm64-prepackage
             artifact_path: dist_electron/mac-arm64
@@ -138,7 +129,7 @@ jobs:
             installer_artifact_name: macos-cpu-arm64-dmg
             macos_artifact_name: "VOICEVOX.${version}-arm64.${ext}"
             os: macos-14
-        
+
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -147,27 +138,26 @@ jobs:
         if: startsWith(matrix.os, 'ubuntu-')
         run: sudo rm -rf /usr/local/lib/android
 
-      # ✨ 方案 B 核心：安装 AppImage 运行依赖
-      - name: Install Dependencies for AppImage
-        if: matrix.build_appimage == true
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libfuse2 libarchive-tools
-      
-      # ✨ 方案 B 核心：确保 vendored 目录下的工具可执行
-      - name: Ensure vendored tools are executable
-        if: matrix.build_appimage == true
-        run: |
-          chmod +x vendored/appimagetool/appimagetool.AppImage || true
-          chmod +x vendored/type2-runtime/runtime || true
-
+      # NOTE: The default sed of macOS is BSD sed.
+      #       There is a difference in specification between BSD sed and GNU sed,
+      #       so you need to install GNU sed.
       - name: Install GNU sed on macOS
         if: startsWith(matrix.os, 'macos-')
-        run: brew install gnu-sed
+        run: |
+          brew install gnu-sed
 
+      # Rename executable file
+      # NOTE: If the CPU/DirectML/GPU builds have the same package name,
+      #       the NSIS installers and the 7z files have duplicate names.
+      #       For Linux, If they have the same product name,
+      #       the AppImages have duplicate names.
+      #       Files with the same name cannot be uploaded to a single GitHub Release,
+      #       so different package/product names should be used for CPU/DirectML/GPU builds.
       - name: Replace package name & version
         run: |
           $sed -i 's/"name": "voicevox"/"name": "${{ matrix.package_name }}"/' package.json
+          # $sed -i 's/productName: "VOICEVOX"/productName: "${{ matrix.product_name }}"/' vue.config.js
+
           $sed -i 's/"version": "999.999.999"/"version": "${{ env.VOICEVOX_EDITOR_VERSION }}"/' package.json
 
       - name: Setup pnpm
@@ -179,6 +169,22 @@ jobs:
           node-version-file: ".node-version"
           cache: "pnpm"
 
+      - name: Cache Electron
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.ELECTRON_CACHE }}
+          key: ${{ env.cache-version }}-${{ runner.os }}--electron-cache-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ env.cache-version }}-${{ runner.os }}--electron-cache-
+
+      - name: Cache Electron-Builder
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.ELECTRON_BUILDER_CACHE }}
+          key: ${{ env.cache-version }}-${{ runner.os }}--electron-builder-cache-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ env.cache-version }}-${{ runner.os }}--electron-builder-cache-
+
       - name: Install dependencies
         run: pnpm i --frozen-lockfile
 
@@ -189,112 +195,330 @@ jobs:
           ref: ${{ env.VOICEVOX_RESOURCE_VERSION }}
           path: resource
 
-      # ... (此处省略中间的资源处理步骤，保持与原脚本一致) ...
       - name: Create and replace software resources
         run: |
           rm build/README.txt
           rm public/policy.md
-          { cat resource/editor/README.md; echo; cat resource/editor/ACKNOWLEDGMENTS.md; } > build/README.txt
+          {
+            cat resource/editor/README.md
+            echo
+            cat resource/editor/ACKNOWLEDGMENTS.md
+          } \
+          > build/README.txt
           cp build/README.txt public/policy.md
+
           cp resource/editor/PRIVACYPOLICY.md public/privacyPolicy.md
 
       - name: Overwrite .env.production for Linux
         if: startsWith(matrix.os, 'ubuntu-')
-        run: $sed -i 's|run.exe|./run|g' .env.production
+        run: |
+          $sed -i 's|run.exe|./run|g' .env.production
 
       - name: Overwrite .env.production for macOS
         if: startsWith(matrix.os, 'macos-')
-        run: $sed -i 's|vv-engine/run.exe|../Resources/vv-engine/run|g' .env.production
+        run: |
+          $sed -i 's|vv-engine/run.exe|../Resources/vv-engine/run|g' .env.production
 
       - name: Replace .env.production infomations
         run: |
+          # GTM ID
           gtm_id=$(jq -er '.gtm_container_id' resource/editor/metas.json)
           $sed -i 's/VITE_GTM_CONTAINER_ID=.*/VITE_GTM_CONTAINER_ID='"$gtm_id"'/' .env.production
 
       - name: Generate public/licenses.json
         run: pnpm run license:generate -o public/licenses.json
 
-      # Build Electron (unpacked)
+      - name: Define Code Signing Envs
+        if: startsWith(matrix.os, 'windows-') && github.event.inputs.code_signing == 'true'
+        run: |
+          bash tools/codesign_setup.bash
+          THUMBPRINT="$(head -n 1 $THUMBPRINT_PATH)"
+          SIGNTOOL_PATH="$(head -n 1 $SIGNTOOL_PATH_PATH)"
+          echo "::add-mask::$THUMBPRINT"
+
+          echo "WIN_CERTIFICATE_SHA1=$THUMBPRINT" >> $GITHUB_ENV
+          echo 'WIN_SIGNING_HASH_ALGORITHMS=["sha256"]' >> $GITHUB_ENV
+          echo "SIGNTOOL_PATH=$SIGNTOOL_PATH" >> $GITHUB_ENV
+        env:
+          ESIGNERCKA_USERNAME: ${{ secrets.ESIGNERCKA_USERNAME }}
+          ESIGNERCKA_PASSWORD: ${{ secrets.ESIGNERCKA_PASSWORD }}
+          ESIGNERCKA_TOTP_SECRET: ${{ secrets.ESIGNERCKA_TOTP_SECRET }}
+          THUMBPRINT_PATH: /tmp/esignercka_thumbprint.txt
+          SIGNTOOL_PATH_PATH: /tmp/signtool_path.txt
+
+      # Build result will be exported to ${{ matrix.artifact_path }}
       - name: Build Electron
         env:
+          NSIS_WEB_ARTIFACT_NAME: ${{ matrix.nsis_web_artifact_name }}
+          LINUX_ARTIFACT_NAME: ${{ matrix.linux_artifact_name }}
+          LINUX_EXECUTABLE_NAME: ${{ matrix.linux_executable_name }}
+          MACOS_ARTIFACT_NAME: ${{ matrix.macos_artifact_name }}
+
+          # https://github.com/electron-userland/electron-builder/issues/3179
           USE_HARD_LINKS: false
         run: pnpm run electron:build --dir
 
-      - name: Rename NoEngine Prepackage
-        run: mv ${{ matrix.artifact_path }} ./prepackage
+      - name: Reset Code Signing Envs
+        if: startsWith(matrix.os, 'windows-') && github.event.inputs.code_signing == 'true'
+        run: |
+          bash tools/codesign_cleanup.bash
+          echo 'WIN_CERTIFICATE_SHA1=' >> $GITHUB_ENV
+          echo 'WIN_SIGNING_HASH_ALGORITHMS=' >> $GITHUB_ENV
+          echo 'SIGNTOOL_PATH=' >> $GITHUB_ENV
+        env:
+          THUMBPRINT_PATH: /tmp/esignercka_thumbprint.txt
 
-      # 下载并合并 Engine
+      - name: Rename NoEngine Prepackage
+        run: |
+          mv ${{ matrix.artifact_path }} ./prepackage
+
+      # Download VOICEVOX ENGINE
       - name: Download VOICEVOX ENGINE
+        id: download-engine
         uses: ./.github/actions/download-engine
         with:
           version: ${{ env.VOICEVOX_ENGINE_VERSION }}
           dest: ${{ github.workspace }}/voicevox_engine
           target: ${{ matrix.voicevox_engine_asset_name }}
 
+      # FIXME: asarをextract/packせず、ビルド前にengine_licenses.jsonとlicenses.jsonを結合する
       - name: Merge licenses.json (ENGINE, VOICEVOX)
         run: |
+          # Unpack asar
           npx asar extract "${{ matrix.app_asar_dir }}/app.asar" "${{ matrix.app_asar_dir }}/app"
           rm "${{ matrix.app_asar_dir }}/app.asar"
+
           mv voicevox_engine/licenses.json engine_licenses.json
           pnpm run license:merge -o "${{ matrix.app_asar_dir }}/app/dist/licenses.json" -i engine_licenses.json -i "${{ matrix.app_asar_dir }}/app/dist/licenses.json"
+
+          # Repack asar
           npx asar pack "${{ matrix.app_asar_dir }}/app" "${{ matrix.app_asar_dir }}/app.asar"
           rm -rf "${{ matrix.app_asar_dir }}/app"
 
       - name: Merge VOICEVOX ENGINE into prepackage/
         if: startsWith(matrix.artifact_name, 'windows-') || startsWith(matrix.artifact_name, 'linux-')
-        run: mv voicevox_engine/ prepackage/vv-engine/
+        run: |
+          mv voicevox_engine/ prepackage/vv-engine/
 
-      - name: Merge VOICEVOX ENGINE into macOS prepackage/
+      - name: Merge VOICEVOX ENGINE into prepackage/VOICEVOX.app/Contents/Resources/
         if: startsWith(matrix.artifact_name, 'macos-')
-        run: mv voicevox_engine/ prepackage/VOICEVOX.app/Contents/Resources/vv-engine/
+        run: |
+          mv voicevox_engine/ prepackage/VOICEVOX.app/Contents/Resources/vv-engine/
 
       - name: Recover file permissions
-        if: startsWith(matrix.artifact_name, 'linux-')
+        if: startsWith(matrix.artifact_name, 'linux-') # linux
         run: |
           chmod +x "prepackage/${{ matrix.linux_executable_name }}"
           chmod +x "prepackage/vv-engine/run"
 
-      # --- 产出 Linux tar.gz (arm64 靠这个) ---
+      - name: Recover file permissions for macOS build
+        if: startsWith(matrix.artifact_name, 'macos-') # macOS
+        run: |
+          chmod +x "prepackage/VOICEVOX.app/Contents/Resources/vv-engine/run"
+          chmod +x "prepackage/VOICEVOX.app/Contents/Frameworks/VOICEVOX Helper (GPU).app/Contents/MacOS/VOICEVOX Helper (GPU)"
+          chmod +x "prepackage/VOICEVOX.app/Contents/Frameworks/VOICEVOX Helper (Plugin).app/Contents/MacOS/VOICEVOX Helper (Plugin)"
+          chmod +x "prepackage/VOICEVOX.app/Contents/Frameworks/VOICEVOX Helper (Renderer).app/Contents/MacOS/VOICEVOX Helper (Renderer)"
+          chmod +x "prepackage/VOICEVOX.app/Contents/Frameworks/VOICEVOX Helper.app/Contents/MacOS/VOICEVOX Helper"
+
+      # NOTE: actions/upload-artifact@v4 does not upload `**.lproj` directories, which are an empty directory.
+      #       Make `ja.lproj` directory because it is necessary for Japanese localization on macOS.
+      - name: Make .lproj directories in Resources directory of VOICEVOX.app
+        if: startsWith(matrix.artifact_name, 'macos-')
+        run: mkdir -p prepackage/VOICEVOX.app/Contents/Resources/ja.lproj prepackage/VOICEVOX.app/Contents/Resources/en.lproj
+
+      - name: Ad hoc code signing
+        if: endsWith(matrix.installer_artifact_name, '-dmg') # macOS
+        run: codesign --force --deep -s - prepackage/VOICEVOX.app
+
       - name: Create Linux tar.gz (without nvidia)
         if: startsWith(matrix.artifact_name, 'linux-') && !contains(matrix.artifact_name, 'nvidia')
         run: |
           name="${{ matrix.compressed_artifact_name }}-${{ env.VOICEVOX_EDITOR_VERSION }}"
+          # Use archiver keeps file permissions
           mv prepackage VOICEVOX
           tar czf ${name}.tar.gz VOICEVOX
           mv VOICEVOX prepackage
 
-      - name: Upload Linux tar.gz to Release Assets
-        if: startsWith(matrix.artifact_name, 'linux-') && !contains(matrix.artifact_name, 'nvidia') && github.event.inputs.version != ''
+      - name: Upload Linux tar.gz (without nvidia) to Artifacts
+        if: startsWith(matrix.artifact_name, 'linux-') && !contains(matrix.artifact_name, 'nvidia') && github.event.inputs.upload_artifact == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_name }}-targz
+          path: |-
+            ${{ matrix.compressed_artifact_name }}-${{ env.VOICEVOX_EDITOR_VERSION }}.tar.gz
+
+      - name: Upload Linux tar.gz (without nvidia) to Release Assets
+        if: startsWith(matrix.artifact_name, 'linux-') && !contains(matrix.artifact_name, 'nvidia') && (github.event.release.tag_name || github.event.inputs.version) != ''
         uses: softprops/action-gh-release@v2
         with:
           prerelease: ${{ github.event.inputs.prerelease }}
           tag_name: ${{ env.VOICEVOX_EDITOR_VERSION }}
-          files: "*.tar.gz"
+          files: |-
+            ${{ matrix.compressed_artifact_name }}-${{ env.VOICEVOX_EDITOR_VERSION }}.tar.gz
+          target_commitish: ${{ github.sha }}
 
-      # --- 产出打包文件 (AppImage / NSIS / DMG) ---
-      - name: Build Electron (Packed)
-        # 🛡️ 只有明确开启 AppImage 或 Windows/Mac 才运行打包
-        if: matrix.build_appimage == true || startsWith(matrix.os, 'windows-') || startsWith(matrix.os, 'macos-')
+      - name: Delete Linux tar.gz (without nvidia)
+        if: startsWith(matrix.artifact_name, 'linux-') && !contains(matrix.artifact_name, 'nvidia')
         run: |
-          if [[ "${{ matrix.os }}" == "macos"* ]]; then
-            pnpm run electron:build:pack --prepackaged prepackage/VOICEVOX.app
-          else
-            pnpm run electron:build:pack --prepackaged prepackage/
-          fi
+          rm ${{ matrix.compressed_artifact_name }}-${{ env.VOICEVOX_EDITOR_VERSION }}.tar.gz
 
-      # --- Linux AppImage 特有步骤 (切分和安装脚本) ---
-      - name: Create Linux AppImage split
-        if: matrix.build_appimage == true
+      - name: Create Windows & Mac zip (without nvidia)
+        if: (startsWith(matrix.artifact_name, 'windows-') || startsWith(matrix.artifact_name, 'macos-')) && !contains(matrix.artifact_name, 'nvidia')
         run: |
-          cd dist_electron/
-          for appImageFile in *.AppImage; do
-            7z -mx=0 -v1900m a "${{ matrix.linux_appimage_7z_name }}.7z" "${appImageFile}"
-          done
+          name="${{ matrix.compressed_artifact_name }}-${{ env.VOICEVOX_EDITOR_VERSION }}"
+          7z a -tzip $name.zip prepackage/
+          7z rn $name.zip prepackage/ VOICEVOX/
 
-      - name: Upload Linux AppImage to Release Assets
-        if: matrix.build_appimage == true && github.event.inputs.version != ''
+      - name: Upload Windows & Mac zip (without nvidia) to Artifacts
+        if: (startsWith(matrix.artifact_name, 'windows-') || startsWith(matrix.artifact_name, 'macos-')) && !contains(matrix.artifact_name, 'nvidia') && github.event.inputs.upload_artifact == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_name }}-zip
+          path: |-
+            ${{ matrix.compressed_artifact_name }}-${{ env.VOICEVOX_EDITOR_VERSION }}.zip
+
+      - name: Upload Windows & Mac zip (without nvidia) to Release Assets
+        if: (startsWith(matrix.artifact_name, 'windows-') || startsWith(matrix.artifact_name, 'macos-')) && !contains(matrix.artifact_name, 'nvidia') && (github.event.release.tag_name || github.event.inputs.version) != ''
         uses: softprops/action-gh-release@v2
         with:
+          prerelease: ${{ github.event.inputs.prerelease }}
           tag_name: ${{ env.VOICEVOX_EDITOR_VERSION }}
-          files: |
+          files: |-
+            ${{ matrix.compressed_artifact_name }}-${{ env.VOICEVOX_EDITOR_VERSION }}.zip
+          target_commitish: ${{ github.sha }}
+
+      - name: Delete Windows & Mac zip (without nvidia)
+        if: (startsWith(matrix.artifact_name, 'windows-') || startsWith(matrix.artifact_name, 'macos-')) && !contains(matrix.artifact_name, 'nvidia')
+        run: |
+          rm ${{ matrix.compressed_artifact_name }}-${{ env.VOICEVOX_EDITOR_VERSION }}.zip
+
+      - name: Define Code Signing Envs
+        if: startsWith(matrix.os, 'windows-') && github.event.inputs.code_signing == 'true'
+        run: |
+          bash tools/codesign_setup.bash
+          THUMBPRINT="$(head -n 1 $THUMBPRINT_PATH)"
+          SIGNTOOL_PATH="$(head -n 1 $SIGNTOOL_PATH_PATH)"
+          echo "::add-mask::$THUMBPRINT"
+
+          echo "WIN_CERTIFICATE_SHA1=$THUMBPRINT" >> $GITHUB_ENV
+          echo 'WIN_SIGNING_HASH_ALGORITHMS=["sha256"]' >> $GITHUB_ENV
+          echo "SIGNTOOL_PATH=$SIGNTOOL_PATH" >> $GITHUB_ENV
+        env:
+          ESIGNERCKA_USERNAME: ${{ secrets.ESIGNERCKA_USERNAME }}
+          ESIGNERCKA_PASSWORD: ${{ secrets.ESIGNERCKA_PASSWORD }}
+          ESIGNERCKA_TOTP_SECRET: ${{ secrets.ESIGNERCKA_TOTP_SECRET }}
+          THUMBPRINT_PATH: /tmp/esignercka_thumbprint.txt
+          SIGNTOOL_PATH_PATH: /tmp/signtool_path.txt
+
+      # NOTE: prepackage can be removed before splitting nsis-web archive
+      - name: Build Electron
+        if: endsWith(matrix.installer_artifact_name, '-nsis-web') || endsWith(matrix.installer_artifact_name, '-appimage') # windows and linux
+        env:
+          NSIS_WEB_ARTIFACT_NAME: ${{ matrix.nsis_web_artifact_name }}
+          LINUX_ARTIFACT_NAME: ${{ matrix.linux_artifact_name }}
+          LINUX_EXECUTABLE_NAME: ${{ matrix.linux_executable_name }}
+        run: |
+          pnpm run electron:build:pack --prepackaged prepackage/
+
+      - name: Build Electron (for macOS)
+        if: endsWith(matrix.installer_artifact_name, '-dmg') # macOS
+        env:
+          MACOS_ARTIFACT_NAME: ${{ matrix.macos_artifact_name }}
+        run: |
+          pnpm run electron:build:pack --prepackaged prepackage/VOICEVOX.app
+
+      - name: Reset Code Signing Envs
+        if: startsWith(matrix.os, 'windows-') && github.event.inputs.code_signing == 'true'
+        run: |
+          bash tools/codesign_cleanup.bash
+          echo 'WIN_CERTIFICATE_SHA1=' >> $GITHUB_ENV
+          echo 'WIN_SIGNING_HASH_ALGORITHMS=' >> $GITHUB_ENV
+          echo 'SIGNTOOL_PATH=' >> $GITHUB_ENV
+        env:
+          THUMBPRINT_PATH: /tmp/esignercka_thumbprint.txt
+
+      - name: Create Linux AppImage split
+        if: endsWith(matrix.installer_artifact_name, '-appimage')
+        run: |
+          cd dist_electron/
+
+          for appImageFile in *.AppImage; do
+            echo "Splitting ${appImageFile}"
+
+            # Split to MyArtifact.AppImage.7z.001, MyArtifact.AppImage.7z.002, ...
+            # Use compression level 0 since AppImage is already compressed
+            # .7z is needed for installer_linux.sh yet
+            7z -mx=0 -v1900m a "${{ matrix.linux_appimage_7z_name }}.7z" "${appImageFile}"
+
+            # Output split archive hash list
+            sha256sum "${{ matrix.linux_appimage_7z_name }}.7z".* > "${{ matrix.installer_artifact_name }}.7z.txt"
+          done
+
+      - name: Create Linux installer
+        if: endsWith(matrix.installer_artifact_name, '-appimage')
+        run: |
+          sed \
+            -e 's/^NAME=@@PLACEHOLDER@@ # placeholder for CI$/NAME="${{ matrix.installer_artifact_name }}"/' \
+            -e 's/^VERSION=@@PLACEHOLDER@@ # placeholder for CI$/VERSION="${{ env.VOICEVOX_EDITOR_VERSION }}"/' \
+            build/linux/installer_linux.template.sh > VOICEVOX.${{ matrix.installer_artifact_name }}.${{ env.VOICEVOX_EDITOR_VERSION }}.sh
+
+          # Check that placeholders were replaced
+          ! grep "@@PLACEHOLDER@@" VOICEVOX.${{ matrix.installer_artifact_name }}.${{ env.VOICEVOX_EDITOR_VERSION }}.sh
+
+      - name: Upload Linux AppImage split and installer to Artifacts
+        if: endsWith(matrix.installer_artifact_name, '-appimage') && github.event.inputs.upload_artifact == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.installer_artifact_name }}-release
+          path: |-
             dist_electron/*.7z.*
+            VOICEVOX.${{ matrix.installer_artifact_name }}.${{ env.VOICEVOX_EDITOR_VERSION }}.sh
+
+      - name: Upload Linux AppImage split and installer to Release Assets
+        if: endsWith(matrix.installer_artifact_name, '-appimage') && (github.event.release.tag_name || github.event.inputs.version) != ''
+        uses: softprops/action-gh-release@v2
+        with:
+          prerelease: ${{ github.event.inputs.prerelease }}
+          tag_name: ${{ env.VOICEVOX_EDITOR_VERSION }}
+          files: |-
+            dist_electron/*.7z.*
+            VOICEVOX.${{ matrix.installer_artifact_name }}.${{ env.VOICEVOX_EDITOR_VERSION }}.sh
+          target_commitish: ${{ github.sha }}
+
+      - name: Upload macOS dmg to Artifacts
+        if: endsWith(matrix.installer_artifact_name, '-dmg') && github.event.inputs.upload_artifact == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.installer_artifact_name }}-release
+          path: |-
+            dist_electron/*.dmg
+
+      - name: Upload macOS dmg to Release Assets
+        if: endsWith(matrix.installer_artifact_name, '-dmg') && (github.event.release.tag_name || github.event.inputs.version) != ''
+        uses: softprops/action-gh-release@v2
+        with:
+          prerelease: ${{ github.event.inputs.prerelease }}
+          tag_name: ${{ env.VOICEVOX_EDITOR_VERSION }}
+          files: |-
+            dist_electron/*.dmg
+          target_commitish: ${{ github.sha }}
+
+      - name: Upload Windows NSIS Web to Artifacts
+        if: endsWith(matrix.installer_artifact_name, '-nsis-web') && github.event.inputs.upload_artifact == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.installer_artifact_name }}-release
+          path: |-
+            dist_electron/nsis-web/out/*.7z.*
+            dist_electron/nsis-web/*.exe
+
+      - name: Upload Windows NSIS Web to Release Assets
+        if: endsWith(matrix.installer_artifact_name, '-nsis-web') && (github.event.release.tag_name || github.event.inputs.version) != ''
+        uses: softprops/action-gh-release@v2
+        with:
+          prerelease: ${{ github.event.inputs.prerelease }}
+          tag_name: ${{ env.VOICEVOX_EDITOR_VERSION }}
+          files: |-
+            dist_electron/nsis-web/out/*.7z.*
+            dist_electron/nsis-web/*.exe
+          target_commitish: ${{ github.sha }}
