@@ -40,41 +40,10 @@ export const fetchLatestDefaultEngineInfo = async (url: string) => {
   return latestDefaultEngineInfoSchema.parse(await response.json());
 };
 
-<<<<<<< HEAD
-/**
- * 実行環境に合うパッケージを取得する。GPU版があってもCPU版を返す。
- * TODO: どのデバイス版にするかはユーザーが選べるようにするべき。
- */
-export const getSuitablePackageInfo = (
-=======
 /** 指定ターゲットのパッケージを取得する */
 export const getPackageInfoByTarget = (
->>>>>>> 80af4a3d5dbe9b5e81509d1a2ce338795386f0c1
   updateInfo: z.infer<typeof latestDefaultEngineInfoSchema>,
   target: RuntimeTarget,
 ): PackageInfo => {
-<<<<<<< HEAD
-  const platform = process.platform;
-  const arch = process.arch;
-
-  if (platform === "win32") {
-    if (arch === "x64") {
-      return updateInfo.windows.x64.CPU;
-    }
-  } else if (platform === "darwin") {
-    if (arch === "x64") {
-      return updateInfo.macos.x64.CPU;
-    } else if (arch === "arm64") {
-      return updateInfo.macos.arm64.CPU;
-    }
-  } else if (platform === "linux") {
-    if (arch === "x64") {
-      return updateInfo.linux.x64.CPU;
-    }
-  }
-
-  throw new Error(`Unsupported platform: ${platform} ${arch}`);
-=======
   return updateInfo.packages[target];
->>>>>>> 80af4a3d5dbe9b5e81509d1a2ce338795386f0c1
 };
