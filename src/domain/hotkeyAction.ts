@@ -7,7 +7,7 @@ export const HotkeyCombination = (
 ): HotkeyCombination => hotkeyCombinationSchema.parse(hotkeyCombination);
 
 // 共通のアクション名
-export const actionPostfixSelectNthCharacter = "番目のキャラクターを選択";
+export const actionPostfixSelectNthCharacter = "号角色选择";
 
 export const hotkeyActionNameSchema = z.enum([
   "语音导出",
