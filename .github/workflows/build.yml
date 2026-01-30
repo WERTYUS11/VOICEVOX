@@ -19,6 +19,10 @@ on:
         type: boolean
         default: false
 
+# 🛡️ 解决 403 权限问题：必须显式声明写权限才能创建 Release
+permissions:
+  contents: write
+
 env:
   VOICEVOX_ENGINE_VERSION: latest
   VOICEVOX_RESOURCE_VERSION: main
@@ -143,19 +147,19 @@ jobs:
         if: startsWith(matrix.os, 'ubuntu-')
         run: sudo rm -rf /usr/local/lib/android
 
-      # --- 关键修改：修复 Ubuntu 22.04 AppImage 构建环境 ---
+      # ✨ 方案 B 核心：安装 AppImage 运行依赖
       - name: Install Dependencies for AppImage
         if: matrix.build_appimage == true
         run: |
           sudo apt-get update
           sudo apt-get install -y libfuse2 libarchive-tools
       
+      # ✨ 方案 B 核心：确保 vendored 目录下的工具可执行
       - name: Ensure vendored tools are executable
         if: matrix.build_appimage == true
         run: |
-          chmod +x vendored/appimagetool/appimagetool.AppImage
-          chmod +x vendored/type2-runtime/runtime
-      # --------------------------------------------------
+          chmod +x vendored/appimagetool/appimagetool.AppImage || true
+          chmod +x vendored/type2-runtime/runtime || true
 
       - name: Install GNU sed on macOS
         if: startsWith(matrix.os, 'macos-')
@@ -185,10 +189,35 @@ jobs:
           ref: ${{ env.VOICEVOX_RESOURCE_VERSION }}
           path: resource
 
-      # 此处省略中间资源处理步骤（Create and replace resources, Generate licenses等）...
-      # 这些步骤与你之前的脚本完全一致
+      # ... (此处省略中间的资源处理步骤，保持与原脚本一致) ...
+      - name: Create and replace software resources
+        run: |
+          rm build/README.txt
+          rm public/policy.md
+          { cat resource/editor/README.md; echo; cat resource/editor/ACKNOWLEDGMENTS.md; } > build/README.txt
+          cp build/README.txt public/policy.md
+          cp resource/editor/PRIVACYPOLICY.md public/privacyPolicy.md
 
-      - name: Build Electron (unpacked)
+      - name: Overwrite .env.production for Linux
+        if: startsWith(matrix.os, 'ubuntu-')
+        run: $sed -i 's|run.exe|./run|g' .env.production
+
+      - name: Overwrite .env.production for macOS
+        if: startsWith(matrix.os, 'macos-')
+        run: $sed -i 's|vv-engine/run.exe|../Resources/vv-engine/run|g' .env.production
+
+      - name: Replace .env.production infomations
+        run: |
+          gtm_id=$(jq -er '.gtm_container_id' resource/editor/metas.json)
+          $sed -i 's/VITE_GTM_CONTAINER_ID=.*/VITE_GTM_CONTAINER_ID='"$gtm_id"'/' .env.production
+
+      - name: Generate public/licenses.json
+        run: pnpm run license:generate -o public/licenses.json
+
+      # Build Electron (unpacked)
+      - name: Build Electron
+        env:
+          USE_HARD_LINKS: false
         run: pnpm run electron:build --dir
 
       - name: Rename NoEngine Prepackage
@@ -202,9 +231,22 @@ jobs:
           dest: ${{ github.workspace }}/voicevox_engine
           target: ${{ matrix.voicevox_engine_asset_name }}
 
+      - name: Merge licenses.json (ENGINE, VOICEVOX)
+        run: |
+          npx asar extract "${{ matrix.app_asar_dir }}/app.asar" "${{ matrix.app_asar_dir }}/app"
+          rm "${{ matrix.app_asar_dir }}/app.asar"
+          mv voicevox_engine/licenses.json engine_licenses.json
+          pnpm run license:merge -o "${{ matrix.app_asar_dir }}/app/dist/licenses.json" -i engine_licenses.json -i "${{ matrix.app_asar_dir }}/app/dist/licenses.json"
+          npx asar pack "${{ matrix.app_asar_dir }}/app" "${{ matrix.app_asar_dir }}/app.asar"
+          rm -rf "${{ matrix.app_asar_dir }}/app"
+
       - name: Merge VOICEVOX ENGINE into prepackage/
         if: startsWith(matrix.artifact_name, 'windows-') || startsWith(matrix.artifact_name, 'linux-')
         run: mv voicevox_engine/ prepackage/vv-engine/
+
+      - name: Merge VOICEVOX ENGINE into macOS prepackage/
+        if: startsWith(matrix.artifact_name, 'macos-')
+        run: mv voicevox_engine/ prepackage/VOICEVOX.app/Contents/Resources/vv-engine/
 
       - name: Recover file permissions
         if: startsWith(matrix.artifact_name, 'linux-')
@@ -212,13 +254,13 @@ jobs:
           chmod +x "prepackage/${{ matrix.linux_executable_name }}"
           chmod +x "prepackage/vv-engine/run"
 
-      # --- Linux 通用 tar.gz 产出 (所有 Linux 都会生成一份) ---
-      - name: Create Linux tar.gz
+      # --- 产出 Linux tar.gz (arm64 靠这个) ---
+      - name: Create Linux tar.gz (without nvidia)
         if: startsWith(matrix.artifact_name, 'linux-') && !contains(matrix.artifact_name, 'nvidia')
         run: |
           name="${{ matrix.compressed_artifact_name }}-${{ env.VOICEVOX_EDITOR_VERSION }}"
           mv prepackage VOICEVOX
-          tar czf "${name}.tar.gz" VOICEVOX
+          tar czf ${name}.tar.gz VOICEVOX
           mv VOICEVOX prepackage
 
       - name: Upload Linux tar.gz to Release Assets
@@ -229,24 +271,30 @@ jobs:
           tag_name: ${{ env.VOICEVOX_EDITOR_VERSION }}
           files: "*.tar.gz"
 
-      # --- 只有标记为 build_appimage 的才运行打包和切分步骤 ---
-      - name: Build Electron Pack (AppImage/NSIS)
-        if: matrix.build_appimage == true || endsWith(matrix.installer_artifact_name, '-nsis-web')
-        run: pnpm run electron:build:pack --prepackaged prepackage/
+      # --- 产出打包文件 (AppImage / NSIS / DMG) ---
+      - name: Build Electron (Packed)
+        # 🛡️ 只有明确开启 AppImage 或 Windows/Mac 才运行打包
+        if: matrix.build_appimage == true || startsWith(matrix.os, 'windows-') || startsWith(matrix.os, 'macos-')
+        run: |
+          if [[ "${{ matrix.os }}" == "macos"* ]]; then
+            pnpm run electron:build:pack --prepackaged prepackage/VOICEVOX.app
+          else
+            pnpm run electron:build:pack --prepackaged prepackage/
+          fi
 
+      # --- Linux AppImage 特有步骤 (切分和安装脚本) ---
       - name: Create Linux AppImage split
-        if: matrix.build_appimage == true && endsWith(matrix.installer_artifact_name, '-appimage')
+        if: matrix.build_appimage == true
         run: |
           cd dist_electron/
           for appImageFile in *.AppImage; do
             7z -mx=0 -v1900m a "${{ matrix.linux_appimage_7z_name }}.7z" "${appImageFile}"
           done
 
-      - name: Upload Linux AppImage to Release
+      - name: Upload Linux AppImage to Release Assets
         if: matrix.build_appimage == true && github.event.inputs.version != ''
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.VOICEVOX_EDITOR_VERSION }}
           files: |
             dist_electron/*.7z.*
-            VOICEVOX.${{ matrix.installer_artifact_name }}.${{ env.VOICEVOX_EDITOR_VERSION }}.sh
