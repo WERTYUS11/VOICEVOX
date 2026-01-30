@@ -624,7 +624,11 @@ Function welcomePageLeave
     ${bytesToHumanReadable} $1 $1
     ${GetRoot} "$EXEDIR" $2
     StrCpy $2 $2 1 ; "C:" から "C" だけを取り出す
+<<<<<<< HEAD
     MessageBox MB_ABORTRETRYIGNORE|MB_ICONEXCLAMATION "可用空间不足$\r$\n要开始下载文件，需要$2磁盘上至少有 $0 的空闲空间。$\r$\n$\r$\n所需容量： $0$\r$\n磁盘$2上的可用空间：$1" IDRETRY welcomePageLeave_checkFreeSpace IDIGNORE welcomePageLeave_download
+=======
+    MessageBox MB_ABORTRETRYIGNORE|MB_ICONEXCLAMATION "可用空间不足$\r$\n要开始下载文件，$2ドライブに $0 以上的空闲空间。$\r$\n$\r$\n所需容量： $0$\r$\n磁盘$2上的可用空间：$1" IDRETRY welcomePageLeave_checkFreeSpace IDIGNORE welcomePageLeave_download
+>>>>>>> 80af4a3d5dbe9b5e81509d1a2ce338795386f0c1
     Abort
   ${EndIf}
 
