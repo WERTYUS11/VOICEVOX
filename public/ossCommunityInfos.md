@@ -4,10 +4,6 @@
 
 要不要一起来打造 VOICEVOX 呢？
 
-## [VOICEVOX Chinese Script](https://github.com/WERTYUS11/VOICEVOX/tree/main/Script)
-
-用于执行文字翻译符的转换模块。
-
 ## [VOICEVOX 编辑器](https://github.com/VOICEVOX/voicevox)
 
 用于呈现 GUI 的模块，并以应用程序形式提供。  
@@ -22,6 +18,10 @@
 
 用于执行语音合成所需计算的模块，并以动态库的形式提供。  
 主要由 Rust 和 onnxruntime 构成。
+
+## [VOICEVOX Chinese Script](https://github.com/WERTYUS11/VOICEVOX/tree/main/Script)
+
+用于执行文字翻译符的转换模块。
 
 ---
 

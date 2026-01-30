@@ -23,7 +23,7 @@
         :thickness="0.3"
         size="xl"
       />
-      <div class="q-mt-md">生成中です...</div>
+      <div class="q-mt-md">生成中...</div>
     </div>
   </div>
 </template>

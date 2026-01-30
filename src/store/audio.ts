@@ -1384,8 +1384,8 @@ export const audioStore = createPartialStore<AudioStoreTypes>({
           );
         } else {
           filePath ??= await window.backend.showSaveFileDialog({
-            title: "音声を保存",
-            name: "WAV ファイル",
+            title: "保存语音",
+            name: "WAV 文件",
             extensions: ["wav"],
             defaultPath: defaultAudioFileName,
           });
@@ -1461,7 +1461,7 @@ export const audioStore = createPartialStore<AudioStoreTypes>({
             path: filePath,
             errorMessage:
               (e instanceof Error ? e.message : String(e)) ||
-              "不明なエラーが発生しました。",
+              "发生未知错误。",
           };
         }
       },
@@ -1486,7 +1486,7 @@ export const audioStore = createPartialStore<AudioStoreTypes>({
           dirPath = state.savingSetting.fixedExportDir;
         } else {
           const selectedDirPath = await window.backend.showSaveDirectoryDialog({
-            title: "音声を保存",
+            title: "保存语音",
           });
           if (selectedDirPath == undefined) {
             return "canceled";
@@ -1535,7 +1535,7 @@ export const audioStore = createPartialStore<AudioStoreTypes>({
         } else {
           filePath ??= await window.backend.showSaveFileDialog({
             title: "音声を全て繋げて保存",
-            name: "WAV ファイル",
+            name: "WAV 文件",
             extensions: ["wav"],
             defaultPath: defaultFileName,
           });
@@ -1646,7 +1646,7 @@ export const audioStore = createPartialStore<AudioStoreTypes>({
             path: filePath,
             errorMessage:
               (e instanceof Error ? e.message : String(e)) ||
-              "不明なエラーが発生しました。",
+              "发生未知错误。",
           };
         }
       },
@@ -1667,8 +1667,8 @@ export const audioStore = createPartialStore<AudioStoreTypes>({
           );
         } else {
           filePath ??= await window.backend.showSaveFileDialog({
-            title: "文章を全て繋げてテキストファイルに保存",
-            name: "テキストファイル",
+            title: "文章を全て繋げて文本文件に保存",
+            name: "文本文件",
             extensions: ["txt"],
             defaultPath: defaultFileName,
           });
@@ -2159,7 +2159,7 @@ export const audioCommandStore = transformCommandStore(
 
         if (Object.keys(errors).length > 0) {
           throw new Error(
-            `話者の変更に失敗しました：\n${Object.entries(errors)
+            `话者变更失败：\n${Object.entries(errors)
               .map(
                 ([audioKey, error]) => `${audioKey}：${errorToMessage(error)}`,
               )
@@ -2417,7 +2417,7 @@ export const audioCommandStore = transformCommandStore(
           );
 
           // accent phraseの生成をリクエスト
-          // 判別できない読み仮名が混じっていた場合400エラーが帰るのでfallback
+          // 判別できない読み仮名が混じっていた場合400错误が帰るのでfallback
           newAccentPhrasesSegment = await actions
             .FETCH_ACCENT_PHRASES({
               text: pureKatakanaWithAccent,
@@ -2889,7 +2889,7 @@ export const audioCommandStore = transformCommandStore(
         });
       },
       /**
-       * セリフテキストファイルを読み込む。
+       * セリフ文本文件を読み込む。
        * ファイル選択ダイアログを表示するか、ファイルパス指定するか、Fileインスタンスを渡すか選べる。
        */
       action: createUILockAction(

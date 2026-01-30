@@ -58,25 +58,27 @@ import {
 import {
   getNoteDuration,
   isValidNote,
-  isValidSnapType,
+  isValidNotes,
   isValidTempo,
+  isValidTempos,
   isValidTimeSignature,
-  isValidKeyRangeAdjustment,
-  isValidVolumeRangeAdjustment,
+  isValidTimeSignatures,
+  isValidTpqn,
   secondToTick,
   tickToSecond,
+} from "@/sing/music";
+import {
+  isValidSnapType,
+  isValidKeyRangeAdjustment,
+  isValidVolumeRangeAdjustment,
   VALUE_INDICATING_NO_DATA,
   isValidPitchEditData,
   isValidVolumeEditData,
-  isValidTempos,
-  isValidTimeSignatures,
-  isValidTpqn,
   DEFAULT_TPQN,
   DEPRECATED_DEFAULT_EDITOR_FRAME_RATE,
   createDefaultTrack,
   createDefaultTempo,
   createDefaultTimeSignature,
-  isValidNotes,
   isValidTrack,
   isTracksEmpty,
   shouldPlayTracks,
@@ -2378,8 +2380,8 @@ export const singingStore = createPartialStore<SingingStoreTypes>({
             filePath = path.join(state.savingSetting.fixedExportDir, fileName);
           } else {
             filePath ??= await window.backend.showSaveFileDialog({
-              title: "音声を保存",
-              name: "WAV ファイル",
+              title: "保存语音",
+              name: "WAV 文件",
               extensions: ["wav"],
               defaultPath: fileName,
             });
@@ -2461,7 +2463,7 @@ export const singingStore = createPartialStore<SingingStoreTypes>({
             dirPath = state.savingSetting.fixedExportDir;
           } else {
             dirPath ??= await window.backend.showSaveDirectoryDialog({
-              title: "音声を保存",
+              title: "保存语音",
             });
           }
           if (!dirPath) {
@@ -2761,7 +2763,7 @@ export const singingStore = createPartialStore<SingingStoreTypes>({
                   path: filePath,
                   errorMessage:
                     (e instanceof Error ? e.message : String(e)) ||
-                    "不明なエラーが発生しました。",
+                    "发生未知错误。",
                 });
                 break; // 想定外のエラーなので書き出しを中断
               }
@@ -2863,7 +2865,7 @@ export const singingStore = createPartialStore<SingingStoreTypes>({
           path: filePath,
           errorMessage:
             (e instanceof Error ? e.message : String(e)) ||
-            "不明なエラーが発生しました。",
+            "发生未知错误。",
         };
       }
 
