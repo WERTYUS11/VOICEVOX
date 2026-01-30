@@ -102,7 +102,7 @@ const contextMenuData = computed<ContextMenuItemData[]>(() => {
     },
     {
       type: "button",
-      label: "小节.拍   ",
+      label: "小节.拍",
       disabled: displayFormat.value === "MEASURES_BEATS",
       onClick: async () => {
         contextMenu.value?.hide();

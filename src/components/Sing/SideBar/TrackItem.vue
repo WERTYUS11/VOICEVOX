@@ -19,7 +19,7 @@
           },
           {
             type: 'button',
-            label: '删除音轨   ',
+            label: '删除音轨',
             onClick: deleteTrack,
             disabled: tracks.size === 1,
             disableWhenUiLocked: true,

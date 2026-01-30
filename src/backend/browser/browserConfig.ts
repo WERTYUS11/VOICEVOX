@@ -100,7 +100,7 @@ class BrowserConfigManager extends BaseConfigManager {
     await waitRequest(request);
     const result: unknown = request.result;
     if (result == undefined) {
-      throw new Error("找不到配置文件   ");
+      throw new Error("找不到配置文件");
     }
     if (typeof result !== "string") {
       throw new UnreachableError("result is not string");

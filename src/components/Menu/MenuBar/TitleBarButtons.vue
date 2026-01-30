@@ -31,11 +31,11 @@
       icon="push_pin"
       color="display"
       class="title-bar-buttons rotate-45"
-      aria-label="固定前方   "
+      aria-label="固定前方"
       @click="changePinWindow()"
     >
       <QTooltip :delay="500" class="text-body2" :offset="[11, 11]">
-        固定前方   
+        固定前方
       </QTooltip>
     </QBtn>
   </QBadge>
@@ -70,11 +70,11 @@
       round
       icon="push_pin"
       class="title-bar-buttons rotate-45"
-      aria-label="固定前方   "
+      aria-label="固定前方"
       @click="changePinWindow()"
     >
       <QTooltip :delay="500" class="text-body2" :offset="[11, 11]">
-        固定前方   
+        固定前方
       </QTooltip>
     </QBtn>
   </QBadge>

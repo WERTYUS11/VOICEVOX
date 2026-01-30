@@ -11,7 +11,7 @@ export const getIcon = (dialogType: DialogType) => {
     case "warning":
       return "warning";
     case "info":
-      throw new Error("无图标   ");
+      throw new Error("无图标");
     default:
       throw new ExhaustiveError(dialogType);
   }

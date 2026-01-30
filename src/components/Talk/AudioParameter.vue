@@ -25,7 +25,7 @@
       transitionHide="jump-down"
       anchor="top middle"
       self="center middle"
-      >清音化的音没有语调。<br />点击文本可以解除清音化。   </QTooltip
+      >清音化的音没有语调。<br />点击文本可以解除清音化。</QTooltip
     >
     <QSlider
       vertical

@@ -55,7 +55,7 @@ const styleInfo = computed(() => {
 const characterName = computed(() => {
   // 初期化前・未選択時
   if (characterInfo.value == undefined) {
-    return "（显示错误）   ";
+    return "（显示错误）";
   }
 
   const speakerName = characterInfo.value.metas.speakerName;
