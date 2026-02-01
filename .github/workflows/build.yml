@@ -413,14 +413,18 @@ jobs:
           THUMBPRINT_PATH: /tmp/esignercka_thumbprint.txt
           SIGNTOOL_PATH_PATH: /tmp/signtool_path.txt
 
-      # NOTE: prepackage can be removed before splitting nsis-web archive
       - name: Build Electron
-        if: endsWith(matrix.installer_artifact_name, '-nsis-web') || endsWith(matrix.installer_artifact_name, '-appimage') # windows and linux
+        if: endsWith(matrix.installer_artifact_name, '-nsis-web') || endsWith(matrix.installer_artifact_name, '-appimage')
         env:
           NSIS_WEB_ARTIFACT_NAME: ${{ matrix.nsis_web_artifact_name }}
           LINUX_ARTIFACT_NAME: ${{ matrix.linux_artifact_name }}
           LINUX_EXECUTABLE_NAME: ${{ matrix.linux_executable_name }}
         run: |
+          rm -f build/appImageArtifactBuildCompleted.js
+          
+          echo "Checking hook script content..."
+          grep "runtime-file" build/appImageArtifactBuildCompleted.ts || echo "✅ No runtime-file found in TS"
+          
           pnpm run electron:build:pack --prepackaged prepackage/
 
       - name: Build Electron (for macOS)
