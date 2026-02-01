@@ -7,18 +7,18 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "バージョン情報（A.BB.C / A.BB.C-preview.D）"
+        description: "版本信息（A.BB.C / A.BB.C-preview.D）"
         required: true
       prerelease:
-        description: "プレリリースかどうか"
+        description: "Pre-release"
         type: boolean
         default: true
       code_signing:
-        description: "コード署名する"
+        description: "代码署名"
         type: boolean
         default: false
       upload_artifact:
-        description: "デバッグ用に成果物をartifactにアップロードするか"
+        description: "将结果上传Artifacts"
         type: boolean
         default: false
 
@@ -413,18 +413,14 @@ jobs:
           THUMBPRINT_PATH: /tmp/esignercka_thumbprint.txt
           SIGNTOOL_PATH_PATH: /tmp/signtool_path.txt
 
+      # NOTE: prepackage can be removed before splitting nsis-web archive
       - name: Build Electron
-        if: endsWith(matrix.installer_artifact_name, '-nsis-web') || endsWith(matrix.installer_artifact_name, '-appimage')
+        if: endsWith(matrix.installer_artifact_name, '-nsis-web') || endsWith(matrix.installer_artifact_name, '-appimage') # windows and linux
         env:
           NSIS_WEB_ARTIFACT_NAME: ${{ matrix.nsis_web_artifact_name }}
           LINUX_ARTIFACT_NAME: ${{ matrix.linux_artifact_name }}
           LINUX_EXECUTABLE_NAME: ${{ matrix.linux_executable_name }}
         run: |
-          rm -f build/appImageArtifactBuildCompleted.js
-          
-          echo "Checking hook script content..."
-          grep "runtime-file" build/appImageArtifactBuildCompleted.ts || echo " No runtime-file found in TS"
-          
           pnpm run electron:build:pack --prepackaged prepackage/
 
       - name: Build Electron (for macOS)
