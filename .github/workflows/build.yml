@@ -413,11 +413,6 @@ jobs:
           THUMBPRINT_PATH: /tmp/esignercka_thumbprint.txt
           SIGNTOOL_PATH_PATH: /tmp/signtool_path.txt
 
-      - name: "Debug: Check Hook Content"
-        run: |
-          echo "Checking line 60-65 of hook script:"
-          sed -n '60,65p' build/appImageArtifactBuildCompleted.ts
-          
       - name: Build Electron
         if: endsWith(matrix.installer_artifact_name, '-nsis-web') || endsWith(matrix.installer_artifact_name, '-appimage')
         env:
@@ -428,7 +423,7 @@ jobs:
           rm -f build/appImageArtifactBuildCompleted.js
           
           echo "Checking hook script content..."
-          grep "runtime-file" build/appImageArtifactBuildCompleted.ts || echo "✅ No runtime-file found in TS"
+          grep "runtime-file" build/appImageArtifactBuildCompleted.ts || echo " No runtime-file found in TS"
           
           pnpm run electron:build:pack --prepackaged prepackage/
 
