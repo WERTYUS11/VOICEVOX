@@ -413,7 +413,7 @@ jobs:
           THUMBPRINT_PATH: /tmp/esignercka_thumbprint.txt
           SIGNTOOL_PATH_PATH: /tmp/signtool_path.txt
 
-      - name: "Debug: Check Hook Content"
+      - name: Check Hook Content
         run: |
           echo "Checking line 60-65 of hook script:"
           sed -n '60,65p' build/appImageArtifactBuildCompleted.ts
