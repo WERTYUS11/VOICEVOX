@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
     inputs:
       update_snapshots:
-        description: "更新快照"
+        description: "スナップショットを更新する"
         required: false
         type: boolean
         default: false
