@@ -1,37 +1,30 @@
-
 name: Build
 
 on:
+  release:
+    types:
+      - created
   workflow_dispatch:
     inputs:
       version:
-        description: "VOICEVOX Editor 的版本信息（例如：A.BB.C 或 A.BB.C-preview.D）" # 更改为中文
+        description: "バージョン情報（A.BB.C / A.BB.C-preview.D）"
         required: true
       prerelease:
-        description: "是否为预发布版本" # 更改为中文
+        description: "プレリリースかどうか"
         type: boolean
         default: true
       code_signing:
-        description: "是否进行代码签名" # 更改为中文
+        description: "コード署名する"
         type: boolean
         default: false
       upload_artifact:
-        description: "是否将构建产物上传为 Artifacts（用于调试）" # 更改为中文
+        description: "デバッグ用に成果物をartifactにアップロードするか"
         type: boolean
         default: false
-      voicevox_engine_version: # 新增输入
-        description: "VOICEVOX Engine 的版本。可指定 `latest`（最新稳定版）、`prerelease-latest`（最新预发布版）或具体的版本号（例如：0.14.4）" # 更改为中文
-        required: false
-        default: "latest" # 默认使用最新稳定版 Engine
-      voicevox_resource_version: # 新增输入
-        description: "VOICEVOX Resource 的版本。可指定标签名或分支名（例如：0.25.0）" # 更改为中文
-        required: false
-        default: "0.25.0" # 默认使用 0.25.0 版本的 Resource
 
 env:
-  # 优先使用 workflow_dispatch 输入，否则回退到默认值
-  VOICEVOX_ENGINE_VERSION: ${{ github.event.inputs.voicevox_engine_version || 'latest' }}
-  VOICEVOX_RESOURCE_VERSION: ${{ github.event.inputs.voicevox_resource_version || '0.25.0' }}
+  VOICEVOX_ENGINE_VERSION: 0.25.1
+  VOICEVOX_RESOURCE_VERSION: 0.25.1
   VOICEVOX_EDITOR_VERSION:
     |- # releaseタグ名か、workflow_dispatchでのバージョン名か、999.999.999-developが入る
     ${{ github.event.release.tag_name || github.event.inputs.version || '999.999.999-develop' }}
@@ -39,9 +32,6 @@ env:
 defaults:
   run:
     shell: bash
-    
-permissions:
-  contents: write
 
 jobs:
   build-and-upload:
@@ -145,7 +135,11 @@ jobs:
 
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4 # 1. 检出主仓库，确保本地 action 可用
+      - uses: actions/checkout@v4
+
+      - name: Purge disk space
+        if: startsWith(matrix.os, 'ubuntu-')
+        run: sudo rm -rf /usr/local/lib/android
 
       # NOTE: The default sed of macOS is BSD sed.
       #       There is a difference in specification between BSD sed and GNU sed,
@@ -169,13 +163,6 @@ jobs:
 
           $sed -i 's/"version": "999.999.999"/"version": "${{ env.VOICEVOX_EDITOR_VERSION }}"/' package.json
 
-      # for appimagetool v1.9.0
-      - name: install desktop-file-utils
-        if: startsWith(matrix.artifact_name, 'linux-')
-        run: |
-          sudo apt-get update
-          sudo apt-get install desktop-file-utils
-
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
 
@@ -189,7 +176,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ env.ELECTRON_CACHE }}
-          key: ${{ env.cache-version }}-${{ runner.os }}--electron-cache-fixed
+          key: ${{ env.cache-version }}-${{ runner.os }}--electron-cache-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ env.cache-version }}-${{ runner.os }}--electron-cache-
 
@@ -197,30 +184,18 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ env.ELECTRON_BUILDER_CACHE }}
-          key: ${{ env.cache-version }}-${{ runner.os }}--electron-cache-fixed
+          key: ${{ env.cache-version }}-${{ runner.os }}--electron-builder-cache-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ env.cache-version }}-${{ runner.os }}--electron-builder-cache-
 
       - name: Install dependencies
         run: pnpm i --frozen-lockfile
 
-      - name: Install dependencies
-        run: node Script/zh-cn.js
-        
-      # 修复：将 Download VOICEVOX ENGINE 步骤提前，在 Checkout Product Version Resource 之前
-      - name: Download VOICEVOX ENGINE
-        id: download-engine
-        uses: ./.github/actions/download-engine # 现在可以正确找到本地 action
-        with:
-          version: ${{ env.VOICEVOX_ENGINE_VERSION }} # 使用 env 变量
-          dest: ${{ github.workspace }}/voicevox_engine
-          target: ${{ matrix.voicevox_engine_asset_name }}
-
-      - name: Checkout Product Version Resource # 现在这个步骤在本地 action 之后
+      - name: Checkout Product Version Resource
         uses: actions/checkout@v4
         with:
           repository: VOICEVOX/voicevox_resource
-          ref: ${{ env.VOICEVOX_RESOURCE_VERSION }} # 使用 env 变量
+          ref: ${{ env.VOICEVOX_RESOURCE_VERSION }}
           path: resource
 
       - name: Create and replace software resources
@@ -299,6 +274,15 @@ jobs:
       - name: Rename NoEngine Prepackage
         run: |
           mv ${{ matrix.artifact_path }} ./prepackage
+
+      # Download VOICEVOX ENGINE
+      - name: Download VOICEVOX ENGINE
+        id: download-engine
+        uses: ./.github/actions/download-engine
+        with:
+          version: ${{ env.VOICEVOX_ENGINE_VERSION }}
+          dest: ${{ github.workspace }}/voicevox_engine
+          target: ${{ matrix.voicevox_engine_asset_name }}
 
       # FIXME: asarをextract/packせず、ビルド前にengine_licenses.jsonとlicenses.jsonを結合する
       - name: Merge licenses.json (ENGINE, VOICEVOX)
@@ -467,27 +451,33 @@ jobs:
             # Split to MyArtifact.AppImage.7z.001, MyArtifact.AppImage.7z.002, ...
             # Use compression level 0 since AppImage is already compressed
             # .7z is needed for installer_linux.sh yet
-            7z -mx=0 -v1g a "${{ matrix.linux_appimage_7z_name }}.7z" "${appImageFile}"
+            7z -mx=0 -v1900m a "${{ matrix.linux_appimage_7z_name }}.7z" "${appImageFile}"
 
-            # Output split archive name<TAB>size<TAB>hash list to myartifact.7z.txt
-            ls "${{ matrix.linux_appimage_7z_name }}.7z".* > archives_name.txt
-            stat --printf="%s\n" "${{ matrix.linux_appimage_7z_name }}.7z".* > archives_size.txt
-            md5sum "${{ matrix.linux_appimage_7z_name }}.7z".* | awk '{print $1}' | tr a-z A-Z > archives_hash.txt
-
-            paste -d '\t' archives_name.txt archives_size.txt archives_hash.txt > archives.txt
-
-            mv archives.txt "${{ matrix.installer_artifact_name }}.7z.txt"
+            # Output split archive hash list
+            sha256sum "${{ matrix.linux_appimage_7z_name }}.7z".* > "${{ matrix.installer_artifact_name }}.7z.txt"
           done
 
-      - name: Upload Linux AppImage split to Artifacts
+      - name: Create Linux installer
+        if: endsWith(matrix.installer_artifact_name, '-appimage')
+        run: |
+          sed \
+            -e 's/^NAME=@@PLACEHOLDER@@ # placeholder for CI$/NAME="${{ matrix.installer_artifact_name }}"/' \
+            -e 's/^VERSION=@@PLACEHOLDER@@ # placeholder for CI$/VERSION="${{ env.VOICEVOX_EDITOR_VERSION }}"/' \
+            build/linux/installer_linux.template.sh > VOICEVOX.${{ matrix.installer_artifact_name }}.${{ env.VOICEVOX_EDITOR_VERSION }}.sh
+
+          # Check that placeholders were replaced
+          ! grep "@@PLACEHOLDER@@" VOICEVOX.${{ matrix.installer_artifact_name }}.${{ env.VOICEVOX_EDITOR_VERSION }}.sh
+
+      - name: Upload Linux AppImage split and installer to Artifacts
         if: endsWith(matrix.installer_artifact_name, '-appimage') && github.event.inputs.upload_artifact == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.installer_artifact_name }}-release
           path: |-
             dist_electron/*.7z.*
+            VOICEVOX.${{ matrix.installer_artifact_name }}.${{ env.VOICEVOX_EDITOR_VERSION }}.sh
 
-      - name: Upload Linux AppImage split to Release Assets
+      - name: Upload Linux AppImage split and installer to Release Assets
         if: endsWith(matrix.installer_artifact_name, '-appimage') && (github.event.release.tag_name || github.event.inputs.version) != ''
         uses: softprops/action-gh-release@v2
         with:
@@ -495,6 +485,7 @@ jobs:
           tag_name: ${{ env.VOICEVOX_EDITOR_VERSION }}
           files: |-
             dist_electron/*.7z.*
+            VOICEVOX.${{ matrix.installer_artifact_name }}.${{ env.VOICEVOX_EDITOR_VERSION }}.sh
           target_commitish: ${{ github.sha }}
 
       - name: Upload macOS dmg to Artifacts
