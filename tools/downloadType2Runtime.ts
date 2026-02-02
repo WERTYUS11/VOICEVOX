@@ -8,7 +8,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { retryFetch } from "./helper";
 
-const TYPE2_RUNTIME_VERSION = "20251108";
+const TYPE2_RUNTIME_VERSION = "continuous";
 
 const distDir = path.join(
   import.meta.dirname,
@@ -49,13 +49,38 @@ async function main() {
     console.log("type2-runtime already downloaded");
     return;
   }
+
   await fs.mkdir(distDir, { recursive: true });
   const url = getDownloadURL();
   const result = await retryFetch(url);
+
+  // ✅ ① HTTP 状态校验
+  if (!result.ok) {
+    throw new Error(
+      `Failed to download type2-runtime: ${result.status} ${result.statusText}`,
+    );
+  }
+
   const data = await result.bytes();
+
+  // ✅ ② ELF 魔数校验（非常重要）
+  if (
+    data.length < 4 ||
+    data[0] !== 0x7f ||
+    data[1] !== 0x45 || // E
+    data[2] !== 0x4c || // L
+    data[3] !== 0x46    // F
+  ) {
+    throw new Error(
+      "Downloaded type2-runtime is not an ELF binary (maybe HTML or error page)",
+    );
+  }
+
+  // ✅ ③ 写文件时直接给执行权限
   await fs.writeFile(runtimePath, data, { mode: 0o755 });
-  await fs.writeFile(versionFilePath, TYPE2_RUNTIME_VERSION);
   await fs.chmod(runtimePath, 0o755);
+
+  await fs.writeFile(versionFilePath, TYPE2_RUNTIME_VERSION);
 }
 
 if (process.platform === "linux") {
