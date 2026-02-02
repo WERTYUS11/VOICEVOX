@@ -1,59 +1,59 @@
-# UI 名称と Vue ファイル名の対応早見表
+# UI 名称与 Vue 文件名对应速查表
 
-## 注意事項など
+## 注意事项等
 
-このファイルは更新漏れなどが発生する可能性が高めです。実際のファイルも併せてご確認ください。
+此文件更新遗漏的可能性较高。请同时查阅实际文件。
 
-各 UI の名称が分からない場合は、[VOICEVOX 専用 UI の名称](./UX・UIデザインの方針.md#voicevox-専用-ui-の名称) をご覧ください。
+如果不知道各 UI 的名称，请参阅[VOICEVOX 专用 UI 名称](./UX・UIデザインの方針.md#voicevox-専用-ui-の名称)。
 
-## 対応早見
+所有文件共用的扩展名`.vue`已省略。
 
-全ファイル共通の拡張子`.vue`は省略しています。
+## 对应速查
 
-### views ディレクトリ
+### views 目录
 
-- メイン画面全体 ･･･ [EditorHome](../src/components/Talk/EditorHome.vue)
+- 主界面整体 ･･･ [EditorHome](../src/components/Talk/EditorHome.vue)
 
-### compornents ディレクトリ
+### components 目录
 
-- 最上部のバー（メニュー含む） ･･･ [MenuBar](../src/components/MenuBar.vue)
-  - メニュー
-    - メニューの項目リスト ･･･ [MenuItem](../src/components/MenuItem.vue)
-    - メニューのボタン ･･･ [MenuButton](../src/components/MenuButton.vue)
-    - エンジン
-      - エンジンの管理 ･･･ [EngineManageDialog](../src/components/Dialog/EngineManageDialog.vue)
-    - 設定
-      - キー割り当て ･･･ [HotkeySettingDialog](../src/components/Dialog/HotkeySettingDialog.vue)
-      - ツールバーのカスタマイズ ･･･ [ToolBarCustomDialog](../src/components/Dialog/ToolBarCustomDialog.vue)
-      - キャラクター並び替え・試聴 ･･･ [CharacterOrderDialog](../src/components/Dialog/CharacterOrderDialog.vue)
-        - サンプルボイス一覧の各キャラクター ･･･ [CharacterTryListenCard](../src/components/Dialog/CharacterTryListenCard.vue)
-      - デフォルトスタイル ･･･ [DefaultStyleListDialog](../src/components/Dialog/DefaultStyleListDialog.vue)
-        - 個別選択 ･･･ [DefaultStyleSelectDialog](../src/components/Dialog/DefaultStyleSelectDialog.vue)
-      - 読み方＆アクセント辞書 ･･･ [DictionaryManageDialog](../src/components/Dialog/DictionaryManageDialog.vue)
-      - オプション ･･･ [SettingDialog](../src/components/Dialog/SettingDialog.vue)
-        - 書き出しファイル名パターン ･･･ [FileNamePatternDialog](../src/components/Dialog/FileNamePatternDialog.vue)
-    - ヘルプ ･･･ `help`ディレクトリ
-      - [HelpDialog](../src/components/Dialog/HelpDialog/HelpDialog.vue) の`pagedata`の`components`をご参照ください。
-  - ウィンドウ右上のボタン群（ピンボタン含む） ･･･ [TitleBarButtons](../src/components/TitleBarButtons.vue)
-    - ピンボタン以外のボタン ･･･ [MinMaxCloseButtons](../src/components/MinMaxCloseButtons.vue)
-- ツールバー ･･･ [ToolBar](../src/components/ToolBar.vue)
-- キャラクター表示欄 ･･･ [CharacterPortrait](../src/components/Talk/CharacterPortrait.vue)
-- 台本欄（テキスト欄追加ボタンを含む） ･･･ [views/EditorHome](../src/views/EditorHome.vue) に含まれる
-  - レーン（行番号・テキスト欄含む） ･･･ [AudioCell](../src/components/Talk/AudioCell.vue)
-    - キャラクターアイコン ･･･ [CharacterButton](../src/components/CharacterButton.vue)
-    - コンテキスト（右クリック）メニュー ･･･ [ContextMenu](../src/components/ContextMenu.vue)
-- パラメータ調整欄 ･･･ [AudioInfo](../src/components/Talk/AudioInfo.vue)
-  - プリセット管理 ･･･ [PresetManageDialog](../src/components/Dialog/PresetManageDialog.vue)
-- 詳細調整欄（各項目・再生ボタンを含む） ･･･ [AudioDetail](../src/components/Talk/AudioDetail.vue)
-  - ｱｸｾﾝﾄ項目のうち、文字以外の部分の UI ･･･ [AudioAccent](../src/components/Talk/AudioAccent.vue)
-  - ｲﾝﾄﾈｰｼｮﾝ・長さ項目のスライダー [AudioParameter](../src/components/Talk/AudioParameter.vue)
-- その他
-  - 初回起動時に表示される画面
-    - 利用規約 ･･･ [AcceptTermsDialog](../src/components/Dialog/AcceptTermsDialog.vue)
-    - データ収集とプライバシーポリシー ･･･ [AcceptRetrieveTelemetryDialog](../src/components/Dialog/AcceptRetrieveTelemetryDialog.vue)
-  - 起動時に表示される画面
-    - 追加キャラクターの紹介 ･･･ [CharacterOrderDialog](../src/components/Dialog/CharacterOrderDialog.vue)（設定 / キャラクター並び替え・試聴 と共通）
-  - 「音声書き出し」時の成否の通知 ･･･ [SaveAllResultDialog](../src/components/Dialog/SaveAllResultDialog.vue)
-  - 一度のみ表示されるヒント ･･･ [ToolTip](../src/components/ToolTip.vue)
-  - 音声生成中の進捗表示 ･･･ [ProgressView](../src/components/ProgressView.vue)
-  - エラー記録用（UI には影響なし） ･･･ [ErrorBoundary](../src/components/ErrorBoundary.vue)
+- 最顶部栏（含菜单） ･･･ [MenuBar](../src/components/MenuBar.vue)
+ - 菜单
+   - 菜单项列表 ･･･ [MenuItem](../src/components/MenuItem.vue)
+   - 菜单按钮 ･･･ [MenuButton](../src/components/MenuButton.vue)
+   - 引擎
+     - 引擎管理 ･･･ [EngineManageDialog](../src/components/Dialog/EngineManageDialog.vue)
+   - 设置
+     - 快捷键设置 ･･･ [HotkeySettingDialog](../src/components/Dialog/HotkeySettingDialog.vue)
+     - 工具栏自定义 ･･･ [ToolBarCustomDialog](../src/components/Dialog/ToolBarCustomDialog.vue)
+     - 角色排序·试听 ･･･ [CharacterOrderDialog](../src/components/Dialog/CharacterOrderDialog.vue)
+       - 试听语音列表中的各角色 ･･･ [CharacterTryListenCard](../src/components/Dialog/CharacterTryListenCard.vue)
+     - 默认样式 ･･･ [DefaultStyleListDialog](../src/components/Dialog/DefaultStyleListDialog.vue)
+       - 单独选择 ･･･ [DefaultStyleSelectDialog](../src/components/Dialog/DefaultStyleSelectDialog.vue)
+     - 读法与重音词典 ･･･ [DictionaryManageDialog](../src/components/Dialog/DictionaryManageDialog.vue)
+     - 选项 ･･･ [SettingDialog](../src/components/Dialog/SettingDialog.vue)
+       - 导出文件名模式 ･･･ [FileNamePatternDialog](../src/components/Dialog/FileNamePatternDialog.vue)
+   - 帮助 ･･･ `help`目录
+     - 请参阅 [HelpDialog](../src/components/Dialog/HelpDialog/HelpDialog.vue) 的`pagedata`中的`components`。
+ - 窗口右上角的按钮组（含置顶按钮） ･･･ [TitleBarButtons](../src/components/TitleBarButtons.vue)
+   - 除置顶按钮外的按钮 ･･･ [MinMaxCloseButtons](../src/components/MinMaxCloseButtons.vue)
+- 工具栏 ･･･ [ToolBar](../src/components/ToolBar.vue)
+- 角色显示区 ･･･ [CharacterPortrait](../src/components/Talk/CharacterPortrait.vue)
+- 台词区（含文本框添加按钮） ･･･ 包含在 [views/EditorHome](../src/views/EditorHome.vue) 中
+ - 音轨（含行号·文本框） ･･･ [AudioCell](../src/components/Talk/AudioCell.vue)
+   - 角色图标 ･･･ [CharacterButton](../src/components/CharacterButton.vue)
+   - 上下文（右键）菜单 ･･･ [ContextMenu](../src/components/ContextMenu.vue)
+- 参数调整区 ･･･ [AudioInfo](../src/components/Talk/AudioInfo.vue)
+ - 预设管理 ･･･ [PresetManageDialog](../src/components/Dialog/PresetManageDialog.vue)
+- 详细调整区（含各项目·播放按钮） ･･･ [AudioDetail](../src/components/Talk/AudioDetail.vue)
+ - 重音项目中，非文字部分的 UI ･･･ [AudioAccent](../src/components/Talk/AudioAccent.vue)
+ - 语调·长度项目的滑块 [AudioParameter](../src/components/Talk/AudioParameter.vue)
+- 其他
+ - 首次启动时显示的画面
+   - 使用条款 ･･･ [AcceptTermsDialog](../src/components/Dialog/AcceptTermsDialog.vue)
+   - 数据收集与隐私政策 ･･･ [AcceptRetrieveTelemetryDialog](../src/components/Dialog/AcceptRetrieveTelemetryDialog.vue)
+ - 启动时显示的画面
+   - 新增角色介绍 ･･･ [CharacterOrderDialog](../src/components/Dialog/CharacterOrderDialog.vue)（与 设置 / 角色排序·试听 共通）
+ - “音频导出”时的成功与否通知 ･･･ [SaveAllResultDialog](../src/components/Dialog/SaveAllResultDialog.vue)
+ - 仅显示一次的提示 ･･･ [ToolTip](../src/components/ToolTip.vue)
+ - 音频生成中的进度显示 ･･･ [ProgressView](../src/components/ProgressView.vue)
+ - 错误记录用（对 UI 无影响） ･･･ [ErrorBoundary](../src/components/ErrorBoundary.vue)
