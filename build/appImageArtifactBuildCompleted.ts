@@ -63,7 +63,7 @@ export async function appImageArtifactBuildCompleted(
     await fixDesktopfile(desktopfilePath);
     execFileSync(
       appimagetoolPath,
-      ["--no-appstream", "--runtime-file", runtimePath, appDir, artifactPath],
+      ["--no-appstream", runtimePath, appDir, artifactPath],
       { stdio: "inherit" },
     );
     // NOTE: AutoUpdaterを使う場合'app-builder-bin blockmap ...'を使用してblockmapを生成する
