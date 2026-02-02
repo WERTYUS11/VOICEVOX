@@ -421,6 +421,9 @@ jobs:
           LINUX_ARTIFACT_NAME: ${{ matrix.linux_artifact_name }}
           LINUX_EXECUTABLE_NAME: ${{ matrix.linux_executable_name }}
         run: |
+          ls -lh vendored/type2-runtime/runtime
+          file vendored/type2-runtime/runtime
+          head -c 4 vendored/type2-runtime/runtime | xxd
           pnpm run electron:build:pack --prepackaged prepackage/
 
       - name: Build Electron (for macOS)
