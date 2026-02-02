@@ -104,12 +104,13 @@ export interface Sandbox {
     detectEnterFullscreen: () => void;
     detectLeaveFullscreen: () => void;
     checkEditedAndNotSave: (obj: {
-      closeOrReload: "close" | "reload";
+      nextAction: "close" | "reload" | "switchToWelcome";
       isMultiEngineOffMode?: boolean;
     }) => void;
     detectResized: (obj: { width: number; height: number }) => void;
   }): void;
   closeWindow(): void;
+  launchWelcomeWindow(): void;
   minimizeWindow(): void;
   toggleMaximizeWindow(): void;
   toggleFullScreen(): void;
@@ -206,10 +207,6 @@ export type SplitTextWhenPasteType = "PERIOD_AND_NEW_LINE" | "NEW_LINE" | "OFF";
 
 export type EditorFontType = "default" | "os";
 
-export type SavingSetting = ConfigType["savingSetting"];
-
-export type EngineSettings = Record<EngineId, EngineSettingType>;
-
 export const engineSettingSchema = z.object({
   useGpu: z.boolean().default(false),
   outputSamplingRate: z
@@ -217,6 +214,25 @@ export const engineSettingSchema = z.object({
     .default("engineDefault"),
 });
 export type EngineSettingType = z.infer<typeof engineSettingSchema>;
+
+export const savingSettingSchema = z
+  .object({
+    fileEncoding: z.enum(["UTF-8", "Shift_JIS"]).default("UTF-8"),
+    fileNamePattern: z.string().default(""), // NOTE: ファイル名パターンは拡張子を含まない
+    fixedExportEnabled: z.boolean().default(false),
+    avoidOverwrite: z.boolean().default(false),
+    fixedExportDir: z.string().default(""),
+    exportLab: z.boolean().default(false),
+    exportText: z.boolean().default(false),
+    outputStereo: z.boolean().default(false),
+    audioOutputDevice: z.string().default(""),
+    songTrackFileNamePattern: z.string().default(""),
+  })
+  .prefault({});
+
+export type SavingSetting = z.infer<typeof savingSettingSchema>;
+
+export type EngineSettings = Record<EngineId, EngineSettingType>;
 
 export type DefaultStyleId = {
   engineId: EngineId;
@@ -258,7 +274,8 @@ export type EngineInfo = {
   // エンジンの種類。
   // vvpp: vvppファイルから読み込んだエンジン
   // path: パスを指定して追加したエンジン
-  type: "vvpp" | "path";
+  // downloadVvpp: VVPPをダウンロードして追加したエンジン
+  type: "vvpp" | "path" | "downloadVvpp";
   isDefault: boolean; // デフォルトエンジンかどうか
 };
 
@@ -405,6 +422,7 @@ export const rootMiscSettingSchema = z.object({
     .default("MINUTES_SECONDS"), // 再生ヘッド位置の表示モード
   enableKatakanaEnglish: z.boolean().default(true), // 未知の英単語をカタカナ読みに変換するかどうか
   enableMultiSelect: z.boolean().default(true), // 複数選択を有効にするかどうか
+  showAudioLength: z.boolean().default(false), // 音声の長さを表示するかどうか
 });
 export type RootMiscSettingType = z.infer<typeof rootMiscSettingSchema>;
 
@@ -414,20 +432,7 @@ export function getConfigSchema({ isMac }: { isMac: boolean }) {
     activePointScrollMode: z
       .enum(["CONTINUOUSLY", "PAGE", "OFF"])
       .default("OFF"),
-    savingSetting: z
-      .object({
-        fileEncoding: z.enum(["UTF-8", "Shift_JIS"]).default("UTF-8"),
-        fileNamePattern: z.string().default(""), // NOTE: ファイル名パターンは拡張子を含まない
-        fixedExportEnabled: z.boolean().default(false),
-        avoidOverwrite: z.boolean().default(false),
-        fixedExportDir: z.string().default(""),
-        exportLab: z.boolean().default(false),
-        exportText: z.boolean().default(false),
-        outputStereo: z.boolean().default(false),
-        audioOutputDevice: z.string().default(""),
-        songTrackFileNamePattern: z.string().default(""),
-      })
-      .prefault({}),
+    savingSetting: savingSettingSchema,
     hotkeySettings: hotkeySettingSchema
       .array()
       .default(getDefaultHotkeySettings({ isMac })),

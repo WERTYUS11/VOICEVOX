@@ -1,5 +1,5 @@
 <template>
-  <div v-if="selectedInfo === undefined" class="container">
+  <div v-if="selectedInfo == undefined" class="container">
     <BaseScrollArea>
       <div class="inner inner-list">
         <h1 class="title">音频库使用条款</h1>
