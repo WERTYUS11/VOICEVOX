@@ -37,6 +37,8 @@ const WIN_SIGNING_HASH_ALGORITHMS = process.env.WIN_SIGNING_HASH_ALGORITHMS
 
 const isMac = process.platform === "darwin";
 
+const isArm64 = process.arch === "arm64";
+
 // electron-builderのextraFilesは、ファイルのコピー先としてVOICEVOX.app/Contents/を使用する。
 // しかし、実行ファイルはVOICEVOX.app/Contents/MacOS/にあるため、extraFilesをVOICEVOX.app/Contents/ディレクトリにコピーするのは正しくない。
 // VOICEVOX.app/Contents/MacOS/ディレクトリにコピーされるように修正する。
@@ -145,7 +147,7 @@ const builderOptions: ElectronBuilderConfiguration = {
     target: [
       {
         target: "AppImage",
-        arch: ["arm64", "x64"],
+        arch: [isArm64 ? "arm64" : "x64"],
       },
     ],
   },
@@ -156,7 +158,7 @@ const builderOptions: ElectronBuilderConfiguration = {
     target: [
       {
         target: "dmg",
-        arch: ["arm64", "x64"],
+        arch: [isArm64 ? "arm64" : "x64"],
       },
     ],
     identity: null, // ad-hoc署名をしない

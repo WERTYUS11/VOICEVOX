@@ -1,24 +1,27 @@
 name: Build
 
 on:
+  push:
+    branches:
+      - main
   release:
     types:
       - created
   workflow_dispatch:
     inputs:
       version:
-        description: "版本信息（A.BB.C / A.BB.C-preview.D）"
+        description: "バージョン情報（A.BB.C / A.BB.C-preview.D）"
         required: true
       prerelease:
-        description: "Pre-release"
+        description: "プレリリースかどうか"
         type: boolean
         default: true
       code_signing:
-        description: "代码署名"
+        description: "コード署名する"
         type: boolean
         default: false
       upload_artifact:
-        description: "将结果上传Artifacts"
+        description: "デバッグ用に成果物をartifactにアップロードするか"
         type: boolean
         default: false
 
@@ -38,7 +41,7 @@ jobs:
     environment: ${{ github.event.inputs.code_signing == 'true' && 'code_signing' || '' }} # コード署名用のenvironment（false時の挙動は2022年7月10日時点で未定義動作）
     env:
       ELECTRON_CACHE: .cache/electron
-      ELECTRON_BUILDER_CACHE: ""
+      ELECTRON_BUILDER_CACHE: .cache/electron-builder
       cache-version: v2
       # GNUコマンド
       sed: ${{ startsWith(matrix.os, 'macos-') && 'gsed' || 'sed' }}
@@ -421,9 +424,6 @@ jobs:
           LINUX_ARTIFACT_NAME: ${{ matrix.linux_artifact_name }}
           LINUX_EXECUTABLE_NAME: ${{ matrix.linux_executable_name }}
         run: |
-          ls -lh vendored/type2-runtime/runtime
-          file vendored/type2-runtime/runtime
-          head -c 4 vendored/type2-runtime/runtime | xxd
           pnpm run electron:build:pack --prepackaged prepackage/
 
       - name: Build Electron (for macOS)
