@@ -53,8 +53,9 @@ async function main() {
   const url = getDownloadURL();
   const result = await retryFetch(url);
   const data = await result.bytes();
-  await fs.writeFile(runtimePath, data);
+  await fs.writeFile(runtimePath, data, { mode: 0o755 });
   await fs.writeFile(versionFilePath, TYPE2_RUNTIME_VERSION);
+  await fs.chmod(runtimePath, 0o755);
 }
 
 if (process.platform === "linux") {
