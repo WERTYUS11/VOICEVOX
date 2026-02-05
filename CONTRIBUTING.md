@@ -141,9 +141,8 @@ VITE_DEFAULT_ENGINE_INFOS=`[
 
 - 若安装路径自定义，例如 `D:\VOICEVOX0.14.1`，需修改为：
 
-```text
-"executionFilePath": "D:/VOICEVOX0.14.1/vv-engine/run.exe",
-```
+- 执行 `pnpm run electron:serve`。
+- 若配置正确，开发环境将会启动。
 
 ### 7. 启动
 
