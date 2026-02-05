@@ -414,11 +414,12 @@ jobs:
           SIGNTOOL_PATH_PATH: /tmp/signtool_path.txt
 
       - name: Fix AppImage permissions
+        if: startsWith(matrix.os, 'ubuntu-')
         run: |
           chmod +x vendored/type2-runtime/runtime
           chmod +x vendored/appimagetool/appimagetool.AppImage
-          
-          # NOTE: prepackage can be removed before splitting nsis-web archive
+
+      # NOTE: prepackage can be removed before splitting nsis-web archive
       - name: Build Electron
         if: endsWith(matrix.installer_artifact_name, '-nsis-web') || endsWith(matrix.installer_artifact_name, '-appimage') # windows and linux
         env:
