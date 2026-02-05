@@ -413,7 +413,12 @@ jobs:
           THUMBPRINT_PATH: /tmp/esignercka_thumbprint.txt
           SIGNTOOL_PATH_PATH: /tmp/signtool_path.txt
 
-      # NOTE: prepackage can be removed before splitting nsis-web archive
+      - name: Fix AppImage permissions
+        run: |
+          chmod +x vendored/type2-runtime/runtime
+          chmod +x vendored/appimagetool/appimagetool.AppImage
+          
+          # NOTE: prepackage can be removed before splitting nsis-web archive
       - name: Build Electron
         if: endsWith(matrix.installer_artifact_name, '-nsis-web') || endsWith(matrix.installer_artifact_name, '-appimage') # windows and linux
         env:
