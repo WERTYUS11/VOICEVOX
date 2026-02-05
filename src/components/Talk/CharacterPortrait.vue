@@ -14,7 +14,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useStore } from "@/store";
-import { AudioKey } from "@/type/preload";
+import type { AudioKey } from "@/type/preload";
 import { formatCharacterStyleName } from "@/store/utility";
 
 const store = useStore();
@@ -55,7 +55,7 @@ const styleInfo = computed(() => {
 const characterName = computed(() => {
   // 初期化前・未選択時
   if (characterInfo.value == undefined) {
-    return "（显示错误）   ";
+    return "（显示错误）";
   }
 
   const speakerName = characterInfo.value.metas.speakerName;

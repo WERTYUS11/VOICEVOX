@@ -1,7 +1,7 @@
 import { directoryHandleStoreKey } from "./contract";
 import { openDB } from "./browserConfig";
-import { createFakePath, FakePath, isFakePath } from "./fakePath";
-import { SandboxKey } from "@/type/preload";
+import { createFakePath, type FakePath, isFakePath } from "./fakePath";
+import type { SandboxKey } from "@/type/preload";
 import { failure, success } from "@/type/result";
 import { createLogger } from "@/helpers/log";
 import { normalizeError } from "@/helpers/normalizeError";
@@ -108,7 +108,7 @@ const getDirectoryHandleFromDirectoryPath = async (
 
     if (!(await maybeFixedDirectory.requestPermission({ mode: "readwrite" }))) {
       throw new Error(
-        "フォルダへのアクセス許可がありません。ファイルの読み書きのためにアクセス許可が必要です。",
+        "文件夹访问无权限，但是需要权限来读取和写入文件",
       );
     }
 
@@ -146,7 +146,7 @@ export const writeFileImpl = async (obj: {
     case "fake": {
       const fileHandle = fileHandleMap.get(filePath.path);
       if (fileHandle == undefined) {
-        return failure(new Error(`找不到文件:    ${filePath.path}`));
+        return failure(new Error(`找不到文件: ${filePath.path}`));
       }
       const writable = await fileHandle.createWritable();
       await writable.write(obj.buffer);
@@ -258,7 +258,7 @@ export const readFileImpl = async (filePath: string) => {
   }
   const fileHandle = fileHandleMap.get(filePath);
   if (fileHandle == undefined) {
-    return failure(new Error(`找不到文件:    ${filePath}`));
+    return failure(new Error(`找不到文件: ${filePath}`));
   }
   const file = await fileHandle.getFile();
   const buffer = await file.arrayBuffer();

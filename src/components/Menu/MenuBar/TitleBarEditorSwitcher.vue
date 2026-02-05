@@ -13,7 +13,7 @@
     toggleColor="primary"
     :options="[
       { label: '对话模式', value: 'talk' },
-      { label: '歌曲模式   ', value: 'song' },
+      { label: '歌曲模式', value: 'song' },
     ]"
     @update:modelValue="switchEditor"
   />
@@ -22,7 +22,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useStore } from "@/store";
-import { EditorType } from "@/type/preload";
+import type { EditorType } from "@/type/preload";
 
 const store = useStore();
 

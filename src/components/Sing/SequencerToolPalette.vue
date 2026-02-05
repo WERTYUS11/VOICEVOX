@@ -71,14 +71,18 @@
         transitionShow=""
         transitionHide=""
       >
-        删除音高   
+        删除音高
       </QTooltip>
     </QBtn>
   </div>
 </template>
 
 <script setup lang="ts">
-import { SequencerEditTarget, NoteEditTool, PitchEditTool } from "@/store/type";
+import type {
+  SequencerEditTarget,
+  NoteEditTool,
+  PitchEditTool,
+} from "@/store/type";
 
 defineProps<{
   editTarget: SequencerEditTarget;

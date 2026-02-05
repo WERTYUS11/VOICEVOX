@@ -50,7 +50,7 @@ const currentVersionGetter = async () => {
   await store.actions.WAIT_VUEX_READY({ timeout: 15000 });
   const skipUpdateVersion = store.state.skipUpdateVersion ?? "0.0.0";
   if (semver.valid(skipUpdateVersion) == undefined) {
-    throw new Error(`skipUpdateVersion 无效：   ${skipUpdateVersion}`);
+    throw new Error(`skipUpdateVersion 无效：${skipUpdateVersion}`);
   }
 
   return semver.gt(appVersion, skipUpdateVersion)

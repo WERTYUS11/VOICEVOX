@@ -48,7 +48,7 @@
         hideBottomSpace
         dense
         class="sing-time-signature-field"
-        label="拍号   "
+        label="拍号"
         stackLabel
         outlined
       >
@@ -187,7 +187,7 @@ import {
 } from "@/sing/domain";
 import CharacterMenuButton from "@/components/Sing/CharacterMenuButton/MenuButton.vue";
 import { useHotkeyManager } from "@/plugins/hotkeyPlugin";
-import { SequencerEditTarget } from "@/store/type";
+import type { SequencerEditTarget } from "@/store/type";
 import { UnreachableError } from "@/type/utility";
 
 const store = useStore();
@@ -398,18 +398,18 @@ const toggleLoop = async () => {
       // 開始位置の指定方法が異なるため共通化はしていない。
       // Toolbar内はplayhead位置を基準に設定
       // LoopLaneはユーザーのクリック位置を基準に設定
-      // 共通化の意味ではむしろ特定の位置の拍号   記号を取得する関数を作った方がいいかもです
+      // 共通化の意味ではむしろ特定の位置の拍号記号を取得する関数を作った方がいいかもです
 
       // 現在のplayhead位置のTimeSignature位置index
       const playheadTsIndex = tsPositions.value.findIndex(
         (pos) => pos > playheadTicks.value,
       );
-      // 現在の拍号   index
+      // 現在の拍号index
       const currentTsIndex =
         playheadTsIndex === -1
           ? tsPositions.value.length - 1
           : playheadTsIndex - 1;
-      // 現在のplayheadがある拍号   
+      // 現在のplayheadがある拍号
       const currentTs = timeSignatures.value[currentTsIndex];
 
       if (!currentTs) {

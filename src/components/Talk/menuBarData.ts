@@ -1,7 +1,7 @@
 import { computed } from "vue";
-import { Store } from "@/store";
+import type { Store } from "@/store";
 import { useRootMiscSetting } from "@/composables/useRootMiscSetting";
-import {
+import type {
   MaybeComputedMenuBarContent,
   MenuBarContent,
 } from "@/components/Menu/MenuBar/menuBarData";
@@ -64,7 +64,7 @@ export const useMenuBarData = (store: Store): MaybeComputedMenuBarContent => {
     guide: [
       {
         type: "button",
-        label: showTextLineNumber.value ? "隐藏行号" : "显示行号   ",
+        label: showTextLineNumber.value ? "隐藏行号" : "显示行号",
         onClick: () => {
           changeShowTextLineNumber(!showTextLineNumber.value);
         },

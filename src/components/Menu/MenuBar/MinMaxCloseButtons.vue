@@ -40,7 +40,7 @@
       flat
       icon="close"
       class="title-bar-buttons close"
-      aria-label="关闭   "
+      aria-label="关闭"
       @click="closeWindow()"
     ></QBtn>
   </QBadge>

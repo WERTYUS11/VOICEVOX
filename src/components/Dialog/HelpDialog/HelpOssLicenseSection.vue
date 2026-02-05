@@ -25,7 +25,7 @@
       <div class="inner">
         <div>
           <BaseButton
-            label="返回   "
+            label="返回"
             icon="keyboard_arrow_left"
             @click="selectLicenseIndex(undefined)"
           />
