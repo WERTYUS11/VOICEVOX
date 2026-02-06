@@ -413,6 +413,7 @@ jobs:
           THUMBPRINT_PATH: /tmp/esignercka_thumbprint.txt
           SIGNTOOL_PATH_PATH: /tmp/signtool_path.txt
 
+      # NOTE: Fix AppImage permissions
       - name: Fix AppImage permissions
         if: runner.os == 'ubuntu-'
         run: |
