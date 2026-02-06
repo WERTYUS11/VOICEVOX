@@ -135,7 +135,7 @@
   Exch $0            ;       $0
   Push $1            ;       $1 $0
 
-  inetc::get /CONNECTTIMEOUT ${CONNECTTIMEOUT} /RECEIVETIMEOUT ${RECEIVETIMEOUT} /POPUP "" /CAPTION "$(^Name) 安装程序" /RESUME "附加文件下载失败。$\r$\n是否重试？" "${DOWNLOAD_BASE_URL}/$archiveName.ini" "$0" /END
+  inetc::get /CONNECTTIMEOUT ${CONNECTTIMEOUT} /RECEIVETIMEOUT ${RECEIVETIMEOUT} /POPUP "" /CAPTION "$(^Name) セットアップ" /RESUME "追加ファイルのダウンロードに失敗しました。$\r$\n再試行しますか？" "${DOWNLOAD_BASE_URL}/$archiveName.ini" "$0" /END
   Pop $0
 
                   ; Stack $1 $0
@@ -227,7 +227,7 @@ verifyPartedFile_finish${UniqueID}:
     Goto downloadFile_finish
   ${EndIf}
 
-  inetc::get /CONNECTTIMEOUT ${CONNECTTIMEOUT} /RECEIVETIMEOUT ${RECEIVETIMEOUT} /POPUP "" /CAPTION "$(^Name) 安装程序 ($3/$numFiles)" /RESUME "ファイルのダウンロード中に错误が発生しました。$\r$\n是否重试？" "${DOWNLOAD_BASE_URL}/$archiveName.$2" "$4" /END
+  inetc::get /CONNECTTIMEOUT ${CONNECTTIMEOUT} /RECEIVETIMEOUT ${RECEIVETIMEOUT} /POPUP "" /CAPTION "$(^Name) セットアップ ($3/$numFiles)" /RESUME "ファイルのダウンロード中にエラーが発生しました。$\r$\n再試行しますか？" "${DOWNLOAD_BASE_URL}/$archiveName.$2" "$4" /END
   Pop $0
 
   ; プロキシーなしでリトライする処理は合理的な理由が見つからないのでひとまずやめる
@@ -235,7 +235,7 @@ verifyPartedFile_finish${UniqueID}:
   ; https://github.com/electron-userland/electron-builder/issues/2049
   ; ${If} $0 != "OK"
   ; ${AndIf} $0 != "Cancelled"
-  ;   inetc::get /CONNECTTIMEOUT ${CONNECTTIMEOUT} /RECEIVETIMEOUT ${RECEIVETIMEOUT} /NOPROXY /POPUP "" /CAPTION "$(^Name) 安装程序 ($3/$numFiles)" /RESUME "ファイルのダウンロード中に错误が発生しました。$\r$\n是否重试？" "${DOWNLOAD_BASE_URL}/$archiveName.$2" "$4" /END
+  ;   inetc::get /CONNECTTIMEOUT ${CONNECTTIMEOUT} /RECEIVETIMEOUT ${RECEIVETIMEOUT} /NOPROXY /POPUP "" /CAPTION "$(^Name) セットアップ ($3/$numFiles)" /RESUME "ファイルのダウンロード中にエラーが発生しました。$\r$\n再試行しますか？" "${DOWNLOAD_BASE_URL}/$archiveName.$2" "$4" /END
   ;   Pop $0
   ; ${EndIf}
 
@@ -244,7 +244,7 @@ verifyPartedFile_finish${UniqueID}:
 
     ; ファイルを検証する
     downloadFile_verify:
-    Banner::show /set 76 "$(^Name) 安装程序" "正在验证文件... ($3/$numFiles)"
+    Banner::show /set 76 "$(^Name) セットアップ" "ファイルを検証しています... ($3/$numFiles)"
     ${verifyPartedFile} $0 $2 $4
     Banner::destroy
     ${If} $0 == "OK"
@@ -253,7 +253,7 @@ verifyPartedFile_finish${UniqueID}:
       Delete "$1"
       Rename "$4" "$1"
       ${If} ${Errors}
-        MessageBox MB_RETRYCANCEL|MB_ICONEXCLAMATION "项目保存$\r$\n如果打开了其他应用程序，请关闭后再试。$\r$\n是否重试？" IDRETRY downloadFile_rename
+        MessageBox MB_RETRYCANCEL|MB_ICONEXCLAMATION "ファイルの操作に失敗しました。$\r$\n他のアプリケーションを開いている場合は、それらを閉じてから再試行してください。$\r$\n再試行しますか？" IDRETRY downloadFile_rename
         StrCpy $0 "Failed to rename"
       ${EndIf}
     ${ElseIf} $0 == "Filesize mismatch"
@@ -270,11 +270,11 @@ verifyPartedFile_finish${UniqueID}:
     ${ElseIf} $0 == "Failed to get file size"
       ; 検証に必要なファイルサイズの取得に失敗した
       ; ダウンロードファイルを他のソフトなどで開いているかもしれない
-      MessageBox MB_RETRYCANCEL|MB_ICONEXCLAMATION "获取文件大小失败。$\r$\n如果打开了其他应用程序，请关闭后再试。$\r$\n是否重试？" IDRETRY downloadFile_verify
+      MessageBox MB_RETRYCANCEL|MB_ICONEXCLAMATION "ファイルサイズの取得に失敗しました。$\r$\n他のアプリケーションを開いている場合は、それらを閉じてから再試行してください。$\r$\n再試行しますか？" IDRETRY downloadFile_verify
       StrCpy $0 "Failed to get file size"
     ${Else}
-      ; スクリプトの記述ミスの可能性が高いので错误を通知して終わる
-      MessageBox MB_OK|MB_ICONSTOP "发生意外错误，安装程序中止。$\r$\n$\r$\n错误: $0"
+      ; スクリプトの記述ミスの可能性が高いのでエラーを通知して終わる
+      MessageBox MB_OK|MB_ICONSTOP "予期しないエラーが発生したため、セットアップを中止します。$\r$\n$\r$\nエラー: $0"
       ${myQuit}
     ${EndIf}
 
@@ -305,7 +305,7 @@ verifyPartedFile_finish${UniqueID}:
   ${IfNot} ${FileExists} $0
     StrCpy $0 "File not found"
   ${Else}
-    Banner::show /set 76 "$(^Name) 安装程序" "正在验证文件..."
+    Banner::show /set 76 "$(^Name) セットアップ" "ファイルを検証しています..."
     ${verifyFile} $0 $0 "SHA2-512" $archiveHash
     Banner::destroy
     ${If} $0 == "OK"
@@ -333,7 +333,7 @@ verifyPartedFile_finish${UniqueID}:
   Push $3 ;       $3 $2 $1 $0
   Push $4 ;       $4 $3 $2 $1 $0
 
-  Banner::show /set 76 "$(^Name) 安装程序" ""
+  Banner::show /set 76 "$(^Name) セットアップ" ""
 
   StrCpy $3 "$EXEDIR\$archiveName"
   IntOp $2 $numFiles - 1
@@ -343,7 +343,7 @@ verifyPartedFile_finish${UniqueID}:
     ${If} ${FileExists} "$3.$1"
       ; バナーのテキストを更新
       IntOp $0 $1 + 1
-      ${updateBannerText} "正在验证文件... ($0/$numFiles)"
+      ${updateBannerText} "ファイルを検証しています... ($0/$numFiles)"
 
       ; ファイルを検証する
       calcDownloadSize_verify:
@@ -362,12 +362,12 @@ verifyPartedFile_finish${UniqueID}:
       ${ElseIf} $0 == "Failed to get file size"
         ; ファイルサイズの取得に失敗した
         ; 別のソフトからのアクセスでブロックされている？
-        MessageBox MB_RETRYCANCEL|MB_ICONEXCLAMATION "获取文件大小失败。$\r$\n如果打开了其他应用程序，请关闭后再试。$\r$\n是否重试？" IDRETRY calcDownloadSize_verify
+        MessageBox MB_RETRYCANCEL|MB_ICONEXCLAMATION "ファイルサイズの取得に失敗しました。$\r$\n他のアプリケーションを開いている場合は、それらを閉じてから再試行してください。$\r$\n再試行しますか？" IDRETRY calcDownloadSize_verify
         StrCpy $0 "Failed to get file size"
         Goto calcDownloadSize_finish
       ${Else}
-        ; スクリプトの記述ミスの可能性が高いので错误を通知して終わる
-        MessageBox MB_OK|MB_ICONSTOP "发生意外错误，安装程序中止。$\r$\n$\r$\n错误: $0"
+        ; スクリプトの記述ミスの可能性が高いのでエラーを通知して終わる
+        MessageBox MB_OK|MB_ICONSTOP "予期しないエラーが発生したため、セットアップを中止します。$\r$\n$\r$\nエラー: $0"
         ${myQuit}
       ${EndIf}
     ${EndIf}
@@ -412,7 +412,7 @@ verifyPartedFile_finish${UniqueID}:
   Push $2 ;       $2 $1 $0
   Push $3 ;       $3 $2 $1 $0
 
-  Banner::show /set 76 "$(^Name) 安装程序" "正在准备安装..."
+  Banner::show /set 76 "$(^Name) セットアップ" "インストールの準備をしています..."
 
   ${getArchiveNameAndHash} $1 $3
   StrCpy $1 "$EXEDIR\$1"
@@ -426,7 +426,7 @@ verifyPartedFile_finish${UniqueID}:
   ${EndIf}
 
   ; 長く待たせてしまっているので「そろそろ終わり」感を煽っていく
-  ${updateBannerText} "正在进行最终文件检查..."
+  ${updateBannerText} "ファイルの最終確認中です..."
 
   ; できあがったファイルが正しいか検証する
   ${verifyFile} $0 $2 "SHA2-512" $3
@@ -499,7 +499,7 @@ verifyPartedFile_finish${UniqueID}:
       ${myQuitSuccess}
     ${ElseIf} $0 == "File Not Found (404)"
       ; すぐに再試行しても望みが薄いので失敗したことを伝えつつ終わる
-      MessageBox MB_OK|MB_ICONSTOP "未能获取安装所需的文件列表。$\r$\n请稍后重试$\r$\n$\r$\n错误: $0"
+      MessageBox MB_OK|MB_ICONSTOP "インストールに必要なファイル一覧の取得に失敗しました。$\r$\n時間を置いてからやり直してみてください。$\r$\n$\r$\nエラー: $0"
       ${myQuit}
     ${ElseIf} $0 != "OK"
       ; https://nsis.sourceforge.io/Inetc_plug-in
@@ -511,11 +511,11 @@ verifyPartedFile_finish${UniqueID}:
     ; ダウンロードした ini ファイルの内容を元に変数を更新
     ${updateDefinedVariablesINI} $0
     ${If} $0 == "Broken"
-      MessageBox MB_OK|MB_ICONSTOP "准备安装程序时发生错误。$\r$\n请稍后重试"
+      MessageBox MB_OK|MB_ICONSTOP "セットアップの準備中にエラーが発生しました。$\r$\n時間を置いてからやり直してみてください。"
       ${myQuit}
     ${ElseIf} $0 != "OK"
       ; 知らない戻り値を返してきた
-      MessageBox MB_OK|MB_ICONSTOP "发生意外错误，安装程序中止。$\r$\n$\r$\n错误: $0"
+      MessageBox MB_OK|MB_ICONSTOP "予期しないエラーが発生したため、セットアップを中止します。$\r$\n$\r$\nエラー: $0"
       ${myQuit}
     ${EndIf}
 
@@ -532,7 +532,7 @@ verifyPartedFile_finish${UniqueID}:
     ${ElseIf} $0 == "No entry"
       ; ini ファイルから必要な情報が見つけられなかった
       ; ウィルス対策ソフトや掃除系ソフトによって一時フォルダ内のファイルを削除されると起こるかもしれない
-      MessageBox MB_OK|MB_ICONSTOP "未找到文件验证所需数据，已中止处理。$\r$\n请稍后重试"
+      MessageBox MB_OK|MB_ICONSTOP "ファイル検証に必要なデータが見つからなかったため処理を中断しました。$\r$\n時間を置いてからやり直してみてください。"
       ${myQuit}
     ${ElseIf} $0 == "Failed to get file size"
       ; リトライを諦めてここまできたのでそのまま終わる
@@ -565,7 +565,7 @@ Function welcomePagePre
 FunctionEnd
 
 Function welcomePageShow
-  StrCpy $2 "此向导将安装 $(^Name) ${VERSION} 在您的计算机上。"
+  StrCpy $2 "このウィザードは $(^Name) ${VERSION} のインストールをガイドしていきます。"
 
   ${If} $additionalProcess == "None"
 
@@ -575,7 +575,7 @@ Function welcomePageShow
 
     ; ダウンロードを行うのでその旨を表示する
     ${bytesToHumanReadable} $0 $downloadSize
-    StrCpy $2 "$2$\r$\n$\r$\n需要总计 $0 将下载额外的文件。"
+    StrCpy $2 "$2$\r$\n$\r$\nインストールのために合計 $0 の追加ファイルをダウンロードします。"
 
     ; ダウンロードと結合に必要な空き容量
     System::Int64Op $archiveSize + $downloadSize
@@ -595,10 +595,10 @@ Function welcomePageShow
     ${bytesToHumanReadable} $1 $1
     ${GetRoot} "$EXEDIR" $3
     StrCpy $3 $3 1 ; "C:" から "C" だけを取り出す
-    StrCpy $2 "$2$\r$\n安装程序所在的磁盘需要有 $0 以上的空闲空间。$\r$\n（现在磁盘$3可用空间为： $1）"
+    StrCpy $2 "$2$\r$\nインストーラーが置かれたドライブには一時的に $0 以上の空きが必要です。$\r$\n（現在の$3ドライブの空き容量: $1）"
   ${EndIf}
 
-  StrCpy $2 "$2$\r$\n$\r$\n要继续，请点击 [下一步]。"
+  StrCpy $2 "$2$\r$\n$\r$\n続けるには [次へ] をクリックしてください。"
 
   ; テキストを更新
   SendMessage $mui.WelcomePage.Text ${WM_SETTEXT} 0 "STR:$2"
@@ -624,7 +624,7 @@ Function welcomePageLeave
     ${bytesToHumanReadable} $1 $1
     ${GetRoot} "$EXEDIR" $2
     StrCpy $2 $2 1 ; "C:" から "C" だけを取り出す
-    MessageBox MB_ABORTRETRYIGNORE|MB_ICONEXCLAMATION "可用空间不足$\r$\n要开始下载文件，$2ドライブに $0 以上的空闲空间。$\r$\n$\r$\n所需容量： $0$\r$\n磁盘$2上的可用空间：$1" IDRETRY welcomePageLeave_checkFreeSpace IDIGNORE welcomePageLeave_download
+    MessageBox MB_ABORTRETRYIGNORE|MB_ICONEXCLAMATION "空き容量が不足しています。$\r$\nファイルのダウンロードを始めるには、$2ドライブに $0 以上の空きが必要です。$\r$\n$\r$\n必要な容量: $0$\r$\n$2ドライブの空き容量: $1" IDRETRY welcomePageLeave_checkFreeSpace IDIGNORE welcomePageLeave_download
     Abort
   ${EndIf}
 
@@ -639,10 +639,10 @@ Function welcomePageLeave
         ${myQuitSuccess}
       ${ElseIf} $0 == "File Not Found (404)"
         ; すぐに再試行しても望みが薄いので失敗したことを伝えつつ終わる
-        MessageBox MB_OK|MB_ICONSTOP "下载文件失败$\r$\n请稍后重试$\r$\n$\r$\n错误: $0"
+        MessageBox MB_OK|MB_ICONSTOP "ファイルのダウンロードに失敗しました。$\r$\n時間を置いてからやり直してみてください。$\r$\n$\r$\nエラー: $0"
         ${myQuit}
       ${ElseIf} $0 == "Hash mismatch"
-        MessageBox MB_OK|MB_ICONSTOP "下载的文件不正确。$\r$\n请尝试重新下载安装程序。"
+        MessageBox MB_OK|MB_ICONSTOP "ダウンロードしたファイルが正しくありません。$\r$\nインストーラーの再ダウンロードをお試しください。"
         ${myQuit}
       ${ElseIf} $0 == "Failed to rename"
       ${OrIf} $0 == "Failed to get file size"
@@ -651,7 +651,7 @@ Function welcomePageLeave
       ${ElseIf} $0 == "No entry"
         ; ini ファイルから必要な情報が見つけられなかった
         ; ウィルス対策ソフトや掃除系ソフトによって一時フォルダ内のファイルを削除されると起こるかもしれない
-        MessageBox MB_OK|MB_ICONSTOP "未找到文件验证所需数据，已中止处理。$\r$\n请稍后重试"
+        MessageBox MB_OK|MB_ICONSTOP "ファイル検証に必要なデータが見つからなかったため処理を中断しました。$\r$\n時間を置いてからやり直してみてください。"
         ${myQuit}
       ${ElseIf} $0 != "OK"
         ; https://nsis.sourceforge.io/Inetc_plug-in
@@ -667,19 +667,19 @@ Function welcomePageLeave
   ${If} $0 == "OK"
     ; 全てに成功
   ${ElseIf} $0 == "Failed to concatenate file"
-    MessageBox MB_RETRYCANCEL|MB_ICONEXCLAMATION "无法创建文件，安装程序无法继续。$\r$\n如果打开了其他应用程序，请关闭后再试。$\r$\n是否重试？" IDRETRY welcomePageLeave_concatenate
+    MessageBox MB_RETRYCANCEL|MB_ICONEXCLAMATION "ファイルの作成に失敗したためセットアップを続行できません。$\r$\n他のアプリケーションを開いている場合は、それらを閉じてから再試行してください。$\r$\n再試行しますか？" IDRETRY welcomePageLeave_concatenate
     ${myQuit}
   ${ElseIf} $0 == "Failed to rename"
-    MessageBox MB_RETRYCANCEL|MB_ICONEXCLAMATION "无法重命名文件，安装程序无法继续。$\r$\n如果打开了其他应用程序，请关闭后再试。$\r$\n是否重试？" IDRETRY welcomePageLeave_concatenate
+    MessageBox MB_RETRYCANCEL|MB_ICONEXCLAMATION "ファイル名の変更に失敗したためセットアップを続行できません。$\r$\n他のアプリケーションを開いている場合は、それらを閉じてから再試行してください。$\r$\n再試行しますか？" IDRETRY welcomePageLeave_concatenate
     ${myQuit}
   ${ElseIf} $0 == "Hash mismatch"
     ; 結合する前のハッシュチェックは通ったのに統合後におかしくなった
     ; ビルド時に作成された分割ファイルではないものを受信した場合に発生するため、提供側の問題の可能性が高い
-    MessageBox MB_OK|MB_ICONSTOP "检测到文件异常，安装程序已中断。$\r$\n请尝试重新下载安装程序。"
+    MessageBox MB_OK|MB_ICONSTOP "ファイルの異常を検知したためセットアップを中断しました。$\r$\nインストーラーをダウンロードし直してみてください。"
     ${myQuit}
   ${Else}
     ; 知らない戻り値を返してきた
-    MessageBox MB_OK|MB_ICONSTOP "发生意外错误，安装程序中止。$\r$\n$\r$\n错误: $0"
+    MessageBox MB_OK|MB_ICONSTOP "予期しないエラーが発生したため、セットアップを中止します。$\r$\n$\r$\nエラー: $0"
     ${myQuit}
   ${EndIf}
 
@@ -707,7 +707,7 @@ Function readyPageShow
     ; 7z ファイルから必要な空き容量などを計算する
     ; すべてがコピーされる前提で計算するので実態とは少し乖離があるかもしれない
     ShowWindow $HWNDPARENT ${SW_HIDE}
-    Banner::show /set 76 "$(^Name) 安装程序" "正在检查安装大小..."
+    Banner::show /set 76 "$(^Name) セットアップ" "インストールサイズを確認中..."
     ${updateDefinedVariables7z} $0
     Banner::destroy
     ShowWindow $HWNDPARENT ${SW_SHOW}
@@ -720,24 +720,24 @@ Function readyPageShow
   ${ElseIf} $0 == "Failed"
     ; 致命的ではないのでデフォルトフォーカスは OK
     ; 10GB 以上空いてるなら聞かなくてもいいかも？
-    MessageBox MB_OKCANCEL|MB_ICONEXCLAMATION "计算安装所需可用空间失败。$\r$\n如果安装目标位置有足够的可用空间，您可以继续。$\r$\n是否继续安装？" IDOK readyPageShow_ignore
+    MessageBox MB_OKCANCEL|MB_ICONEXCLAMATION "インストール時に必要な空き容量の計算に失敗しました。$\r$\nインストール先に十分な空き容量がある場合はこのまま進めても構いません。$\r$\nこのままインストールを続行しますか？" IDOK readyPageShow_ignore
     ${myQuit}
     readyPageShow_ignore:
     StrCpy $installedSize "0"
   ${Else}
     ; 知らない戻り値を返してきた
-    MessageBox MB_OK|MB_ICONSTOP "发生意外错误，安装程序中止。$\r$\n$\r$\n错误: $0"
+    MessageBox MB_OK|MB_ICONSTOP "予期しないエラーが発生したため、セットアップを中止します。$\r$\n$\r$\nエラー: $0"
     ${myQuit}
   ${EndIf}
 
-  !insertmacro MUI_HEADER_TEXT "开始安装" "安装准备就绪。"
+  !insertmacro MUI_HEADER_TEXT "インストールの開始" "インストールの準備が整いました。"
   nsDialogs::Create /NOUNLOAD 1018
   Pop $0
   ${If} $0 == "error"
     Abort
   ${EndIf}
 
-  ${NSD_CreateLabel} 0 0 100% 12u "按下“安装”将会启动  $(^Name) ${VERSION}  安装程序"
+  ${NSD_CreateLabel} 0 0 100% 12u "[インストール] を押すとコンピューターに $(^Name) ${VERSION} がセットアップされます。"
   Pop $0
 
   StrCpy $0 $installedSize
@@ -748,7 +748,7 @@ Function readyPageShow
     ${bytesToHumanReadable} $1 $1
     ${GetRoot} "$INSTDIR" $2
     StrCpy $2 $2 1 ; "C:" から "C" だけを取り出す
-    ${NSD_CreateLabel} 0 24u 100% 24u "安装需要 $0 以上的空闲空间。$\r$\n（当前磁盘$2上的可用空间：$1）"
+    ${NSD_CreateLabel} 0 24u 100% 24u "インストールには $0 以上の空きが必要です。$\r$\n（現在の$2ドライブの空き容量: $1）"
     Pop $0
   ${EndIf}
 
@@ -765,19 +765,19 @@ Function readyPageLeave
     ${bytesToHumanReadable} $1 $1
     ${GetRoot} "$INSTDIR" $2
     StrCpy $2 $2 1 ; "C:" から "C" だけを取り出す
-    MessageBox MB_ABORTRETRYIGNORE|MB_ICONEXCLAMATION "可用空间不足$\r$\n要安装$(^Name) $2到磁盘$0 的临时空间$\r$\n$\r$\n所需容量： $0$\r$\n磁盘$2上的可用空间：$1" IDRETRY readyPageLeave_checkDiskSpace IDIGNORE readyPageLeave_finish
+    MessageBox MB_ABORTRETRYIGNORE|MB_ICONEXCLAMATION "空き容量が不足しています。$\r$\n$(^Name) をインストールするには$2ドライブに $0 以上の空き容量が必要です。$\r$\n$\r$\n必要な容量: $0$\r$\n$2ドライブの空き容量: $1" IDRETRY readyPageLeave_checkDiskSpace IDIGNORE readyPageLeave_finish
     Abort
   ${EndIf}
   readyPageLeave_finish:
 FunctionEnd
 
 ; README を表示するためのオプションを流用して、
-; 安装程序完了画面にファイル削除のチェックボックスを追加する
+; セットアップ完了画面にファイル削除のチェックボックスを追加する
 Function deleteArchive
   Delete "$EXEDIR\$archiveName"
 FunctionEnd
 !define MUI_FINISHPAGE_SHOWREADME
-!define MUI_FINISHPAGE_SHOWREADME_TEXT "删除已使用过的下载文件"
+!define MUI_FINISHPAGE_SHOWREADME_TEXT "使い終わったダウンロード済みファイルを削除する"
 !define MUI_FINISHPAGE_SHOWREADME_NOTCHECKED
 !define MUI_FINISHPAGE_SHOWREADME_FUNCTION deleteArchive
 
@@ -800,7 +800,7 @@ FunctionEnd
   FunctionEnd
 !macroend
 
-; "%VITE_APP_NAME%"が空の状態でビルドすると他のソフトのファイルを消してしまうためビルド错误にする。
+; "%VITE_APP_NAME%"が空の状態でビルドすると他のソフトのファイルを消してしまうためビルドエラーにする。
 !define DOLLAR "$"
 !if "$%VITE_APP_NAME%" == "${DOLLAR}%VITE_APP_NAME%"
   !error 'The environment variable "%VITE_APP_NAME%" is undefined.'
@@ -877,7 +877,7 @@ FunctionEnd
     GetDlgItem $0 $HWNDPARENT 2
     EnableWindow $0 0
 
-    ${NSD_CreateCheckBox} 0 0 100% 12u "删除附加引擎"
+    ${NSD_CreateCheckBox} 0 0 100% 12u "追加エンジンを削除する"
     Var /GLOBAL removeAdditionalEngineCheckBox
     Pop $removeAdditionalEngineCheckBox
 
@@ -900,7 +900,7 @@ FunctionEnd
       RMDir "$APPDATA\$%VITE_APP_NAME%\vvpp-engines\.tmp"
       !insertmacro locateVvppEngines un.removeVvppEngines
       RMDir "$APPDATA\$%VITE_APP_NAME%\vvpp-engines"
-      ; 未知のファイルが残っている場合削除されずに错误フラグが立つのでクリアする
+      ; 未知のファイルが残っている場合削除されずにエラーフラグが立つのでクリアする
       ClearErrors
 
       ${If} $installMode == "all"
