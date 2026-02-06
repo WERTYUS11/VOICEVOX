@@ -1,6 +1,9 @@
 name: Build
 
 on:
+  push:
+    branches:
+      - main
   release:
     types:
       - created
@@ -412,12 +415,6 @@ jobs:
           ESIGNERCKA_TOTP_SECRET: ${{ secrets.ESIGNERCKA_TOTP_SECRET }}
           THUMBPRINT_PATH: /tmp/esignercka_thumbprint.txt
           SIGNTOOL_PATH_PATH: /tmp/signtool_path.txt
-
-      - name: Fix AppImage permissions
-        if: startsWith(matrix.os, 'ubuntu-')
-        run: |
-          chmod +x vendored/type2-runtime/runtime
-          chmod +x vendored/appimagetool/appimagetool.AppImage
 
       # NOTE: prepackage can be removed before splitting nsis-web archive
       - name: Build Electron
