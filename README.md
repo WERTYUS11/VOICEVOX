@@ -9,21 +9,21 @@
 
 （语音引擎是 [VOICEVOX ENGINE](https://github.com/VOICEVOX/voicevox_engine/)，  
 核心库是 [VOICEVOX CORE](https://github.com/VOICEVOX/voicevox_core/)，  
-整体架构请参考 [こちら](./docs/全体構成.md)。）
+整体架构请参考 [这里](./docs/全体構成.md)。）
 
 ---
 
 ## 面向普通用户
 
 本仓库是**开发用仓库**。  
-使用方法请查看 **[VOICEVOX 公式サイト](https://voicevox.hiroshiba.jp/)**。
+使用方法请查看 **[VOICEVOX官方网站](https://voicevox.hiroshiba.jp/)**。
 
 ---
 
 ## 面向想参与贡献的人
 
 VOICEVOX 项目欢迎任何感兴趣的人参与。  
-我们准备了 **[貢献手順について説明したガイド](./CONTRIBUTING.md)** 作为贡献指南。
+我们准备了 **[贡献过程指南](./CONTRIBUTING.md)** 作为贡献指南。
 
 贡献不仅限于写代码，还包括：
 
@@ -32,18 +32,18 @@ VOICEVOX 项目欢迎任何感兴趣的人参与。
 - 参与功能讨论  
 - 提出改进建议  
 
-同时也有**初心者歓迎タスク**，非常适合新手入门。
+同时也有**初学者欢迎任务**，非常适合新手入门。
 
 VOICEVOX 编辑器使用了 **Electron、TypeScript、Vue、Vuex** 等技术，整体结构比较复杂。  
-可以参考 **[コードの歩き方](./docs/コードの歩き方.md)** 来理解项目结构。
+可以参考 **[项目结构](./docs/コードの歩き方.md)** 来理解项目结构。
 
 如果你打算为某个 Issue 提交 PR，请**先在 Issue 中声明你已开始处理**，或者先提交 Draft PR，以避免重复工作。
 
-开发讨论与交流主要在 **[VOICEVOX 非公式 Discord サーバー](https://discord.gg/WMwWetrzuh)**，欢迎加入。
+开发讨论与交流主要在 **[VOICEVOX非官方Discord服务器](https://discord.gg/WMwWetrzuh)**，欢迎加入。
 
-### デザインガイドライン
+### 设计指南
 
-请参考 **[UX・UI デザインの方針](./docs/UX・UIデザインの方針.md)**。
+请参考 **[UX / UI设计方针](./docs/UX・UIデザインの方針.md)**。
 
 ---
 
@@ -103,7 +103,7 @@ pnpm run electron:serve --mode production
 pnpm run electron:serve -- ...
 ```
 
-音声合成エンジンのリポジトリはこちらです  
+语音合成引擎的信息⬇️
 <https://github.com/VOICEVOX/voicevox_engine>
 
 ---
