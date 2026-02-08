@@ -49,7 +49,7 @@ try {
     await fetch("http://localhost:7357/index.json").then((res) => res.json()),
   );
 } catch (e) {
-  throw new Error(`Storybookのindex.jsonの取得に失敗しました`, {
+  throw new Error(`获取 Storybook 的 index.json 失败`, {
     cause: e,
   });
 }
@@ -69,13 +69,13 @@ for (const [story, stories] of Object.entries(allStories)) {
     for (const story of stories) {
       test.describe(story.name, () => {
         for (const [theme, name] of [
-          ["light", "ライト"],
-          ["dark", "ダーク"],
+          ["light", "浅色模式"],
+          ["dark", "深色模式"],
         ] as const) {
           test(`テーマ：${name}`, async ({ page }) => {
             test.skip(
               process.platform !== "win32",
-              "Windows以外のためスキップします",
+              "跳过 Windows 以外的系统",
             );
 
             const params = new URLSearchParams();
@@ -120,8 +120,8 @@ for (const [story, stories] of Object.entries(allStories)) {
   });
 }
 
-test("スクリーンショットの一覧に過不足が無い", async () => {
-  test.skip(process.platform !== "win32", "Windows以外のためスキップします");
+test("屏幕截图列表无多余或缺失项", async () => {
+  test.skip(process.platform !== "win32", "跳过 Windows 以外的系统");
   const screenshotFiles = await fs.readdir(test.info().snapshotDir);
   const screenshotPaths = screenshotFiles.map((file) =>
     path.join(test.info().snapshotDir, file),
