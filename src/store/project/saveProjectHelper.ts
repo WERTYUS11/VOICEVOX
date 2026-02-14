@@ -12,7 +12,7 @@ export async function promptProjectSaveFilePath(
   const defaultPath = `${context.getters.DEFAULT_PROJECT_FILE_BASE_NAME}.vvproj`;
 
   return await window.backend.showSaveFileDialog({
-    title: "プロジェクトファイルの保存",
+    title: "项目文件保存",
     name: "VOICEVOX Project file",
     extensions: ["vvproj"],
     defaultPath,
@@ -76,7 +76,7 @@ export async function executeWritePromiseOrDialog(
     return true;
   } catch (e) {
     window.backend.logError(e);
-    await showErrorDialog("プロジェクトファイルの保存に失敗しました", e);
+    await showErrorDialog("项目文件保存失败", e);
     return false;
   }
 }
