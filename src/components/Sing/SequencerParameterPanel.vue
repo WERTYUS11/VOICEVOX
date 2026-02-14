@@ -1,7 +1,7 @@
 <template>
   <div class="parameter-panel">
     <div class="tool-area">
-      パラメータ
+      参数
       <!-- 仮のSwitcher -->
       <ParameterPanelEditTargetSwitcher :editTarget :changeEditTarget />
     </div>

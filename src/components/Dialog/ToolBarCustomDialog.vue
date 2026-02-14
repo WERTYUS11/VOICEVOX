@@ -158,7 +158,7 @@ const usableButtonsDesc: Record<ToolbarButtonTagType, string> = {
     "将所有输入文本的朗读导出为音频文件。",
   EXPORT_AUDIO_CONNECT_ALL:
     "将所有输入文本的朗读连接为一个音频文件导出。",
-  SAVE_PROJECT: "プロジェクトを上書き保存します。",
+  SAVE_PROJECT: "覆盖并保存项目",
   UNDO: "撤销一步操作。",
   REDO: "重做被撤销的操作。",
   IMPORT_TEXT: "读取文本文件 (.txt)。",

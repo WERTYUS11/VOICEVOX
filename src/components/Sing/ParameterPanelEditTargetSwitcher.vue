@@ -15,7 +15,7 @@
         transitionShow=""
         transitionHide=""
       >
-        音素タイミング編集
+        编辑音素时序
       </QTooltip>
     </QBtn>
 
@@ -34,7 +34,7 @@
         transitionShow=""
         transitionHide=""
       >
-        ボリューム編集
+        调整音量
       </QTooltip>
     </QBtn>
   </QBtnGroup>

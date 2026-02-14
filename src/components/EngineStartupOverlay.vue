@@ -31,7 +31,7 @@
         >
           关闭多引擎后重新加载</QBtn
         >
-        <QBtn v-else outline @click="openQa">Q&Aを見る</QBtn>
+        <QBtn v-else outline @click="openQa">查看FAQ</QBtn>
       </template>
     </div>
   </div>

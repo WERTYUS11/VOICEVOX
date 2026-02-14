@@ -44,8 +44,8 @@
           </QSelect>
         </BaseCell>
         <BaseCell
-          title="音声のビット深度"
-          description="音声のビット深度を変更できます。16bitは互換性が高く、32bit floatは高品質です。"
+          title="音深"
+          description="调整音频位深:16bit兼容高;32bit float高品质"
         >
           <QBtnToggle
             v-model="bitDepth"
