@@ -514,7 +514,8 @@ replaceInFile("src/components/EngineStartupOverlay.vue", {
    "マルチエンジンをオフにして再読み込みする":"关闭多引擎后重新加载",
    "エンジン起動中・・・":"引擎启动中……",
    "データ準備中・・・":"数据准备中……",
-});
+   "Q&Aを見る":"查看FAQ",
+})
 
 replaceInFile("src/components/Dialog/AcceptDialog/AcceptDialog.stories.ts", {
    "承諾ボタンを押す":"点击同意按钮",
@@ -1226,6 +1227,55 @@ replaceInFile("src/store/audio.ts", {
 
 replaceInFile("src/components/ProgressView.vue", {
    "生成中です...":"生成中..."
+});
+
+replaceInFile("src/components/Sing/SequencerParameterPanel.vue", {
+   "パラメータ":"参数",
+})
+
+replaceInFile("src/components/Sing/ParameterPanelEditTargetSwitcher.vue", {
+   "音素タイミング編集":"编辑音素时序",
+   "ボリューム編集":"调整音量",
+});
+
+replaceInFile("src/components/Sing/SequencerPhonemeTimingEditor.vue", {
+   "音素タイミング編集":"编辑音素时序",
+});
+
+replaceInFile("src/components/Dialog/ExportSongAudioDialog/Presentation.vue", {
+   "音素タイミング編集":"编辑音素时序",
+   "音声のビット深度を変更できます。16bitは互換性が高く、32bit floatは高品質です。":"调整音频位深:16bit兼容高;32bit float高品质",
+   "音声のビット深度":"音深",
+});
+
+replaceInFile("src/components/Dialog/ToolBarCustomDialog.vue", {
+   "プロジェクトを上書き保存します。":"覆盖并保存项目",
+});
+
+replaceInFile("src/store/project/saveProjectHelper.ts", {
+   "プロジェクトファイルの保存に失敗しました":"项目文件保存失败",
+   "プロジェクトファイルの保存":"项目文件保存",
+});
+
+replaceInFile("src/store/project/index.ts", {
+   "プロジェクトファイルが新しいバージョンのVOICEVOXで作成されています":"项目文件是由新版本的 VOICEVOX 创建",
+   "このプロジェクトファイルは新しいバージョンのVOICEVOXで作成されたため、一部の機能が正しく動作しない可能性があります。読み込みを続行しますか？":"项目文件是由新版本的 VOICEVOX 创建, 可能会导致部分功能异常。是否继续加载？",
+   "いいえ":"不彳亍",
+   "はい":"彳亍",
+   "プロジェクトファイルの選択":"选择项目文件",
+   "プロジェクトをロードすると現在のプロジェクトは破棄されます。":"加载工程时，当前工程将被销毁！",
+   "エラーが発生しました。":"发生错误",
+   "プロジェクトファイルが見つかりませんでした。ファイルが移動、または削除された可能性があります。":"项目文件不存在或已被移动/删除",
+   "ファイルフォーマットが正しくありません。":"文件格式错误",
+   "プロジェクトファイルの読み込みに失敗しました。":"项目文件加载失败",
+   "編集中のプロジェクトが":"项目",
+   "に切り替わりました。":"已切换为正在编辑",
+   "プロジェクトの変更が保存されていません。":"项目修改未保存",
+   "プロジェクトを保存しますか？":"保存项目吗？",
+   "キャンセル":"取消",
+   "破棄する":"不保存",
+   "保存する":"保存",
+   "エラー":"错误",
 });
 //---------------------------
 //以上是汉化
