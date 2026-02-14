@@ -72,7 +72,7 @@
           </div>
         </QItemLabel>
         <QItemLabel v-if="trackCharacter" caption class="singer-name">
-          <!-- ミュート中はアイコンを表示 -->
+          <!-- 静音中はアイコンを表示 -->
           <QIcon
             v-if="!shouldPlayTrack"
             name="volume_off"
@@ -82,7 +82,7 @@
           {{ singerName }}
         </QItemLabel>
       </QItemSection>
-      <!-- ミュート・ソロボタン -->
+      <!-- 静音・独奏ボタン -->
       <QItemSection side class="track-control-container">
         <div class="track-control">
           <QBtn
@@ -99,7 +99,7 @@
             :disable="uiLocked || isThereSoloTrack"
             @click.stop="setTrackMute(!track.mute)"
           >
-            <QTooltip :delay="500">ミュート</QTooltip>
+            <QTooltip :delay="500">静音</QTooltip>
           </QBtn>
           <QBtn
             :color="track.solo ? 'primary' : 'default'"
@@ -115,7 +115,7 @@
             :disable="uiLocked"
             @click.stop="setTrackSolo(!track.solo)"
           >
-            <QTooltip :delay="500">ソロ</QTooltip>
+            <QTooltip :delay="500">独奏</QTooltip>
           </QBtn>
         </div>
       </QItemSection>
@@ -309,7 +309,7 @@ const deleteTrack = async () => {
 
 const singerName = computed(() => {
   const character = trackCharacter.value;
-  if (!character) return "（不明なキャラクター）";
+  if (!character) return "（不明角色）";
   return character.character.metas.speakerName;
 });
 </script>

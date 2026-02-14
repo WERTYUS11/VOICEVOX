@@ -313,7 +313,11 @@ replaceInFile("src/components/Sing/SideBar/SideBar.vue", {
 
 replaceInFile("src/components/Sing/SideBar/TrackItem.vue", {
    "トラック追加":"添加音轨",
-   "トラック削除":"删除音轨"
+   "トラック削除":"删除音轨",
+   "ソロ":"独奏",
+   "（不明なキャラクター）":"（不明角色）",
+   "ミュート":"静音",
+
 });
 
 replaceInFile("src/components/Sing/ToolBar/EditTargetSwicher.vue", {
@@ -600,6 +604,7 @@ replaceInFile("src/components/Dialog/HelpDialog/HelpUpdateInfoSection.vue", {
    "最新バージョン":"最新版本",
    "ダウンロードページ":"下载页面",
    "が見つかりました":"已找到",
+   "バージョン":"版本",
 });
 
 replaceInFile("src/components/Dialog/SettingDialog/EditButtonCell.vue", {

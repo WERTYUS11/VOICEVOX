@@ -14,7 +14,7 @@
             v-for="(info, infoIndex) of props.updateInfos"
             :key="infoIndex"
           >
-            <h2>バージョン {{ info.version }}</h2>
+            <h2>版本 {{ info.version }}</h2>
             <ul>
               <li
                 v-for="(item, descriptionIndex) of info.descriptions"
