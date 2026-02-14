@@ -170,10 +170,10 @@ export const projectStore = createPartialStore<ProjectStoreTypes>({
           const result = await showQuestionDialog({
             type: "warning",
             title:
-              "プロジェクトファイルが新しいバージョンのVOICEVOXで作成されています",
+              "项目文件是由新版本的 VOICEVOX 创建",
             message:
-              "このプロジェクトファイルは新しいバージョンのVOICEVOXで作成されたため、一部の機能が正しく動作しない可能性があります。読み込みを続行しますか？",
-            buttons: ["いいえ", { text: "はい", color: "warning" }],
+              "项目文件是由新版本的 VOICEVOX 创建, 可能会导致部分功能异常。是否继续加载？",
+            buttons: ["不彳亍", { text: "彳亍", color: "warning" }],
             cancel: 0,
           });
           return result === 1;
@@ -192,14 +192,14 @@ export const projectStore = createPartialStore<ProjectStoreTypes>({
     /**
      * プロジェクトファイルを読み込む。読み込めたかの成否が返る。
      * ファイル選択ダイアログを表示するか、ファイルパス指定するか、Fileインスタンスを渡すか選べる。
-     * エラー発生時はダイアログが表示される。
+     * 错误発生時はダイアログが表示される。
      */
     action: createUILockAction(
       async ({ actions, mutations, getters }, payload) => {
         let filePath: undefined | string;
         if (payload.type == "dialog") {
           const ret = await window.backend.showOpenFileDialog({
-            title: "プロジェクトファイルの選択",
+            title: "选择项目文件",
             name: "VOICEVOX Project file",
             mimeType: "application/json",
             extensions: ["vvproj"],
@@ -240,7 +240,7 @@ export const projectStore = createPartialStore<ProjectStoreTypes>({
           if (getters.IS_EDITED) {
             const result = await actions.SAVE_OR_DISCARD_PROJECT_FILE({
               additionalMessage:
-                "プロジェクトをロードすると現在のプロジェクトは破棄されます。",
+                "加载工程时，当前工程将被销毁！",
             });
             if (result == "canceled") {
               return false;
@@ -257,16 +257,16 @@ export const projectStore = createPartialStore<ProjectStoreTypes>({
           window.backend.logError(err);
           const message = (() => {
             if (typeof err === "string") return err;
-            if (!(err instanceof Error)) return "エラーが発生しました。";
+            if (!(err instanceof Error)) return "发生错误";
             if (err instanceof ResultError && err.code === "ENOENT")
-              return "プロジェクトファイルが見つかりませんでした。ファイルが移動、または削除された可能性があります。";
+              return "项目文件不存在或已被移动/删除";
             if (err instanceof ProjectFileFormatError)
-              return "ファイルフォーマットが正しくありません。";
+              return "文件格式错误";
             return err.message;
           })();
           await showAlertDialog({
-            title: "エラー",
-            message: `プロジェクトファイルの読み込みに失敗しました。\n${message}`,
+            title: "错误",
+            message: `项目文件加载失败\n${message}`,
           });
           return false;
         }
@@ -276,10 +276,10 @@ export const projectStore = createPartialStore<ProjectStoreTypes>({
 
   SAVE_PROJECT_FILE_OVERWRITE: {
     /**
-     * プロジェクトファイルを上書き保存する。
-     * 現在のプロジェクトファイルが未設定の場合は名前をつけて保存する。
-     * ファイルを保存できた場合はtrueが、キャンセルしたか例外が発生した場合はfalseが返る。
-     * エラー発生時はダイアログが表示される。
+     * プロジェクトファイルを上書き保存。
+     * 現在のプロジェクトファイルが未設定の場合は名前をつけて保存。
+     * ファイルを保存できた場合はtrueが、取消したか例外が発生した場合はfalseが返る。
+     * 错误発生時はダイアログが表示される。
      */
     action: createUILockAction(async (context) => {
       const filePath = context.state.projectFilePath;
@@ -300,8 +300,8 @@ export const projectStore = createPartialStore<ProjectStoreTypes>({
   SAVE_PROJECT_FILE_AS: {
     /**
      * プロジェクトファイルを名前をつけて保存し、現在のプロジェクトファイルのパスを更新する。
-     * ファイルを保存できた場合はtrueが、キャンセルしたか例外が発生した場合はfalseが返る。
-     * エラー発生時はダイアログが表示される。
+     * ファイルを保存できた場合はtrueが、取消したか例外が発生した場合はfalseが返る。
+     * 错误発生時はダイアログが表示される。
      */
     action: createUILockAction(async (context) => {
       const filePath = await promptProjectSaveFilePath(context);
@@ -319,7 +319,7 @@ export const projectStore = createPartialStore<ProjectStoreTypes>({
           await showMessageDialog({
             type: "info",
             title: "保存",
-            message: `編集中のプロジェクトが ${filePath} に切り替わりました。`,
+            message: `项目 ${filePath} 已切换为正在编辑`,
           });
         }
       }
@@ -331,9 +331,9 @@ export const projectStore = createPartialStore<ProjectStoreTypes>({
 
   SAVE_PROJECT_FILE_AS_COPY: {
     /**
-     * プロジェクトファイルを複製として保存する。
-     * ファイルを保存できた場合はtrueが、キャンセルしたか例外が発生した場合はfalseが返る。
-     * エラー発生時はダイアログが表示される。
+     * プロジェクトファイルを複製として保存。
+     * ファイルを保存できた場合はtrueが、取消したか例外が発生した場合はfalseが返る。
+     * 错误発生時はダイアログが表示される。
      */
     action: createUILockAction(async (context) => {
       const filePath = await promptProjectSaveFilePath(context);
@@ -347,25 +347,25 @@ export const projectStore = createPartialStore<ProjectStoreTypes>({
   },
 
   /**
-   * プロジェクトファイルを保存するか破棄するかキャンセルするかのダイアログを出して、保存する場合は保存する。
+   * プロジェクトファイルを保存か不保存か取消するかのダイアログを出して、保存場合は保存。
    * 何を選択したかが返る。
-   * 保存に失敗した場合はキャンセル扱いになる。
+   * 保存に失敗した場合は取消扱いになる。
    */
   SAVE_OR_DISCARD_PROJECT_FILE: {
     action: createUILockAction(async ({ actions }, { additionalMessage }) => {
-      let message = "プロジェクトの変更が保存されていません。";
+      let message = "项目修改未保存";
       if (additionalMessage) {
         message += "\n" + additionalMessage;
       }
 
       const result: number = await showQuestionDialog({
         type: "warning",
-        title: "プロジェクトを保存しますか？",
+        title: "保存项目吗？",
         message,
         buttons: [
-          "キャンセル",
-          { text: "破棄する", color: "warning" },
-          { text: "保存する", color: "primary" },
+          "取消",
+          { text: "不保存", color: "warning" },
+          { text: "保存", color: "primary" },
         ],
         cancel: 0,
       });
