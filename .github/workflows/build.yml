@@ -420,6 +420,11 @@ jobs:
           chmod +x vendored/type2-runtime/runtime
           chmod +x vendored/appimagetool/appimagetool.AppImage
 
+      # Localization
+      - name: Localization
+        run: |
+          node Script/zh-cn.js
+
       # NOTE: prepackage can be removed before splitting nsis-web archive
       - name: Build Electron
         if: endsWith(matrix.installer_artifact_name, '-nsis-web') || endsWith(matrix.installer_artifact_name, '-appimage') # windows and linux
