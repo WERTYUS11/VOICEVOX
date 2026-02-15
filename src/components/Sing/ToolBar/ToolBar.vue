@@ -155,7 +155,7 @@
         optionsDense
         hideDropdownIcon
         unelevated
-        label="スナップ"
+        label="SNAP"
         transitionShow="none"
         transitionHide="none"
         class="sing-snap"
@@ -423,7 +423,7 @@ const toggleLoop = async () => {
         tpqn.value,
       );
 
-      // 現在のplayheadがある位置をスナップ位置に調整
+      // 現在のplayheadがある位置をSNAP位置に調整
       const currentMeasureStartTick =
         Math.round(playheadTicks.value / snapTicks.value) * snapTicks.value;
 
