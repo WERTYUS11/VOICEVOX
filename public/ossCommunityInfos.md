@@ -27,4 +27,4 @@
 
 VOICEVOX 的整体架构可在[此处](https://github.com/VOICEVOX/voicevox/blob/main/docs/%E5%85%A8%E4%BD%93%E6%A7%8B%E6%88%90.md)查看详细信息。
 
-本项目不支持任何关于汉化的PR、Iussue。若需要可前往[项目官网](https://github.com/VOICEVOX/voicevox)提交。
+本项目不支持除了任何关于汉化的PR、Iussue。若需要可前往[项目官网](https://github.com/VOICEVOX/voicevox)提交。
