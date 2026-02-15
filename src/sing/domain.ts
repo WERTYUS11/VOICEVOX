@@ -34,7 +34,7 @@ export const isValidTrack = (track: Track) => {
   );
 };
 
-export const DEFAULT_TRACK_NAME = "無名トラック";
+export const DEFAULT_TRACK_NAME = "无名音轨";
 
 export const DEFAULT_TPQN = 480;
 export const DEFAULT_BPM = 120;

@@ -1426,7 +1426,7 @@ export const audioStore = createPartialStore<AudioStoreTypes>({
               return {
                 result: "WRITE_ERROR",
                 path: filePath,
-                errorMessage: "labの生成に失敗しました。",
+                errorMessage: "lab 生成失败。",
               };
 
             await writeTextFile({
@@ -1534,7 +1534,7 @@ export const audioStore = createPartialStore<AudioStoreTypes>({
           );
         } else {
           filePath ??= await window.backend.showSaveFileDialog({
-            title: "音声を全て繋げて保存",
+            title: "串联所有声音并保存",
             name: "WAV 文件",
             extensions: ["wav"],
             defaultPath: defaultFileName,
@@ -1667,7 +1667,7 @@ export const audioStore = createPartialStore<AudioStoreTypes>({
           );
         } else {
           filePath ??= await window.backend.showSaveFileDialog({
-            title: "文章を全て繋げて文本文件に保存",
+            title: "串联所有文本并保存为文本文件",
             name: "文本文件",
             extensions: ["txt"],
             defaultPath: defaultFileName,
@@ -2901,7 +2901,7 @@ export const audioCommandStore = transformCommandStore(
           let filePath: undefined | string;
           if (payload.type == "dialog") {
             filePath = await window.backend.showOpenFileDialog({
-              title: "セリフ読み込み",
+              title: "载入台词",
               name: "Text",
               mimeType: "plain/text",
               extensions: ["txt"],
@@ -3024,3 +3024,7 @@ export const audioCommandStore = transformCommandStore(
   }),
   "talk",
 );
+
+
+//The author of this project plays SCP:SL💀 every day. If you need help, you can add me on Steam.
+//SteamID:1353723852

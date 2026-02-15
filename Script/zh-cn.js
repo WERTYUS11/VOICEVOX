@@ -202,6 +202,7 @@ replaceInFile("src/components/Sing/ToolBar/ToolBar.vue", {
    "やり直す":"重做",
    "再生/停止":"播放/停止",
    "元に戻す":"撤销",
+   "スナップ":"SNAP",
 });
 
 replaceInFile("tests/unit/lib/hotkeyManager.spec.ts", {
@@ -344,6 +345,7 @@ replaceInFile("src/components/Sing/ExportOverlay.vue", {
 replaceInFile("src/components/Sing/menuBarData.ts", {
    "プロジェクトをインポート":"导入项目",
    "labファイルを書き出し":"导出lab文件",
+   "プロジェクトをエクスポート":"导出项目为",
    "選択解除":"取消选择",
    "音声書き出し":"语音导出",
    "すべて選択":"全选",
@@ -1004,6 +1006,7 @@ replaceInFile("src/components/Dialog/OldDefaultStyleListDialog.vue", {
    "前のスタイル":"上一个风格",
    "次のスタイル":"下一个风格",
    "スタイル":"风格",
+   "完了":"完成",
 });
 
 replaceInFile("src/components/Dialog/OldDefaultStyleSelectDialog.vue", {
@@ -1215,7 +1218,9 @@ replaceInFile("src/store/singing.ts", {
    "不明なエラーが発生しました。":"发生未知错误。",
    "音声を全て繋げて保存":"串联所有声音并保存",
    "テキストファイル":"文本文件",
-   "話者の変更に失敗しました":"话者变更失败"
+   "話者の変更に失敗しました":"话者变更失败",
+   "labファイルを保存":"保存 lab 文件",
+   "プロジェクトを書き出し":"对应项目导出",
 });
 
 replaceInFile("src/store/audio.ts", {
@@ -1228,6 +1233,10 @@ replaceInFile("src/store/audio.ts", {
    "labファイルを保存":"保存 lab 文件",
    "再生デバイスが見つかりません":"找不到播放设备",
    "エラー":"错误",
+   "labの生成に失敗しました。":"lab 生成失败。",
+   "音声を全て繋げて保存":"串联所有声音并保存",
+   "文章を全て繋げて文本文件に保存":"串联所有文本并保存为文本文件",
+   "セリフ読み込み":"载入台词",
 });
 
 replaceInFile("src/components/ProgressView.vue", {
@@ -1281,6 +1290,30 @@ replaceInFile("src/store/project/index.ts", {
    "破棄する":"不保存",
    "保存する":"保存",
    "エラー":"错误",
+});
+
+replaceInFile("src/store/ui.ts", {
+   "Vuexが準備できませんでした":"Vuex 未准备就绪",
+   "テキスト欄が選択されていません":"未选择文本栏",
+   "音声を書き出したいテキスト欄を選択してください。":"请选择要导出语音的文本栏",
+});
+
+replaceInFile("src/sing/viewHelper.ts", {
+   "トーク":"对话",
+   "ソング":"歌曲",
+   "ハミング":"哼唱",
+});
+
+replaceInFile("src/sing/domain.ts", {
+   "無名トラック":"无名音轨",
+});
+
+replaceInFile("tests/unit/domain/__snapshots__/project.spec.ts.snap", {
+   "無名トラック":"无名音轨",
+});
+
+replaceInFile("tests/unit/lib/utaformatixProject/__snapshots__/export.spec.ts.snap", {
+   "無名トラック":"无名音轨",
 });
 //---------------------------
 //以上是汉化

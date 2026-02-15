@@ -110,11 +110,11 @@ export const getNumKeys = () => {
 export const getStyleDescription = (style: StyleInfo) => {
   const description: string[] = [];
   if (style.styleType === "talk") {
-    description.push("トーク");
+    description.push("对话");
   } else if (style.styleType === "frame_decode") {
-    description.push("ハミング");
+    description.push("哼唱");
   } else if (style.styleType === "sing") {
-    description.push("ソング");
+    description.push("歌曲");
   } else {
     throw new Error("Unknown style type.");
   }

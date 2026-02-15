@@ -267,7 +267,7 @@ export const uiStore = createPartialStore<UiStoreTypes>({
       let vuexReadyTimeout = 0;
       while (!state.isVuexReady) {
         if (vuexReadyTimeout >= timeout) {
-          throw new Error("Vuexが準備できませんでした");
+          throw new Error("Vuex 未准备就绪");
         }
         await new Promise((resolve) => setTimeout(resolve, 300));
         vuexReadyTimeout += 300;
@@ -505,8 +505,8 @@ export const uiStore = createPartialStore<UiStoreTypes>({
       const activeAudioKey = getters.ACTIVE_AUDIO_KEY;
       if (activeAudioKey == undefined) {
         void actions.SHOW_ALERT_DIALOG({
-          title: "テキスト欄が選択されていません",
-          message: "音声を書き出したいテキスト欄を選択してください。",
+          title: "未选择文本栏",
+          message: "请选择要导出语音的文本栏",
         });
         return;
       }

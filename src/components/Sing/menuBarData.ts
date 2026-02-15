@@ -90,7 +90,7 @@ export const useMenuBarData = (store: Store): MaybeComputedMenuBarContent => {
       },
       {
         type: "root",
-        label: "プロジェクトをエクスポート",
+        label: "导出项目为",
         subMenu: (
           [
             ["smf", "MIDI (SMF)"],

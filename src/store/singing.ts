@@ -2688,7 +2688,7 @@ export const singingStore = createPartialStore<SingingStoreTypes>({
           } else {
             // 保存先が固定されていない場合、保存先のディレクトリを選択するダイアログを表示する
             dirPath ??= await window.backend.showSaveDirectoryDialog({
-              title: "labファイルを保存",
+              title: "保存 lab 文件",
             });
           }
           // ディレクトリが選択されなかった（キャンセルされた）場合は、全トラックをキャンセル扱いとして処理を中断する
@@ -3313,7 +3313,7 @@ export const singingStore = createPartialStore<SingingStoreTypes>({
         // 複数トラックかつ複数ファイルの形式はディレクトリに書き出す
         if (state.trackOrder.length > 1 && isMultiFileProjectFormat(fileType)) {
           const dirPath = await window.backend.showSaveDirectoryDialog({
-            title: "プロジェクトを書き出し",
+            title: "对应项目导出",
           });
           if (!dirPath) {
             return { result: "CANCELED", path: "" };
@@ -3359,7 +3359,7 @@ export const singingStore = createPartialStore<SingingStoreTypes>({
           }
 
           let filePath = await window.backend.showSaveFileDialog({
-            title: "プロジェクトを書き出し",
+            title: "对应项目导出",
             name: fileTypeLabel,
             extensions: [extension],
             defaultPath: fileBaseName,

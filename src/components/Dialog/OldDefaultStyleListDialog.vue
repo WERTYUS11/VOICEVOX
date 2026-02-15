@@ -31,7 +31,7 @@
           <div class="row items-center no-wrap">
             <QBtn
               unelevated
-              label="完了"
+              label="完成"
               color="toolbar-button"
               textColor="toolbar-button-display"
               class="text-no-wrap"
