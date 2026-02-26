@@ -58,6 +58,14 @@ pnpm i
 
 ---
 
+### 设置AI Agent
+
+执行后将会给类似于Codex CLI和Claude Code的AI Agent生成必要文件
+
+```bash
+pnpm run setup-agents
+```
+
 ## 运行
 
 ### 准备vv-engine引擎
@@ -74,7 +82,7 @@ pnpm i
 
 - macOS  
   ```
-  /path/to/VOICEVOX.app/Resources/MacOS/vv-engine/run
+  /path/to/VOICEVOX.app/Contents/Resources/vv-engine/run
   ```
 
 - Linux  
