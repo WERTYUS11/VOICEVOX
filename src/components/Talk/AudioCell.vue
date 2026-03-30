@@ -496,7 +496,7 @@ const removeCell = async () => {
       }
       if (willNextFocusIndex === -1) {
         throw new Error(
-          "未找到下一个要选择的audioKey（无法到达）",
+          "没有找到下一个要选择的audioKey（不可访问）",
         );
       }
       emit("focusCell", {

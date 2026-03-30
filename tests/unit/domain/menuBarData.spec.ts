@@ -10,7 +10,7 @@ const menuItemData1: MenuItemData = {
 };
 const menuItemData2: MenuItemData = {
   type: "button",
-  label: "选择导出声音",
+  label: "导出选定声音",
   onClick: () => {},
   disableWhenUiLocked: true,
 };

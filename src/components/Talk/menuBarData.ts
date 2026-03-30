@@ -20,7 +20,7 @@ export const useMenuBarData = (store: Store): MaybeComputedMenuBarContent => {
       },
       {
         type: "button",
-        label: "选择并导出声音",
+        label: "导出选定声音",
         onClick: () => {
           void store.actions.SHOW_GENERATE_AND_SAVE_SELECTED_AUDIO_DIALOG();
         },
@@ -28,7 +28,7 @@ export const useMenuBarData = (store: Store): MaybeComputedMenuBarContent => {
       },
       {
         type: "button",
-        label: "剪辑并导出声音",
+        label: "串联声音并输出",
         onClick: () => {
           void store.actions.SHOW_GENERATE_AND_CONNECT_ALL_AUDIO_DIALOG();
         },

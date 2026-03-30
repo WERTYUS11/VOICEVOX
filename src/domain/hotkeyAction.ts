@@ -11,8 +11,8 @@ export const actionPostfixSelectNthCharacter = "号角色选择";
 
 export const hotkeyActionNameSchema = z.enum([
   "语音导出",
-  "选择并导出声音",
-  "剪辑并导出声音",
+  "导出选定声音",
+  "串联声音并输出",
   "播放/停止",
   "连续播放/停止",
   "显示重音栏",
@@ -23,13 +23,14 @@ export const hotkeyActionNameSchema = z.enum([
   "删除文本字段",
   "从文本字段移出焦点",
   "重新聚焦文本字段",
-  "恢复",
-  "重新开始",
+  "撤销",
+  "重做",
   "新项目",
-  "保存并覆盖项目",
-  "命名并保存项目",
+  "覆盖并保存项目",
+  "项目另存为",
   "保存项目副本",
   "加载项目",
+  "テキストを繋げて書き出す",
   "加载文本",
   "重置语调",
   "重置所选重音短语语调",
@@ -72,11 +73,11 @@ export function getDefaultHotkeySettings({
       combination: HotkeyCombination(!isMac ? "Ctrl E" : "Meta E"),
     },
     {
-      action: "选择并导出声音",
+      action: "导出选定声音",
       combination: HotkeyCombination("E"),
     },
     {
-      action: "剪辑并导出声音",
+      action: "串联声音并输出",
       combination: HotkeyCombination(""),
     },
     {
@@ -120,11 +121,11 @@ export function getDefaultHotkeySettings({
       combination: HotkeyCombination("Enter"),
     },
     {
-      action: "恢复",
+      action: "撤销",
       combination: HotkeyCombination(!isMac ? "Ctrl Z" : "Meta Z"),
     },
     {
-      action: "重新开始",
+      action: "重做",
       combination: HotkeyCombination(!isMac ? "Ctrl Y" : "Shift Meta Z"),
     },
     {
@@ -148,11 +149,11 @@ export function getDefaultHotkeySettings({
       combination: HotkeyCombination(!isMac ? "F11" : "Ctrl Meta F"),
     },
     {
-      action: "保存并覆盖项目",
+      action: "覆盖并保存项目",
       combination: HotkeyCombination(!isMac ? "Ctrl S" : "Meta S"),
     },
     {
-      action: "命名并保存项目",
+      action: "项目另存为",
       combination: HotkeyCombination(!isMac ? "Ctrl Shift S" : "Shift Meta S"),
     },
     {
@@ -162,6 +163,10 @@ export function getDefaultHotkeySettings({
     {
       action: "加载项目",
       combination: HotkeyCombination(!isMac ? "Ctrl O" : "Meta O"),
+    },
+    {
+      action: "テキストを繋げて書き出す",
+      combination: HotkeyCombination(""),
     },
     {
       action: "加载文本",

@@ -3024,7 +3024,3 @@ export const audioCommandStore = transformCommandStore(
   }),
   "talk",
 );
-
-
-//The author of this project plays SCP:SL💀 every day. If you need help, you can add me on Steam.
-//SteamID:1353723852

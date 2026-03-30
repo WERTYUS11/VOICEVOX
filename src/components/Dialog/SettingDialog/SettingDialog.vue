@@ -403,6 +403,15 @@
                     description="开启时，如果引擎支持，将未知英文单词转换为片假名读音。"
                   />
                 </BaseTooltip>
+                <ButtonToggleCell
+                  v-model="defaultLyricModeComputed"
+                  title="ソング：默认歌詞"
+                  description="歌詞が未設定の音符に対して默认で設定される歌詞を設定できます。"
+                  :options="[
+                    { label: 'ドレミ（階名）', value: 'doremi' },
+                    { label: 'ら（固定）', value: 'la' },
+                  ]"
+                />
                 <BaseRowCard
                   title="歌曲：撤销轨道操作"
                   description="指定“撤销”功能所针对的轨道操作。"
@@ -733,6 +742,18 @@ const [enableMultiSelect, setEnableMultiSelect] = useRootMiscSetting(
   store,
   "enableMultiSelect",
 );
+
+const [defaultLyricMode, setDefaultLyricMode] = useRootMiscSetting(
+  store,
+  "defaultLyricMode",
+);
+
+const defaultLyricModeComputed = computed({
+  get: () => defaultLyricMode.value,
+  set: (value: "doremi" | "la") => {
+    setDefaultLyricMode(value);
+  },
+});
 
 const canSetAudioOutputDevice = computed(() => {
   return !!HTMLAudioElement.prototype.setSinkId;

@@ -188,7 +188,7 @@ registerHotkeyWithCleanup({
 });
 registerHotkeyWithCleanup({
   editor: "talk",
-  name: "选择并导出声音",
+  name: "导出选定声音",
   callback: () => {
     if (!uiLocked.value) {
       void store.actions.SHOW_GENERATE_AND_SAVE_SELECTED_AUDIO_DIALOG();
@@ -197,7 +197,7 @@ registerHotkeyWithCleanup({
 });
 registerHotkeyWithCleanup({
   editor: "talk",
-  name: "剪辑并导出声音",
+  name: "串联声音并输出",
   callback: () => {
     if (!uiLocked.value) {
       void store.actions.SHOW_GENERATE_AND_CONNECT_ALL_AUDIO_DIALOG();
@@ -206,10 +206,19 @@ registerHotkeyWithCleanup({
 });
 registerHotkeyWithCleanup({
   editor: "talk",
-  name: "加载文本",
+  name: "テキストを繋げて書き出す",
   callback: () => {
     if (!uiLocked.value) {
       void store.actions.SHOW_CONNECT_AND_EXPORT_TEXT_DIALOG();
+    }
+  },
+});
+registerHotkeyWithCleanup({
+  editor: "talk",
+  name: "加载文本",
+  callback: () => {
+    if (!uiLocked.value) {
+      void store.actions.COMMAND_IMPORT_FROM_FILE({ type: "dialog" });
     }
   },
 });

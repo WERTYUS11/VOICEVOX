@@ -11,6 +11,7 @@ exports[`0.13.0からマイグレーションできる 1`] = `
     "tweakableSliderByScroll": false,
   },
   "currentTheme": "Default",
+  "defaultLyricMode": "doremi",
   "defaultPresetKeys": {},
   "defaultStyleIds": [],
   "editorFont": "default",
@@ -38,11 +39,11 @@ exports[`0.13.0からマイグレーションできる 1`] = `
       "combination": "Ctrl E",
     },
     {
-      "action": "选择并导出声音",
+      "action": "导出选定声音",
       "combination": "E",
     },
     {
-      "action": "剪辑并导出声音",
+      "action": "串联声音并输出",
       "combination": "",
     },
     {
@@ -86,11 +87,11 @@ exports[`0.13.0からマイグレーションできる 1`] = `
       "combination": "Enter",
     },
     {
-      "action": "恢复",
+      "action": "撤销",
       "combination": "Ctrl Z",
     },
     {
-      "action": "重新开始",
+      "action": "重做",
       "combination": "Ctrl Y",
     },
     {
@@ -114,11 +115,11 @@ exports[`0.13.0からマイグレーションできる 1`] = `
       "combination": "F11",
     },
     {
-      "action": "保存并覆盖项目",
+      "action": "覆盖并保存项目",
       "combination": "Ctrl S",
     },
     {
-      "action": "命名并保存项目",
+      "action": "项目另存为",
       "combination": "Ctrl Shift S",
     },
     {
@@ -128,6 +129,10 @@ exports[`0.13.0からマイグレーションできる 1`] = `
     {
       "action": "加载项目",
       "combination": "Ctrl O",
+    },
+    {
+      "action": "串联文本并写出",
+      "combination": "",
     },
     {
       "action": "加载文本",

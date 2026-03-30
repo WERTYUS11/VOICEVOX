@@ -448,7 +448,7 @@ export const getToolbarButtonName = (tag: ToolbarButtonTagType): string => {
   const tag2NameObj: Record<ToolbarButtonTagType, string> = {
     PLAY_CONTINUOUSLY: "连续播放",
     STOP: "停止",
-    EXPORT_AUDIO_SELECTED: "选择导出声音",
+    EXPORT_AUDIO_SELECTED: "导出选定声音",
     EXPORT_AUDIO_ALL: "全部导出",
     EXPORT_AUDIO_CONNECT_ALL: "连接声音并写出",
     SAVE_PROJECT: "项目保存",

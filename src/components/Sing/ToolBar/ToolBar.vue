@@ -123,7 +123,7 @@
     </div>
     <!-- settings for edit controls -->
     <div class="sing-controls">
-      <EditTargetSwicher :editTarget :changeEditTarget />
+      <EditTargetSwitcher :editTarget :changeEditTarget />
       <QBtn
         flat
         dense
@@ -167,7 +167,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import PlayheadPositionDisplay from "../PlayheadPositionDisplay.vue";
-import EditTargetSwicher from "./EditTargetSwicher.vue";
+import EditTargetSwitcher from "./EditTargetSwitcher.vue";
 import { useStore } from "@/store";
 
 import {
@@ -200,7 +200,7 @@ const canRedo = computed(() => store.getters.CAN_REDO(editor));
 const { registerHotkeyWithCleanup } = useHotkeyManager();
 registerHotkeyWithCleanup({
   editor,
-  name: "恢复",
+  name: "撤销",
   callback: () => {
     if (!uiLocked.value && canUndo.value) {
       undo();
@@ -209,7 +209,7 @@ registerHotkeyWithCleanup({
 });
 registerHotkeyWithCleanup({
   editor,
-  name: "重新开始",
+  name: "重做",
   callback: () => {
     if (!uiLocked.value && canRedo.value) {
       redo();

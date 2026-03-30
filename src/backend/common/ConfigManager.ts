@@ -105,16 +105,16 @@ const migrations: [string, (store: Record<string, unknown>) => unknown][] = [
   [
     ">=0.15",
     (config) => {
-      // 只选择一个导出声音 → 选择并导出声音
+      // 仅导出选中项 → 导出选定声音
       const hotkeySettings =
         config.hotkeySettings as ConfigType["hotkeySettings"];
       const newHotkeySettings: ConfigType["hotkeySettings"] =
         hotkeySettings.map((hotkeySetting) => {
           /// @ts-expect-error 名前変更なので合わない。
-          if (hotkeySetting.action === "只选择一个导出声音") {
+          if (hotkeySetting.action === "仅导出选中项") {
             return {
               ...hotkeySetting,
-              action: "选择并导出声音",
+              action: "导出选定声音",
             };
           }
           return hotkeySetting;
@@ -284,6 +284,25 @@ const migrations: [string, (store: Record<string, unknown>) => unknown][] = [
         if (preset == undefined) throw new Error("preset == undefined");
         preset.pauseLengthScale = 1;
       }
+    },
+  ],
+  [
+    ">=0.26",
+    (config) => {
+      // 加载文本 をショートカットで呼び出すと テキストを繋げて書き出す が動いていたのでキー割り当てを移行する
+      const hotkeySettings =
+        config.hotkeySettings as ConfigType["hotkeySettings"];
+      const newHotkeySettings: ConfigType["hotkeySettings"] =
+        hotkeySettings.map((hotkeySetting) => {
+          if (hotkeySetting.action === "加载文本") {
+            return {
+              ...hotkeySetting,
+              action: "テキストを繋げて書き出す",
+            };
+          }
+          return hotkeySetting;
+        });
+      config.hotkeySettings = newHotkeySettings;
     },
   ],
 ];

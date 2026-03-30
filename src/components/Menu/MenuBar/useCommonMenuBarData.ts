@@ -128,11 +128,11 @@ export const useCommonMenuBarData = (store: Store) => {
   });
   registerHotkeyForAllEditors({
     callback: saveProject,
-    name: "保存并覆盖项目",
+    name: "覆盖并保存项目",
   });
   registerHotkeyForAllEditors({
     callback: saveProjectAs,
-    name: "命名并保存项目",
+    name: "项目另存为",
   });
   registerHotkeyForAllEditors({
     callback: saveProjectCopy,
@@ -170,7 +170,7 @@ export const useCommonMenuBarData = (store: Store) => {
         },
         {
           type: "button",
-          label: "保存并覆盖项目",
+          label: "覆盖并保存项目",
           onClick: async () => {
             await saveProject();
           },
@@ -178,7 +178,7 @@ export const useCommonMenuBarData = (store: Store) => {
         },
         {
           type: "button",
-          label: "命名并保存项目",
+          label: "项目另存为",
           onClick: async () => {
             await saveProjectAs();
           },
@@ -213,7 +213,7 @@ export const useCommonMenuBarData = (store: Store) => {
       undoRedo: [
         {
           type: "button",
-          label: "恢复",
+          label: "撤销",
           onClick: async () => {
             if (!uiLocked.value) {
               await store.actions.UNDO({
@@ -226,7 +226,7 @@ export const useCommonMenuBarData = (store: Store) => {
         },
         {
           type: "button",
-          label: "重新开始",
+          label: "重做",
           onClick: async () => {
             if (!uiLocked.value) {
               await store.actions.REDO({

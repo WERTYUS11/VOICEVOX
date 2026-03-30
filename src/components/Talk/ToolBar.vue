@@ -50,7 +50,7 @@ const nowPlayingContinuously = computed(
 const { registerHotkeyWithCleanup } = useHotkeyManager();
 registerHotkeyWithCleanup({
   editor,
-  name: "恢复",
+  name: "撤销",
   callback: () => {
     if (!uiLocked.value && canUndo.value) {
       undo();
@@ -59,7 +59,7 @@ registerHotkeyWithCleanup({
 });
 registerHotkeyWithCleanup({
   editor,
-  name: "重新开始",
+  name: "重做",
   callback: () => {
     if (!uiLocked.value && canRedo.value) {
       redo();

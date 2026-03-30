@@ -19,6 +19,12 @@
           },
           {
             type: 'button',
+            label: 'トラック複製',
+            onClick: duplicateTrack,
+            disableWhenUiLocked: true,
+          },
+          {
+            type: 'button',
             label: '删除音轨',
             onClick: deleteTrack,
             disabled: tracks.size === 1,
@@ -286,6 +292,12 @@ const addTrack = async () => {
   });
   await store.actions.SELECT_TRACK({
     trackId: trackOrder.value[willNextSelectedTrackIndex],
+  });
+};
+
+const duplicateTrack = async () => {
+  await store.actions.COMMAND_DUPLICATE_TRACK({
+    trackId: props.trackId,
   });
 };
 
