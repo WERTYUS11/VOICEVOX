@@ -171,6 +171,21 @@ jobs:
         with:
           node-version-file: ".node-version"
           cache: "pnpm"
+      
+      - name: Cache downloaded tools
+        uses: actions/cache@v4
+        with:
+          path: |
+            tools/7z
+            tools/typos
+            tools/appimagetool
+            tools/type2runtime
+          key: ${{ runner.os }}-tools-${{ hashFiles('tools/download*.ts') }}
+          restore-keys: |
+            ${{ runner.os }}-tools-
+
+      - name: Install dependencies
+        run: pnpm i --frozen-lockfile 
 
       - name: Cache Electron
         uses: actions/cache@v4
