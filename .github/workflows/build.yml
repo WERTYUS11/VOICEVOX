@@ -16,7 +16,7 @@ on:
       code_signing:
         description: "コード署名する"
         type: boolean
-        default: false
+        default: true
       upload_artifact:
         description: "デバッグ用に成果物をartifactにアップロードするか"
         type: boolean
@@ -247,7 +247,7 @@ jobs:
         run: pnpm run license:generate -o public/licenses.json
 
       - name: Define Code Signing Envs
-        if: startsWith(matrix.os, 'windows-') && github.event.inputs.code_signing == 'true'
+        if: startsWith(matrix.os, 'windows-') && (github.event.inputs.code_signing == 'true' || github.event_name == 'release')
         run: |
           bash tools/codesign_setup.bash
           THUMBPRINT="$(head -n 1 $THUMBPRINT_PATH)"
