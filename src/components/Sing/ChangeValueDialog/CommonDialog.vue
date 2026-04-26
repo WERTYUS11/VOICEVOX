@@ -65,9 +65,7 @@ defineEmits({
   ...useDialogPluginComponent.emitsObject,
 });
 
-const okText = computed(() =>
-  props.mode === "edit" ? "更改" : "添加",
-);
+const okText = computed(() => (props.mode === "edit" ? "更改" : "添加"));
 
 const handleOk = () => {
   onDialogOK();

@@ -10,9 +10,7 @@
       <QPageContainer>
         <QHeader class="q-pa-sm">
           <QToolbar>
-            <QToolbarTitle class="text-display"
-              >读法与重音字典</QToolbarTitle
-            >
+            <QToolbarTitle class="text-display">读法与重音字典</QToolbarTitle>
             <QSpace />
             <!-- close button -->
             <QBtn

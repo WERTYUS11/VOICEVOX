@@ -34,17 +34,13 @@
           v-if="selectedStyleInfo == undefined && !emptiable"
           class="warning-item row no-wrap items-center"
         >
-          <span class="text-warning vertical-middle"
-            >未选择有效的样式</span
-          >
+          <span class="text-warning vertical-middle">未选择有效的样式</span>
         </QItem>
         <QItem
           v-if="characterInfos.length === 0"
           class="warning-item row no-wrap items-center"
         >
-          <span class="text-warning vertical-middle"
-            >没有可选择的样式</span
-          >
+          <span class="text-warning vertical-middle">没有可选择的样式</span>
         </QItem>
         <QItem v-if="emptiable" class="to-unselect-item q-pa-none">
           <QBtn

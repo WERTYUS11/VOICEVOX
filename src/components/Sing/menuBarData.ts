@@ -186,9 +186,7 @@ export const useMenuBarData = (store: Store): MaybeComputedMenuBarContent => {
     portrait: [
       {
         type: "button",
-        label: showSingCharacterPortrait.value
-          ? "隐藏立绘"
-          : "显示立绘",
+        label: showSingCharacterPortrait.value ? "隐藏立绘" : "显示立绘",
         onClick: () => {
           setShowSingCharacterPortrait(!showSingCharacterPortrait.value);
         },

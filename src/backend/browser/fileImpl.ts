@@ -101,15 +101,11 @@ const getDirectoryHandleFromDirectoryPath = async (
     );
 
     if (maybeFixedDirectory == undefined) {
-      throw new Error(
-        `无文件夹访问权限: ${maybeDirectoryPathKey}`,
-      );
+      throw new Error(`无文件夹访问权限: ${maybeDirectoryPathKey}`);
     }
 
     if (!(await maybeFixedDirectory.requestPermission({ mode: "readwrite" }))) {
-      throw new Error(
-        "无权访问文件夹，需要读写权限。",
-      );
+      throw new Error("无权访问文件夹，需要读写权限。");
     }
 
     return maybeFixedDirectory;

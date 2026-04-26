@@ -23,9 +23,7 @@
         </template>
         <span v-if="lastRecord !== '' && confirmBtnEnabled"> +</span>
         <div v-if="duplicatedHotkey != undefined" class="text-warning q-mt-lg">
-          <div class="text-warning">
-            快捷键与以下操作冲突
-          </div>
+          <div class="text-warning">快捷键与以下操作冲突</div>
           <div class="q-mt-sm text-weight-bold text-warning">
             「{{ duplicatedHotkey.action }}」
           </div>

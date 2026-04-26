@@ -73,10 +73,7 @@ for (const [story, stories] of Object.entries(allStories)) {
           ["dark", "深色模式"],
         ] as const) {
           test(`テーマ：${name}`, async ({ page }) => {
-            test.skip(
-              process.platform !== "win32",
-              "跳过 Windows 以外的系统",
-            );
+            test.skip(process.platform !== "win32", "跳过 Windows 以外的系统");
 
             const params = new URLSearchParams();
             params.append("id", story.id);

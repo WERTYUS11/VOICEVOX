@@ -34,9 +34,7 @@
         @blur="setYomi(yomi)"
         @keydown.enter="setYomiWhenEnter"
       >
-        <template #error>
-          读音只能使用平假名和片假名。
-        </template>
+        <template #error> 读音只能使用平假名和片假名。 </template>
         <ContextMenu
           ref="yomiContextMenu"
           :header="yomiContextMenuHeader"
@@ -47,9 +45,7 @@
       </QInput>
     </div>
     <div class="row q-pl-md q-mt-lg text-h6">重音调整</div>
-    <div class="row q-pl-md desc-row">
-      为了考虑尾音的重音，会自动插入“が”。
-    </div>
+    <div class="row q-pl-md desc-row">为了考虑尾音的重音，会自动插入“が”。</div>
     <div class="row q-px-md" style="height: 130px">
       <div class="play-button">
         <QBtn
@@ -105,9 +101,7 @@
       </div>
     </div>
     <div class="row q-pl-md q-pt-lg text-h6">单词优先级</div>
-    <div class="row q-pl-md desc-row">
-      如果注册单词后未生效，请提高优先级。
-    </div>
+    <div class="row q-pl-md desc-row">如果注册单词后未生效，请提高优先级。</div>
     <div
       class="row q-px-md"
       :style="{

@@ -13,11 +13,7 @@
     <div>
       <QSpinner color="primary" size="2.5rem" />
       <div class="q-mt-xs">
-        {{
-          allEngineState === "STARTING"
-            ? "引擎启动中……"
-            : "数据准备中……"
-        }}
+        {{ allEngineState === "STARTING" ? "引擎启动中……" : "数据准备中……" }}
       </div>
 
       <template v-if="isEngineWaitingLong">

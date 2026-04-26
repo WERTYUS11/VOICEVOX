@@ -11,9 +11,7 @@
         <QToolbar>
           <div class="column">
             <QToolbarTitle class="text-display">{{
-              hasNewCharacter
-                ? "追加角色介绍"
-                : "设置 / 角色排序与试听"
+              hasNewCharacter ? "追加角色介绍" : "设置 / 角色排序与试听"
             }}</QToolbarTitle>
           </div>
 

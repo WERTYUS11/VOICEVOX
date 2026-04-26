@@ -19,8 +19,7 @@
 
                 <div v-if="onlineFetchErrorMessage" class="engine-error">
                   <div class="engine-error-text">
-                    无法在线获取引擎信息
-                    请检查网络状态并重试。
+                    无法在线获取引擎信息 请检查网络状态并重试。
                     <p
                       v-if="onlineFetchErrorMessage"
                       class="engine-error-detail"
@@ -298,13 +297,8 @@ const fetchInstalledEngineInfos = async () => {
     };
   } catch (error) {
     onlineFetchErrorMessage.value =
-      error instanceof Error
-        ? error.message
-        : "版本获取失败。";
-    window.welcomeBackend.logError(
-      "版本获取失败",
-      error,
-    );
+      error instanceof Error ? error.message : "版本获取失败。";
+    window.welcomeBackend.logError("版本获取失败", error);
     loadingEngineInfosState.value = {
       type: "fetched",
       currentEngineInfos,

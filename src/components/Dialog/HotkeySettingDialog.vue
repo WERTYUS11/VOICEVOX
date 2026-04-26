@@ -9,9 +9,7 @@
     <QLayout container view="hHh Lpr lff" class="bg-background">
       <QHeader class="q-py-sm">
         <QToolbar>
-          <QToolbarTitle class="text-display"
-            >设置 / 快捷键分配</QToolbarTitle
-          >
+          <QToolbarTitle class="text-display">设置 / 快捷键分配</QToolbarTitle>
           <QInput
             v-model="hotkeyFilter"
             hideBottomSpace

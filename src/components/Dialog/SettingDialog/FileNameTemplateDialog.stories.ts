@@ -67,19 +67,13 @@ export const EmptyInput: Story = {
 export const ForbiddenInput: Story = {
   name: "无效的输入：禁用字符",
   args: { ...Opened.args },
-  play: createInvalidInputPlay(
-    "$連番$/",
-    /^包含不可用字符：「.+」$/,
-  ),
+  play: createInvalidInputPlay("$連番$/", /^包含不可用字符：「.+」$/),
 };
 
 export const UnknownTagInput: Story = {
   name: "无效输入：未知标签",
   args: { ...Opened.args },
-  play: createInvalidInputPlay(
-    "$連番$测试$",
-    "存在非法标签或单独包含 '",
-  ),
+  play: createInvalidInputPlay("$連番$测试$", "存在非法标签或单独包含 '"),
 };
 
 export const UnclosedTagInput: Story = {
@@ -87,7 +81,7 @@ export const UnclosedTagInput: Story = {
   args: { ...Opened.args },
   play: createInvalidInputPlay(
     "$連番$",
-    "存在非法标签或单独包含 '",
+    "不正なタグが存在するか、$が単体で含まれています",
   ),
 };
 
