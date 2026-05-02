@@ -12,7 +12,7 @@ const versionFilePath = path.join(distPath, "version.txt");
 const sevenZipVersion = "26.00";
 const sevenZipAssetVersion = sevenZipVersion.replace(".", "");
 const sevenZipReleaseBaseUrl =
-  "https://ghproxy.net/https://github.com/ip7z/7zip/releases/download/" + sevenZipVersion;
+  "https://github.com/ip7z/7zip/releases/download/" + sevenZipVersion;
 
 function getPlatformDownloadInfo(): {
   url: string;
