@@ -35,7 +35,7 @@ function getDownloadURL() {
     ia32: "i686",
     x64: "x86_64",
   };
-  return `https://ghproxy.net/https://github.com/AppImage/appimagetool/releases/download/${APPIMAGETOOL_VERSION}/appimagetool-${arch[process.arch]}.AppImage`;
+  return `https://github.com/AppImage/appimagetool/releases/download/${APPIMAGETOOL_VERSION}/appimagetool-${arch[process.arch]}.AppImage`;
 }
 
 async function main() {

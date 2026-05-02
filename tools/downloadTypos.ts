@@ -97,7 +97,7 @@ async function runCommand({
  * 現在のOSとアーキテクチャに基づいてバイナリのダウンロード先URLを定数のオブジェクトから取得する関数
  */
 function getBinaryURL() {
-  const baseUrl = "https://ghproxy.net/https://github.com/crate-ci/typos/releases/download";
+  const baseUrl = "https://github.com/crate-ci/typos/releases/download";
   const targetTriple = TYPOS_TARGET_TRIPLES[currentOS][currentCpuArchitecture];
   const extension = currentOS === OS.WINDOWS ? ".zip" : ".tar.gz";
 
