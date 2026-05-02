@@ -434,6 +434,12 @@ jobs:
         run: |
           chmod +x vendored/type2-runtime/runtime
           chmod +x vendored/appimagetool/appimagetool.AppImage
+          
+      - name: Install AppImage build dependencies
+        if: runner.os == 'ubuntu-'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y desktop-file-utils
 
       # Localization
       - name: Localization
