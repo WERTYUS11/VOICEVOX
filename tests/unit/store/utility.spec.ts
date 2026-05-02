@@ -1,11 +1,11 @@
 import { it, expect, describe, test } from "vitest";
-import type { AccentPhrase, Mora } from "@/openapi";
+import { AccentPhrase, Mora } from "@/openapi";
 import {
-  type CharacterInfo,
+  CharacterInfo,
   EngineId,
   SpeakerId,
   StyleId,
-  type ToolbarButtonTagType,
+  ToolbarButtonTagType,
 } from "@/type/preload";
 import {
   formatCharacterStyleName,

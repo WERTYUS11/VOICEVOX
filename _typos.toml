@@ -10,7 +10,6 @@ extend-ignore-re = [
 
 [default.extend-identifiers]
 splited = "splited" # コードで使う時、もっと自然な感じを与える
-StrCpy = "StrCpy" # nsisの文字列操作命令
 
 [default.extend-words]
 ba = "ba" # 7zコマンドの-baオプション
@@ -19,7 +18,7 @@ GAM = "GAM" # VuexのGetter・Action・Mutationの略
 
 [files]
 extend-exclude = [
-    "pnpm-lock.yaml",
+    "package-lock.json",
     "*.svg",
     "public/res/macos-big-sur-software-update-rosetta-alert.jpg", # macos-big-surは正しい固有名詞
 ]

@@ -6,7 +6,7 @@
 import { computed } from "vue";
 import { useStore } from "@/store";
 import { getOrThrow } from "@/helpers/mapHelper";
-import type { PhraseKey, PhraseState } from "@/store/type";
+import { PhraseKey, PhraseState } from "@/store/type";
 
 const props = defineProps<{
   phraseKey: PhraseKey;

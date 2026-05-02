@@ -17,13 +17,13 @@
 import { ref, computed } from "vue";
 import { useStore } from "@/store";
 import ContextMenu, {
-  type ContextMenuItemData,
+  ContextMenuItemData,
 } from "@/components/Menu/ContextMenu/Container.vue";
 import {
   getTimeSignaturePositions,
-  type MeasuresBeats,
+  MeasuresBeats,
   ticksToMeasuresBeats,
-} from "@/sing/music";
+} from "@/sing/domain";
 import { useRootMiscSetting } from "@/composables/useRootMiscSetting";
 
 const store = useStore();

@@ -2,7 +2,8 @@
   <DefaultStyleSelectDialog
     v-if="
       selectedCharacterInfo &&
-      selectedStyleIndexes[selectedCharacterInfo.metas.speakerUuid] != undefined
+      selectedStyleIndexes[selectedCharacterInfo.metas.speakerUuid] !==
+        undefined
     "
     v-model:dialogOpened="showStyleSelectDialog"
     v-model:selectedStyleIndex="
@@ -104,7 +105,7 @@ import { computed, ref, watch } from "vue";
 import DefaultStyleSelectDialog from "./OldDefaultStyleSelectDialog.vue";
 import { useStore } from "@/store";
 import { DEFAULT_STYLE_NAME } from "@/store/utility";
-import { type CharacterInfo, SpeakerId, type StyleInfo } from "@/type/preload";
+import { CharacterInfo, SpeakerId, StyleInfo } from "@/type/preload";
 
 const dialogOpened = defineModel<boolean>("dialogOpened", { default: false });
 

@@ -6,13 +6,13 @@ import { cloneWithUnwrapProxy } from "@/helpers/cloneWithUnwrapProxy";
 
 const initialState = cloneWithUnwrapProxy(store.state);
 beforeEach(() => {
-  store.replaceState(cloneWithUnwrapProxy(initialState));
+  store.replaceState(initialState);
 
   resetMockMode();
 });
 
 test("コマンド実行で履歴が作られる", async () => {
-  await store.actions.COMMAND_SET_AUDIO_KEYS({
+  await store.dispatch("COMMAND_SET_AUDIO_KEYS", {
     audioKeys: [AudioKey(uuid4())],
   });
   const { audioKeys, redoCommands, undoCommands } = store.state;

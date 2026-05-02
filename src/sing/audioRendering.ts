@@ -1,5 +1,8 @@
-import { decibelToLinear, linearToDecibel } from "@/sing/audio";
-import { noteNumberToFrequency } from "@/sing/music";
+import {
+  noteNumberToFrequency,
+  decibelToLinear,
+  linearToDecibel,
+} from "@/sing/domain";
 import { Timer } from "@/sing/utility";
 
 /**

@@ -1,6 +1,6 @@
 import { userEvent, within, expect, fn } from "storybook/test";
 
-import type { Meta, StoryObj } from "@storybook/vue3-vite";
+import { Meta, StoryObj } from "@storybook/vue3-vite";
 import FileNameTemplateDialog from "./FileNameTemplateDialog.vue";
 import {
   buildAudioFileNameFromRawData,
@@ -67,13 +67,19 @@ export const EmptyInput: Story = {
 export const ForbiddenInput: Story = {
   name: "无效的输入：禁用字符",
   args: { ...Opened.args },
-  play: createInvalidInputPlay("$連番$/", /^包含不可用字符：「.+」$/),
+  play: createInvalidInputPlay(
+    "$連番$/",
+    /^包含不可用字符：「.+」$/,
+  ),
 };
 
 export const UnknownTagInput: Story = {
   name: "无效输入：未知标签",
   args: { ...Opened.args },
-  play: createInvalidInputPlay("$連番$测试$", "存在非法标签或单独包含 '"),
+  play: createInvalidInputPlay(
+    "$連番$测试$",
+    "存在非法标签或单独包含 '",
+  ),
 };
 
 export const UnclosedTagInput: Story = {

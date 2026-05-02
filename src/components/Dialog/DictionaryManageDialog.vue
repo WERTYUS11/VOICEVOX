@@ -10,7 +10,9 @@
       <QPageContainer>
         <QHeader class="q-pa-sm">
           <QToolbar>
-            <QToolbarTitle class="text-display">读法与重音字典</QToolbarTitle>
+            <QToolbarTitle class="text-display"
+              >读法与重音字典</QToolbarTitle
+            >
             <QSpace />
             <!-- close button -->
             <QBtn
@@ -122,7 +124,7 @@
 </template>
 
 <script lang="ts">
-import type { Ref, ComputedRef, InjectionKey } from "vue";
+import { Ref, ComputedRef, type InjectionKey } from "vue";
 
 export const dictionaryManageDialogContextKey: InjectionKey<{
   wordEditing: Ref<boolean>;
@@ -154,11 +156,11 @@ export const dictionaryManageDialogContextKey: InjectionKey<{
 
 <script setup lang="ts">
 import { computed, ref, watch, provide } from "vue";
-import type { QInput } from "quasar";
+import { QInput } from "quasar";
 import DictionaryEditWordDialog from "./DictionaryEditWordDialog.vue";
 import { useStore } from "@/store";
-import type { AccentPhrase, UserDictWord } from "@/openapi";
-import type { EngineId, SpeakerId, StyleId } from "@/type/preload";
+import { AccentPhrase, UserDictWord } from "@/openapi";
+import { EngineId, SpeakerId, StyleId } from "@/type/preload";
 import {
   convertHiraToKana,
   convertLongVowel,

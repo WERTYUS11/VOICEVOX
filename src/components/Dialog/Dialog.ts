@@ -2,15 +2,15 @@ import { Dialog, Notify, Loading } from "quasar";
 import SaveAllResultDialog from "./SaveAllResultDialog.vue";
 import QuestionDialog from "./TextDialog/QuestionDialog.vue";
 import MessageDialog from "./TextDialog/MessageDialog.vue";
-import type { DialogType } from "./TextDialog/common";
-import type { AudioKey, ConfirmedTips } from "@/type/preload";
-import type {
+import { DialogType } from "./TextDialog/common";
+import { AudioKey, ConfirmedTips } from "@/type/preload";
+import {
   AllActions,
   SaveResultObject,
   SaveResult,
   ErrorTypeForSaveAllResultDialog,
 } from "@/store/type";
-import type { DotNotationDispatch } from "@/store/vuex";
+import { DotNotationDispatch } from "@/store/vuex";
 import { withProgress } from "@/store/ui";
 import { errorToMessage } from "@/helpers/errorHelper";
 
@@ -332,13 +332,17 @@ const showWriteErrorDialog = ({
     // 文本書き出し時のエラーを出力
     void actions.SHOW_ALERT_DIALOG({
       title: "文本导出失败。",
-      message: "由于写入错误操作失败。请确认是否有可用空间以及写入权限。",
+      message:
+        "由于写入错误操作失败。请确认是否有可用空间以及写入权限。",
     });
   } else {
     const defaultErrorMessages: Partial<Record<SaveResult, string>> = {
-      WRITE_ERROR: "因某些原因导出失败。请查看日志。",
-      ENGINE_ERROR: "因引擎错误导致失败。请尝试重启引擎。",
-      UNKNOWN_ERROR: "因某些原因导出失败。请查看日志。",
+      WRITE_ERROR:
+        "因某些原因导出失败。请查看日志。",
+      ENGINE_ERROR:
+        "因引擎错误导致失败。请尝试重启引擎。",
+      UNKNOWN_ERROR:
+        "因某些原因导出失败。请查看日志。",
     };
 
     // 音频書き出し時のエラーを出力

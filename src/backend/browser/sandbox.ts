@@ -5,24 +5,51 @@ import {
   showSaveFilePickerImpl,
   showOpenDirectoryDialogImpl,
   showOpenFilePickerImpl,
-  type WritableFilePath,
+  WritableFilePath,
   writeFileImpl,
 } from "./fileImpl";
 import { getConfigManager } from "./browserConfig";
 import { isFakePath } from "./fakePath";
+import { IpcSOData } from "@/type/ipc";
 import {
   defaultToolbarButtonSetting,
-  type EngineId,
-  type EngineSettingType,
-  type EngineSettings,
-  type Sandbox,
+  EngineId,
+  EngineSettingType,
+  EngineSettings,
+  Sandbox,
 } from "@/type/preload";
 import { AssetTextFileNames } from "@/type/staticResources";
-import type { HotkeySettingType } from "@/domain/hotkeyAction";
+import { HotkeySettingType } from "@/domain/hotkeyAction";
 import path from "@/helpers/path";
 
 const toStaticPath = (fileName: string) =>
   `${import.meta.env.BASE_URL}/${fileName}`.replaceAll(/\/\/+/g, "/");
+
+// FIXME: asを使わないようオーバーロードにした。オーバーロードも使わない書き方にしたい。
+function onReceivedIPCMsg<
+  T extends {
+    [K in keyof IpcSOData]: (
+      event: unknown,
+      ...args: IpcSOData[K]["args"]
+    ) => Promise<IpcSOData[K]["return"]> | IpcSOData[K]["return"];
+  },
+>(listeners: T): void;
+function onReceivedIPCMsg(listeners: {
+  [key: string]: (event: unknown, ...args: unknown[]) => unknown;
+}) {
+  // NOTE: もしブラウザ本体からレンダラへのメッセージを実装するならこんな感じ
+  window.addEventListener(
+    "message",
+    ({
+      data,
+    }: MessageEvent<{
+      channel: keyof IpcSOData;
+      args: IpcSOData[keyof IpcSOData]["args"];
+    }>) => {
+      listeners[data.channel]?.({}, ...data.args);
+    },
+  );
+}
 
 /**
  * Browser版のSandBox実装
@@ -106,14 +133,9 @@ export const api: Sandbox = {
     // NOTE: UIの表示状態の制御のためだけなので固定値を返している
     return Promise.resolve(true);
   },
-  registerIpcHandler: () => {
-    // NOTE: Browser版では受け取る側のIPCは存在しないため、何もしない
-  },
+  onReceivedIPCMsg,
   closeWindow() {
     throw new Error(`Not supported on Browser version: closeWindow`);
-  },
-  launchWelcomeWindow() {
-    throw new Error(`Not supported on Browser version: launchWelcomeWindow`);
   },
   minimizeWindow() {
     throw new Error(`Not supported on Browser version: minimizeWindow`);

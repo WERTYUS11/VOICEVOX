@@ -4,15 +4,10 @@ import { resetMockMode } from "@/helpers/random";
 import { createOpenAPIEngineMock } from "@/mock/engineMock";
 import { createOrGetTokenizer } from "@/mock/engineMock/talkModelMock";
 
-beforeAll(
-  async () => {
-    // NOTE: ウォームアップのためトークナイザーを事前に生成する
-    await createOrGetTokenizer();
-  },
-
-  // NOTE: トークナイザーの生成に時間がかかるためタイムアウトを延長する
-  60000,
-);
+beforeAll(async () => {
+  // NOTE: ウォームアップのためトークナイザーを事前に生成する
+  await createOrGetTokenizer();
+});
 
 beforeEach(() => {
   resetMockMode();

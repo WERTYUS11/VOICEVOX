@@ -4,7 +4,7 @@
 
 import { moraToPhonemes } from "./phonemeMock";
 import { convertHiraToKana } from "@/domain/japanese";
-import type { Note, FramePhoneme } from "@/openapi";
+import { Note, FramePhoneme } from "@/openapi";
 
 function noteNumberToFrequency(noteNumber: number) {
   return 440 * Math.pow(2, (noteNumber - 69) / 12);

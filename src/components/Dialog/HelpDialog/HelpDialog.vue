@@ -80,7 +80,7 @@ import UpdateInfo from "./HelpUpdateInfoSection.vue";
 import LibraryPolicy from "./HelpLibraryPolicySection.vue";
 import BaseListItem from "@/components/Base/BaseListItem.vue";
 import BaseNavigationView from "@/components/Base/BaseNavigationView.vue";
-import { type UpdateInfo as UpdateInfoObject, UrlString } from "@/type/preload";
+import { UpdateInfo as UpdateInfoObject, UrlString } from "@/type/preload";
 import { useStore } from "@/store";
 import { useFetchNewUpdateInfos } from "@/composables/useFetchNewUpdateInfos";
 import { createLogger } from "@/helpers/log";

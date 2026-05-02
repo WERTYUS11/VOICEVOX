@@ -1,5 +1,5 @@
-import type { Locator, Page } from "@playwright/test";
-import { ensureNotNullish } from "@/type/utility";
+import { Locator, Page } from "@playwright/test";
+import { ensureNotNullish } from "@/helpers/errorHelper";
 
 /**
  * 最新のquasarダイアログのlocatorを取得する

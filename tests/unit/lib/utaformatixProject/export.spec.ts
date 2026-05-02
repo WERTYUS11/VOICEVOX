@@ -20,7 +20,7 @@ it("トラックを変換できる", async () => {
     lyric: "ど",
   });
 
-  const project = await ufProjectFromVoicevox(
+  const project = ufProjectFromVoicevox(
     {
       tracks: [track],
       tpqn: 480,

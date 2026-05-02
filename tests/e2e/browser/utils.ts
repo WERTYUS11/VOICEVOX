@@ -1,4 +1,4 @@
-import { test, type Page, type Locator, expect } from "@playwright/test";
+import { test, Page, Locator, expect } from "@playwright/test";
 import { getQuasarMenu } from "../locators";
 import {
   mockReadFile,
@@ -49,8 +49,10 @@ export async function saveProject(page: Page): Promise<string> {
     await getQuasarMenu(page, "プロジェクトの複製を保存").click();
     await waitForUiUnlock(page);
     const [fileId] = await saveFileDialogHandle.getFileIds();
+    assertNonNullable(fileId);
     const writtenFiles = await writeFileHandle.getWrittenFileBuffers();
     const writtenFile = writtenFiles[fileId];
+    assertNonNullable(writtenFile);
     return writtenFile.toString("utf-8");
   });
 }

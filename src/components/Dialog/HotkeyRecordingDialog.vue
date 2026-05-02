@@ -23,7 +23,9 @@
         </template>
         <span v-if="lastRecord !== '' && confirmBtnEnabled"> +</span>
         <div v-if="duplicatedHotkey != undefined" class="text-warning q-mt-lg">
-          <div class="text-warning">快捷键与以下操作冲突</div>
+          <div class="text-warning">
+            快捷键与以下操作冲突
+          </div>
           <div class="q-mt-sm text-weight-bold text-warning">
             「{{ duplicatedHotkey.action }}」
           </div>
@@ -80,7 +82,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import type { HotkeyCombination } from "@/domain/hotkeyAction";
+import { HotkeyCombination } from "@/domain/hotkeyAction";
 
 const dialogOpened = defineModel<boolean>("dialogOpened", { default: false });
 const props = defineProps<{

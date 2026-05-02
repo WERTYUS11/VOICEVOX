@@ -15,7 +15,7 @@
   >
     <div
       class="note-bar"
-      @pointerdown="onBarPointerDown"
+      @mousedown="onBarMouseDown"
       @dblclick="onBarDoubleClick"
     >
       <ContextMenu
@@ -24,8 +24,8 @@
         :menudata="contextMenuData"
       />
     </div>
-    <div class="note-edge left" @pointerdown="onLeftEdgePointerDown"></div>
-    <div class="note-edge right" @pointerdown="onRightEdgePointerDown"></div>
+    <div class="note-edge left" @mousedown="onLeftEdgeMouseDown"></div>
+    <div class="note-edge right" @mousedown="onRightEdgeMouseDown"></div>
     <!-- エラー内容を表示 -->
     <QTooltip
       v-if="hasOverlappingError"
@@ -67,15 +67,14 @@
 import { computed, ref } from "vue";
 import { useStore } from "@/store";
 import type { Note } from "@/domain/project/type";
-import { getDefaultLyric } from "@/sing/domain";
 import {
   getKeyBaseHeight,
   tickToBaseX,
   noteNumberToBaseY,
-  type PreviewMode,
+  PreviewMode,
 } from "@/sing/viewHelper";
 import ContextMenu, {
-  type ContextMenuItemData,
+  ContextMenuItemData,
 } from "@/components/Menu/ContextMenu/Container.vue";
 
 const props = defineProps<{
@@ -97,10 +96,10 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (name: "barPointerdown", event: PointerEvent): void;
+  (name: "barMousedown", event: MouseEvent): void;
   (name: "barDoubleClick", event: MouseEvent): void;
-  (name: "rightEdgePointerdown", event: PointerEvent): void;
-  (name: "leftEdgePointerdown", event: PointerEvent): void;
+  (name: "rightEdgeMousedown", event: MouseEvent): void;
+  (name: "leftEdgeMousedown", event: MouseEvent): void;
 }>();
 
 const store = useStore();
@@ -167,10 +166,7 @@ const hasPhraseError = computed(() => {
 // 表示する歌詞。
 // 優先度：入力中の歌詞 > 渡された（=Storeの）歌詞
 const lyricToDisplay = computed(() => {
-  const noteLyric =
-    props.note.lyric ??
-    getDefaultLyric(props.note.noteNumber, state.defaultLyricMode);
-  return props.previewLyric ?? noteLyric;
+  return props.previewLyric ?? props.note.lyric;
 });
 
 // 状態に応じたCSSクラス
@@ -241,20 +237,20 @@ const contextMenuData = computed<ContextMenuItemData[]>(() => {
   ];
 });
 
-const onBarPointerDown = (event: PointerEvent) => {
-  emit("barPointerdown", event);
+const onBarMouseDown = (event: MouseEvent) => {
+  emit("barMousedown", event);
 };
 
 const onBarDoubleClick = (event: MouseEvent) => {
   emit("barDoubleClick", event);
 };
 
-const onRightEdgePointerDown = (event: PointerEvent) => {
-  emit("rightEdgePointerdown", event);
+const onRightEdgeMouseDown = (event: MouseEvent) => {
+  emit("rightEdgeMousedown", event);
 };
 
-const onLeftEdgePointerDown = (event: PointerEvent) => {
-  emit("leftEdgePointerdown", event);
+const onLeftEdgeMouseDown = (event: MouseEvent) => {
+  emit("leftEdgeMousedown", event);
 };
 </script>
 

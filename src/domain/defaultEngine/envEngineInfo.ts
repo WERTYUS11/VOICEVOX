@@ -31,7 +31,7 @@ const envEngineInfoSchema = z
       }),
     ]),
   );
-type EnvEngineInfo = z.infer<typeof envEngineInfoSchema>;
+type EnvEngineInfoType = z.infer<typeof envEngineInfoSchema>;
 
 /**
  * デフォルトエンジン情報の環境変数を取得する
@@ -53,7 +53,7 @@ function getDefaultEngineInfosEnv(): string {
 }
 
 /** .envからデフォルトエンジン情報を読み込む */
-export function loadEnvEngineInfos(): EnvEngineInfo[] {
+export function loadEnvEngineInfos(): EnvEngineInfoType[] {
   const defaultEngineInfosEnv = getDefaultEngineInfosEnv();
 
   // FIXME: 「.envを書き換えてください」というログを出したい

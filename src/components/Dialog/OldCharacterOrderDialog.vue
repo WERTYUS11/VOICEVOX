@@ -11,7 +11,9 @@
         <QToolbar>
           <div class="column">
             <QToolbarTitle class="text-display">{{
-              hasNewCharacter ? "追加角色介绍" : "设置 / 角色排序与试听"
+              hasNewCharacter
+                ? "追加角色介绍"
+                : "设置 / 角色排序与试听"
             }}</QToolbarTitle>
           </div>
 
@@ -106,12 +108,7 @@ import Draggable from "vuedraggable";
 import { useQuasar } from "quasar";
 import CharacterTryListenCard from "./OldCharacterTryListenCard.vue";
 import { useStore } from "@/store";
-import type {
-  CharacterInfo,
-  SpeakerId,
-  StyleId,
-  StyleInfo,
-} from "@/type/preload";
+import { CharacterInfo, SpeakerId, StyleId, StyleInfo } from "@/type/preload";
 
 const dialogOpened = defineModel<boolean>("dialogOpened", { default: false });
 const props = defineProps<{

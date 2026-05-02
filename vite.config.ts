@@ -2,20 +2,19 @@
 import { execFileSync } from "node:child_process";
 import path from "node:path";
 import { rm } from "node:fs/promises";
-import electronPlugin, { type ElectronOptions } from "vite-plugin-electron";
+import electronPlugin from "vite-plugin-electron/simple";
 import tsconfigPaths from "vite-tsconfig-paths";
 import vue from "@vitejs/plugin-vue";
 import electronDefaultImport from "electron";
 import checker from "vite-plugin-checker";
-import { type BuildOptions, defineConfig, loadEnv, type Plugin } from "vite";
+import { BuildOptions, defineConfig, loadEnv, Plugin } from "vite";
 import { quasar } from "@quasar/vite-plugin";
-import { playwright as playwrightProvider } from "@vitest/browser-playwright";
 import { z } from "zod";
 import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
 import {
   checkSuspiciousImports,
-  type CheckSuspiciousImportsOptions,
-  type SourceFile,
+  CheckSuspiciousImportsOptions,
+  SourceFile,
 } from "./tools/checkSuspiciousImports.js";
 
 // @ts-expect-error electronをelectron環境外からimportするとelectronのファイルパスが得られる。
@@ -32,11 +31,10 @@ const isProduction = process.env.NODE_ENV === "production";
 
 const ignorePaths = (paths: string[]) => paths.map((path) => `!${path}`);
 
-type ElectronTargetVersion = {
+function getElectronTargetVersion(): {
   node: string;
   chrome: string;
-};
-function getElectronTargetVersion(): ElectronTargetVersion {
+} {
   const result = execFileSync(
     electronPath,
     [path.join(import.meta.dirname, "build/getElectronVersion.mjs")],
@@ -98,18 +96,13 @@ export default defineConfig((options) => {
       outDir: path.resolve(import.meta.dirname, "dist"),
       chunkSizeWarningLimit: 10000,
       sourcemap,
-      rollupOptions: {
-        input: {
-          main: path.resolve(import.meta.dirname, "src/index.html"),
-          welcome: path.resolve(import.meta.dirname, "src/welcome/index.html"),
-        },
-      },
     },
     publicDir: path.resolve(import.meta.dirname, "public"),
     css: {
       preprocessorOptions: {
         scss: {
-          loadPaths: [path.resolve(import.meta.dirname, "node_modules")],
+          api: "modern",
+          includePaths: [path.resolve(import.meta.dirname, "node_modules")],
         },
       },
     },
@@ -129,8 +122,8 @@ export default defineConfig((options) => {
       isElectron && [
         cleanDistPlugin(),
         // TODO: 関数で切り出して共通化できる部分はまとめる
-        electronPlugin([
-          {
+        electronPlugin({
+          main: {
             entry: "./backend/electron/main.ts",
 
             // ref: https://github.com/electron-vite/vite-plugin-electron/pull/122
@@ -150,7 +143,13 @@ export default defineConfig((options) => {
             vite: {
               plugins: [
                 tsconfigPaths({ root: import.meta.dirname }),
-                isProduction && checkSuspiciousImportsPlugin({}),
+                isProduction &&
+                  checkSuspiciousImportsPlugin({
+                    allowedInTryCatchModules: [
+                      // systeminformationのoptionalな依存。try-catch内なので許可。
+                      "osx-temperature-sensor",
+                    ],
+                  }),
               ],
               build: {
                 target: electronTargetVersion?.node,
@@ -159,18 +158,26 @@ export default defineConfig((options) => {
               },
             },
           },
-          ...electronPreloadOptions(
-            {
-              skipLaunchElectron,
-              sourcemap,
-              electronTargetVersion,
+          preload: {
+            input: "./src/backend/electron/renderer/preload.ts",
+            onstart({ reload }) {
+              if (!skipLaunchElectron) {
+                reload();
+              }
             },
-            {
-              preload: "./src/backend/electron/renderer/preload.ts",
-              welcomePreload: "./src/welcome/preload.ts",
+            vite: {
+              plugins: [
+                tsconfigPaths({ root: import.meta.dirname }),
+                isProduction && checkSuspiciousImportsPlugin({}),
+              ],
+              build: {
+                target: electronTargetVersion?.chrome,
+                outDir: path.resolve(import.meta.dirname, "dist"),
+                sourcemap,
+              },
             },
-          ),
-        ]),
+          },
+        }),
       ],
       isElectron &&
         injectLoaderScriptPlugin(
@@ -219,7 +226,7 @@ export default defineConfig((options) => {
             browser: {
               enabled: true,
               instances: [{ browser: "chromium" }],
-              provider: playwrightProvider(),
+              provider: "playwright",
               headless: true,
               api: 7158,
               ui: false,
@@ -248,7 +255,7 @@ export default defineConfig((options) => {
             browser: {
               enabled: true,
               instances: [{ browser: "chromium" }],
-              provider: playwrightProvider(),
+              provider: "playwright",
               headless: true,
               api: 7159,
               ui: false,
@@ -274,47 +281,6 @@ const cleanDistPlugin = (): Plugin => {
     },
   };
 };
-
-const electronPreloadOptions = (
-  options: {
-    skipLaunchElectron: boolean;
-    sourcemap: BuildOptions["sourcemap"];
-    electronTargetVersion: ElectronTargetVersion | undefined;
-  },
-  entries: Record<string, string>,
-): ElectronOptions[] =>
-  Object.entries(entries).map(
-    ([name, entry]): ElectronOptions => ({
-      onstart({ reload }) {
-        if (!options.skipLaunchElectron) {
-          reload();
-        }
-      },
-      vite: {
-        plugins: [
-          tsconfigPaths({ root: import.meta.dirname }),
-          isProduction && checkSuspiciousImportsPlugin({}),
-        ],
-        build: {
-          outDir: path.resolve(import.meta.dirname, "dist"),
-          sourcemap: options.sourcemap,
-          target: options.electronTargetVersion?.node,
-          rollupOptions: {
-            input: {
-              [name]: path.resolve(import.meta.dirname, entry),
-            },
-            output: {
-              format: "cjs",
-              inlineDynamicImports: true,
-              entryFileNames: `[name].cjs`,
-              chunkFileNames: `[name].cjs`,
-              assetFileNames: `[name].[ext]`,
-            },
-          },
-        },
-      },
-    }),
-  );
 
 /** バックエンドAPIをフロントエンドから実行するコードを注入する */
 const injectLoaderScriptPlugin = (scriptPath: string): Plugin => {

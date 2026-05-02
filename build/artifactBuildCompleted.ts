@@ -1,4 +1,4 @@
-import type { ArtifactCreated } from "electron-builder";
+import { ArtifactCreated } from "electron-builder";
 import { appImageArtifactBuildCompleted } from "./appImageArtifactBuildCompleted";
 
 export default async function artifactBuildCompleted(

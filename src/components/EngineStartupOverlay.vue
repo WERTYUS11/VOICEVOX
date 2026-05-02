@@ -13,7 +13,11 @@
     <div>
       <QSpinner color="primary" size="2.5rem" />
       <div class="q-mt-xs">
-        {{ allEngineState === "STARTING" ? "引擎启动中……" : "数据准备中……" }}
+        {{
+          allEngineState === "STARTING"
+            ? "引擎启动中……"
+            : "数据准备中……"
+        }}
       </div>
 
       <template v-if="isEngineWaitingLong">
@@ -35,7 +39,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
 import { useStore } from "@/store";
-import type { EngineState } from "@/store/type";
+import { EngineState } from "@/store/type";
 
 const store = useStore();
 const props = defineProps<{
@@ -88,7 +92,7 @@ watch(allEngineState, (newEngineState) => {
 
 const reloadAppWithMultiEngineOffMode = () => {
   void store.actions.CHECK_EDITED_AND_NOT_SAVE({
-    nextAction: "reload",
+    closeOrReload: "reload",
     isMultiEngineOffMode: true,
   });
 };

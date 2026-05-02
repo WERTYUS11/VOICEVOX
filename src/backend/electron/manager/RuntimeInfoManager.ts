@@ -3,12 +3,12 @@
  * ランタイム情報には起動しているエンジンのURLなどが含まれる。
  */
 
+import AsyncLock from "async-lock";
 import type { AltPortInfos } from "@/store/type";
-import type { EngineId, EngineInfo } from "@/type/preload";
+import { EngineId, EngineInfo } from "@/type/preload";
 import { writeFileSafely } from "@/backend/electron/fileHelper";
 import { createEngineUrl } from "@/domain/url";
 import { createLogger } from "@/helpers/log";
-import { Mutex } from "@/helpers/mutex";
 
 const log = createLogger("RuntimeInfoManager");
 
@@ -48,9 +48,10 @@ export class RuntimeInfoManager {
   /**
    * ファイルロック用のインスタンス
    */
-  private lock = new Mutex({
+  private lock = new AsyncLock({
     timeout: 1000,
   });
+  private lockKey = "write";
 
   /**
    * ファイルフォーマットバージョン
@@ -78,41 +79,43 @@ export class RuntimeInfoManager {
    * ランタイム情報ファイルを書き出す
    */
   public async exportFile() {
-    await using _lock = await this.lock.acquire();
-    // データ化
-    const runtimeInfoFormatFor3rdParty: RuntimeInfo = {
-      formatVersion: this.fileFormatVersion,
-      appVersion: this.appVersion,
-      engineInfos: this.engineInfos.map((engineInfo) => {
-        const altPort: string | undefined = this.altportInfos[engineInfo.uuid];
-        const port = altPort ?? engineInfo.defaultPort;
-        return {
-          uuid: engineInfo.uuid,
-          url: createEngineUrl({
-            protocol: engineInfo.protocol,
-            hostname: engineInfo.hostname,
-            port,
-            pathname: engineInfo.pathname,
-          }),
-          name: engineInfo.name,
-        };
-      }),
-    };
+    await this.lock.acquire(this.lockKey, async () => {
+      // データ化
+      const runtimeInfoFormatFor3rdParty: RuntimeInfo = {
+        formatVersion: this.fileFormatVersion,
+        appVersion: this.appVersion,
+        engineInfos: this.engineInfos.map((engineInfo) => {
+          const altPort: string | undefined =
+            this.altportInfos[engineInfo.uuid];
+          const port = altPort ?? engineInfo.defaultPort;
+          return {
+            uuid: engineInfo.uuid,
+            url: createEngineUrl({
+              protocol: engineInfo.protocol,
+              hostname: engineInfo.hostname,
+              port,
+              pathname: engineInfo.pathname,
+            }),
+            name: engineInfo.name,
+          };
+        }),
+      };
 
-    // ファイル書き出し
-    try {
-      writeFileSafely(
-        this.runtimeInfoPath,
-        JSON.stringify(runtimeInfoFormatFor3rdParty), // FIXME: zod化する
-      );
-      log.info(
-        `Runtime information file has been updated. : ${this.runtimeInfoPath}`,
-      );
-    } catch (e) {
-      // ディスクの空き容量がない、他ツールからのファイルロック時をトラップ。
-      // サードパーティ向けなのでVOICEVOX側には通知せず、エラー記録して継続
-      log.error("Failed to write file :", e);
-    }
+      // ファイル書き出し
+      try {
+        writeFileSafely(
+          this.runtimeInfoPath,
+          JSON.stringify(runtimeInfoFormatFor3rdParty), // FIXME: zod化する
+        );
+        log.info(
+          `Runtime information file has been updated. : ${this.runtimeInfoPath}`,
+        );
+      } catch (e) {
+        // ディスクの空き容量がない、他ツールからのファイルロック時をトラップ。
+        // サードパーティ向けなのでVOICEVOX側には通知せず、エラー記録して継続
+        log.error("Failed to write file :", e);
+      }
+    });
   }
 }
 

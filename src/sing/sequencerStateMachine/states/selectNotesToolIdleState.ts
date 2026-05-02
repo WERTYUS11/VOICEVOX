@@ -1,15 +1,16 @@
-import type { SetNextState, State } from "@/sing/stateMachine";
+import { SetNextState, State } from "@/sing/stateMachine";
 import {
-  type Context,
+  Context,
   getGuideLineTicks,
-  type Input,
+  Input,
   selectNotesInRange,
   selectOnlyThisNoteAndPlayPreviewSound,
-  type SequencerStateDefinitions,
+  SequencerStateDefinitions,
   toggleNoteSelection,
 } from "@/sing/sequencerStateMachine/common";
 import {
   getButton,
+  getDoremiFromNoteNumber,
   isSelfEventTarget,
   PREVIEW_SOUND_DURATION,
 } from "@/sing/viewHelper";
@@ -19,11 +20,9 @@ import { NoteId } from "@/type/preload";
 import { clamp } from "@/sing/utility";
 import { uuid4 } from "@/helpers/random";
 
-export class SelectNotesToolIdleState implements State<
-  SequencerStateDefinitions,
-  Input,
-  Context
-> {
+export class SelectNotesToolIdleState
+  implements State<SequencerStateDefinitions, Input, Context>
+{
   readonly id = "selectNotesToolIdle";
 
   onEnter(context: Context) {
@@ -41,13 +40,13 @@ export class SelectNotesToolIdleState implements State<
   }) {
     if (input.type === "keyboardEvent") {
       this.updateCursorState(context, input.keyboardEvent.shiftKey);
-    } else if (input.type === "pointerEvent") {
-      const mouseButton = getButton(input.pointerEvent);
+    } else if (input.type === "mouseEvent") {
+      const mouseButton = getButton(input.mouseEvent);
       const selectedTrackId = context.selectedTrackId.value;
 
       if (
         input.targetArea === "Window" &&
-        input.pointerEvent.type === "pointermove"
+        input.mouseEvent.type === "mousemove"
       ) {
         context.guideLineTicks.value = getGuideLineTicks(
           input.cursorPos,
@@ -56,8 +55,8 @@ export class SelectNotesToolIdleState implements State<
       }
 
       if (mouseButton === "LEFT_BUTTON") {
-        if (isSelfEventTarget(input.pointerEvent)) {
-          if (input.pointerEvent.type === "pointerdown") {
+        if (isSelfEventTarget(input.mouseEvent)) {
+          if (input.mouseEvent.type === "mousedown") {
             if (input.targetArea === "SequencerBody") {
               setNextState("selectNotesWithRect", {
                 cursorPosAtStart: input.cursorPos,
@@ -66,7 +65,7 @@ export class SelectNotesToolIdleState implements State<
             } else if (input.targetArea === "Note") {
               this.executeNotesSelectionProcess(
                 context,
-                input.pointerEvent,
+                input.mouseEvent,
                 input.note,
               );
               setNextState("moveNote", {
@@ -79,7 +78,7 @@ export class SelectNotesToolIdleState implements State<
             } else if (input.targetArea === "NoteLeftEdge") {
               this.executeNotesSelectionProcess(
                 context,
-                input.pointerEvent,
+                input.mouseEvent,
                 input.note,
               );
               setNextState("resizeNoteLeft", {
@@ -92,7 +91,7 @@ export class SelectNotesToolIdleState implements State<
             } else if (input.targetArea === "NoteRightEdge") {
               this.executeNotesSelectionProcess(
                 context,
-                input.pointerEvent,
+                input.mouseEvent,
                 input.note,
               );
               setNextState("resizeNoteRight", {
@@ -103,16 +102,7 @@ export class SelectNotesToolIdleState implements State<
                 returnStateId: this.id,
               });
             }
-          }
-        }
-      }
-    } else if (input.type === "mouseEvent") {
-      const selectedTrackId = context.selectedTrackId.value;
-      const mouseButton = getButton(input.mouseEvent);
-
-      if (mouseButton === "LEFT_BUTTON") {
-        if (isSelfEventTarget(input.mouseEvent)) {
-          if (
+          } else if (
             input.mouseEvent.type === "dblclick" &&
             input.targetArea === "SequencerBody"
           ) {
@@ -124,7 +114,7 @@ export class SelectNotesToolIdleState implements State<
               position: Math.max(0, guideLineTicks),
               duration: context.snapTicks.value,
               noteNumber: clamp(input.cursorPos.noteNumber, 0, 127),
-              lyric: undefined,
+              lyric: getDoremiFromNoteNumber(input.cursorPos.noteNumber),
             };
 
             void context.store.actions.COMMAND_ADD_NOTES({
@@ -170,12 +160,12 @@ export class SelectNotesToolIdleState implements State<
 
   private executeNotesSelectionProcess(
     context: Context,
-    pointerEvent: PointerEvent,
+    mouseEvent: MouseEvent,
     mouseDownNote: Note,
   ) {
-    if (pointerEvent.shiftKey) {
+    if (mouseEvent.shiftKey) {
       selectNotesInRange(context, mouseDownNote);
-    } else if (isOnCommandOrCtrlKeyDown(pointerEvent)) {
+    } else if (isOnCommandOrCtrlKeyDown(mouseEvent)) {
       toggleNoteSelection(context, mouseDownNote);
     } else if (!context.selectedNoteIds.value.has(mouseDownNote.id)) {
       selectOnlyThisNoteAndPlayPreviewSound(context, mouseDownNote);

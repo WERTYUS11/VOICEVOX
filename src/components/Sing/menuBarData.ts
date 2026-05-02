@@ -1,9 +1,9 @@
 import { computed } from "vue";
-import type { Store } from "@/store";
+import { Store } from "@/store";
 import { useRootMiscSetting } from "@/composables/useRootMiscSetting";
-import type { ExportSongProjectFileType } from "@/store/type";
+import { ExportSongProjectFileType } from "@/store/type";
 import { notifyResult } from "@/components/Dialog/Dialog";
-import type {
+import {
   MaybeComputedMenuBarContent,
   MenuBarContent,
 } from "@/components/Menu/MenuBar/menuBarData";
@@ -186,7 +186,9 @@ export const useMenuBarData = (store: Store): MaybeComputedMenuBarContent => {
     portrait: [
       {
         type: "button",
-        label: showSingCharacterPortrait.value ? "隐藏立绘" : "显示立绘",
+        label: showSingCharacterPortrait.value
+          ? "隐藏立绘"
+          : "显示立绘",
         onClick: () => {
           setShowSingCharacterPortrait(!showSingCharacterPortrait.value);
         },

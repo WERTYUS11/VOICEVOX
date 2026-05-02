@@ -1,6 +1,6 @@
-import { computed, type ComputedRef, ref, watch } from "vue";
+import { computed, ComputedRef, ref, watch } from "vue";
 import { useCommandOrControlKey, useShiftKey } from "./useModifierKey";
-import type {
+import {
   ComputedRefs,
   IdleStateId,
   Input,
@@ -8,7 +8,7 @@ import type {
   Refs,
   ViewportInfo,
 } from "@/sing/sequencerStateMachine/common";
-import { getNoteDuration } from "@/sing/music";
+import { getNoteDuration } from "@/sing/domain";
 import { createSequencerStateMachine } from "@/sing/sequencerStateMachine";
 import { ExhaustiveError } from "@/type/utility";
 

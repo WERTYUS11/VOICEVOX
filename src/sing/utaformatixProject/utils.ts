@@ -1,4 +1,4 @@
-import type { Project as UfProject } from "@sevenc-nanashi/utaformatix-ts";
+import { Project as UfProject } from "@sevenc-nanashi/utaformatix-ts";
 import { ExhaustiveError } from "@/type/utility";
 
 export const singleFileProjectFormats = ["smf", "ufdata"] as const;

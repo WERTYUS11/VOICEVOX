@@ -1,4 +1,4 @@
-import type {
+import {
   Context,
   IdleStateId,
   Input,

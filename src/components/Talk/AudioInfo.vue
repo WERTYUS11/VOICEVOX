@@ -60,7 +60,9 @@
           </template>
           <template #no-option>
             <QItem>
-              <QItemSection class="text-grey"> 没有预设 </QItemSection>
+              <QItemSection class="text-grey">
+                没有预设
+              </QItemSection>
             </QItem>
           </template>
         </QSelect>
@@ -102,7 +104,12 @@
             </QCardSection>
 
             <QCardActions align="right">
-              <QBtn v-close-popup flat label="取消" @click="closeAllDialog" />
+              <QBtn
+                v-close-popup
+                flat
+                label="取消"
+                @click="closeAllDialog"
+              />
               <QBtn flat type="submit" label="确定" />
             </QCardActions>
           </QForm>
@@ -284,11 +291,11 @@
 
 <script setup lang="ts">
 import { computed, ref, watchEffect } from "vue";
-import type { QSelectProps } from "quasar";
+import { QSelectProps } from "quasar";
 import CharacterButton from "@/components/CharacterButton.vue";
 import { useStore } from "@/store";
 
-import type {
+import {
   AudioKey,
   CharacterInfo,
   MorphingInfo,
@@ -299,10 +306,10 @@ import type {
 } from "@/type/preload";
 import {
   previewSliderHelper,
-  type PreviewSliderHelper,
-  type Props as PreviewSliderHelperProps,
+  PreviewSliderHelper,
+  Props as PreviewSliderHelperProps,
 } from "@/helpers/previewSliderHelper";
-import type { EngineManifest } from "@/openapi";
+import { EngineManifest } from "@/openapi";
 import { useDefaultPreset } from "@/composables/useDefaultPreset";
 import { SLIDER_PARAMETERS } from "@/store/utility";
 import { createLogger } from "@/helpers/log";

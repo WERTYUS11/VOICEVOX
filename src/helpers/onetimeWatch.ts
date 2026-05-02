@@ -1,4 +1,4 @@
-import { type WatchOptions, type WatchSource, watch } from "vue";
+import { WatchOptions, WatchSource, watch } from "vue";
 
 /**
  * "unwatch"が返されたらunwatchするwatch

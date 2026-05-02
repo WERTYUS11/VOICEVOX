@@ -7,9 +7,9 @@
 
 <script setup lang="ts">
 import { notifyResult } from "../Dialog";
-import Presentation, { type ExportTarget } from "./Presentation.vue";
+import Presentation, { ExportTarget } from "./Presentation.vue";
 import { useStore } from "@/store";
-import type { SaveResultObject, SongExportSetting } from "@/store/type";
+import { SaveResultObject, SongExportSetting } from "@/store/type";
 
 defineOptions({
   name: "ExportSongAudioDialog",

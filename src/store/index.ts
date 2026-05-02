@@ -1,11 +1,11 @@
-import type { InjectionKey } from "vue";
+import { InjectionKey } from "vue";
 import {
   createStore,
-  type Store as BaseStore,
+  Store as BaseStore,
   useStore as baseUseStore,
 } from "./vuex";
 
-import type {
+import {
   AllActions,
   AllGetters,
   AllMutations,
@@ -38,11 +38,11 @@ import { createPartialStore } from "./vuex";
 import { engineStoreState, engineStore } from "./engine";
 import { filterCharacterInfosByStyleType } from "./utility";
 import {
-  type DefaultStyleId,
+  DefaultStyleId,
   EngineId,
   SpeakerId,
   StyleId,
-  type Voice,
+  Voice,
 } from "@/type/preload";
 import { isProduction } from "@/helpers/platform";
 

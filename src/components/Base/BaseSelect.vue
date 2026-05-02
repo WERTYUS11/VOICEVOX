@@ -36,7 +36,7 @@ import {
   SelectValue,
   SelectViewport,
   SelectArrow,
-  type AcceptableValue,
+  AcceptableValue,
 } from "reka-ui";
 
 defineProps<{

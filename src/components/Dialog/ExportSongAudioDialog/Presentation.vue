@@ -30,7 +30,10 @@
         >
           <QToggle v-model="isMono" />
         </BaseCell>
-        <BaseCell title="音频采样率" description="音频采样率を変更できます。">
+        <BaseCell
+          title="音频采样率"
+          description="音频采样率を変更できます。"
+        >
           <QSelect
             v-model="samplingRate"
             dense
@@ -39,23 +42,6 @@
             :optionLabel="renderSamplingRateLabel"
           >
           </QSelect>
-        </BaseCell>
-        <BaseCell
-          title="音深"
-          description="调整音频位深:16bit兼容高;32bit float高品质"
-        >
-          <QBtnToggle
-            v-model="bitDepth"
-            :options="bitDepthOptions"
-            noCaps
-            padding="xs md"
-            unelevated
-            color="surface"
-            textColor="display"
-            toggleColor="primary"
-            toggleTextColor="display-on-primary"
-            dense
-          />
         </BaseCell>
         <BaseCell
           title="限制音量"
@@ -108,8 +94,7 @@
 import { ref, computed } from "vue";
 import { useDialogPluginComponent } from "quasar";
 import BaseCell from "./BaseCell.vue";
-import type { SongExportSetting, TrackParameters } from "@/store/type";
-import type { WavFormat } from "@/helpers/fileDataGenerator";
+import { SongExportSetting, TrackParameters } from "@/store/type";
 
 export type ExportTarget = "master" | "stem";
 const { dialogRef, onDialogOK, onDialogCancel } = useDialogPluginComponent();
@@ -140,13 +125,6 @@ const isMono = ref<boolean>(false);
 const samplingRate = ref<number>(48000);
 const samplingRateOptions = [24000, 44100, 48000, 88200, 96000];
 const renderSamplingRateLabel = (rate: number) => `${rate} Hz`;
-
-// ビット深度
-const bitDepth = ref<WavFormat>("signedInt16");
-const bitDepthOptions = [
-  { label: "16bit", value: "signedInt16" },
-  { label: "32bit float", value: "float32" },
-];
 
 // リミッター
 const withLimiter = ref<boolean>(true);
@@ -187,7 +165,6 @@ const handleExportTrack = () => {
   emit("exportAudio", exportTarget.value, {
     isMono: isMono.value,
     sampleRate: samplingRate.value,
-    format: bitDepth.value,
     withLimiter: withLimiter.value,
     withTrackParameters: {
       pan: withTrackParameters.value.includes("pan"),

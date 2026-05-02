@@ -1,6 +1,5 @@
-import { AST_NODE_TYPES, type TSESTree } from "@typescript-eslint/utils";
+import { AST_NODE_TYPES, TSESTree } from "@typescript-eslint/utils";
 import { createRule } from "./create-rule";
-import { wrapListenerForVueTemplate } from "./helper";
 
 function isNull(node: TSESTree.Expression) {
   return node.type === AST_NODE_TYPES.Literal && node.value == null;
@@ -12,7 +11,7 @@ function isUndefined(node: TSESTree.Expression) {
 
 const noStrictNullable = createRule({
   create(context) {
-    return wrapListenerForVueTemplate(context, {
+    return {
       BinaryExpression(node) {
         if (node.operator !== "===" && node.operator !== "!==") return;
         if (!isNull(node.right) && !isUndefined(node.right)) return;
@@ -22,7 +21,7 @@ const noStrictNullable = createRule({
           messageId: "report",
           data: {
             operator: node.operator.slice(0, 2),
-            expression: context.sourceCode.getText(node.right),
+            expression: context.getSourceCode().getText(node.right),
           },
           fix(fixer) {
             return fixer.replaceTextRange(
@@ -32,7 +31,7 @@ const noStrictNullable = createRule({
           },
         });
       },
-    });
+    };
   },
   name: "no-strict-nullable",
   meta: {

@@ -6,15 +6,16 @@
 
 <script setup lang="ts">
 import { ref, watch, computed, onUnmounted, onMounted } from "vue";
-import "@pixi/unsafe-eval";
 import * as PIXI from "pixi.js";
+import AsyncLock from "async-lock";
 import { useStore } from "@/store";
 import { useMounted } from "@/composables/useMounted";
-import { frequencyToNoteNumber, secondToTick } from "@/sing/music";
 import {
   UNVOICED_PHONEMES,
   VALUE_INDICATING_NO_DATA,
   convertToFramePhonemes,
+  frequencyToNoteNumber,
+  secondToTick,
 } from "@/sing/domain";
 import { noteNumberToBaseY, tickToBaseX } from "@/sing/viewHelper";
 import { Color } from "@/sing/graphics/lineStrip";
@@ -24,13 +25,12 @@ import { getLast } from "@/sing/utility";
 import { getOrThrow } from "@/helpers/mapHelper";
 import {
   calculatePitchDataHash,
-  type PitchData,
-  type PitchDataHash,
+  PitchData,
+  PitchDataHash,
   PitchLine,
-  type ViewInfo,
+  ViewInfo,
 } from "@/sing/graphics/pitchLine";
-import type { FramePhoneme } from "@/openapi";
-import { Mutex } from "@/helpers/mutex";
+import { FramePhoneme } from "@/openapi";
 
 const props = defineProps<{
   offsetX: number;
@@ -291,38 +291,41 @@ const updatePitchEditLineDataMap = async () => {
   renderInNextFrame = true;
 };
 
-const originalPitchLock = new Mutex({ maxPending: 1 });
-const pitchEditLock = new Mutex({ maxPending: 1 });
+const asyncLock = new AsyncLock({ maxPending: 1 });
 
 // NOTE: mountedをwatchしているので、onMountedの直後に必ず１回実行される
-watch(
-  [mounted, singingGuidesInSelectedTrack, tempos, tpqn],
-  async ([mounted]) => {
-    try {
-      await using _lock = await originalPitchLock.acquire();
+watch([mounted, singingGuidesInSelectedTrack, tempos, tpqn], ([mounted]) => {
+  asyncLock.acquire(
+    "originalPitch",
+    async () => {
       if (mounted) {
         await updateOriginalPitchLineDataMap();
       }
-    } catch (e) {
-      warn("Failed to update original pitch line data map.", e);
-    }
-  },
-);
+    },
+    (err) => {
+      if (err != undefined) {
+        warn(`An error occurred.`, err);
+      }
+    },
+  );
+});
 
 // NOTE: mountedをwatchしているので、onMountedの直後に必ず１回実行される
-watch(
-  [mounted, pitchEditData, previewPitchEdit, tempos, tpqn],
-  async ([mounted]) => {
-    try {
-      await using _lock = await pitchEditLock.acquire();
+watch([mounted, pitchEditData, previewPitchEdit, tempos, tpqn], ([mounted]) => {
+  asyncLock.acquire(
+    "pitchEdit",
+    async () => {
       if (mounted) {
         await updatePitchEditLineDataMap();
       }
-    } catch (e) {
-      warn("Failed to update pitch edit line data map.", e);
-    }
-  },
-);
+    },
+    (err) => {
+      if (err != undefined) {
+        warn(`An error occurred.`, err);
+      }
+    },
+  );
+});
 
 watch(isDark, () => {
   renderInNextFrame = true;

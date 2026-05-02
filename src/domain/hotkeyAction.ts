@@ -30,7 +30,6 @@ export const hotkeyActionNameSchema = z.enum([
   "项目另存为",
   "保存项目副本",
   "加载项目",
-  "テキストを繋げて書き出す",
   "加载文本",
   "重置语调",
   "重置所选重音短语语调",
@@ -163,10 +162,6 @@ export function getDefaultHotkeySettings({
     {
       action: "加载项目",
       combination: HotkeyCombination(!isMac ? "Ctrl O" : "Meta O"),
-    },
-    {
-      action: "テキストを繋げて書き出す",
-      combination: HotkeyCombination(""),
     },
     {
       action: "加载文本",

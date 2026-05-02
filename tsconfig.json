@@ -13,7 +13,6 @@
     "allowImportingTsExtensions": true,
     "noEmit": true,
     "isolatedModules": true,
-    "verbatimModuleSyntax": true,
     "resolveJsonModule": true,
     "sourceMap": true,
     "baseUrl": ".",

@@ -18,7 +18,9 @@
         <QToolbar>
           <div class="column">
             <QToolbarTitle class="text-display">{{
-              hasNewCharacter ? "追加角色介绍" : "设置 / 角色与风格管理"
+              hasNewCharacter
+                ? "追加角色介绍"
+                : "设置 / 角色与风格管理"
             }}</QToolbarTitle>
           </div>
 
@@ -107,12 +109,7 @@ import BaseToggleGroup from "@/components/Base/BaseToggleGroup.vue";
 import BaseToggleGroupItem from "@/components/Base/BaseToggleGroupItem.vue";
 import BaseScrollArea from "@/components/Base/BaseScrollArea.vue";
 import { useStore } from "@/store";
-import type {
-  CharacterInfo,
-  SpeakerId,
-  StyleId,
-  StyleInfo,
-} from "@/type/preload";
+import { CharacterInfo, SpeakerId, StyleId, StyleInfo } from "@/type/preload";
 import { filterCharacterInfosByStyleType } from "@/store/utility";
 import { debounce } from "@/helpers/timer";
 
@@ -150,7 +147,8 @@ const selectCharacter = (speakerUuid: SpeakerId) => {
   const characterInfo = props.characterInfos.find(
     (characterInfo) => characterInfo.metas.speakerUuid == speakerUuid,
   );
-  if (characterInfo == undefined) throw new Error(`未找到角色: ${speakerUuid}`);
+  if (characterInfo == undefined)
+    throw new Error(`未找到角色: ${speakerUuid}`);
   styleSelectDialogState.value = { isOpen: true, characterInfo };
 };
 

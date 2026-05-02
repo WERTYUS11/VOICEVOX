@@ -90,21 +90,30 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { useDialogPluginComponent } from "quasar";
-import type {
+import {
   Project as UfProject,
+  EmptyProjectException,
+  IllegalFileException,
+  NotesOverlappingException,
+  supportedExtensions,
   SupportedExtensions as UfSupportedExtensions,
 } from "@sevenc-nanashi/utaformatix-ts";
 import { useStore } from "@/store";
 import { createLogger } from "@/helpers/log";
 import { ExhaustiveError } from "@/type/utility";
-import type { IsEqual } from "@/type/utility";
-import type { LatestProjectType } from "@/infrastructures/projectFile/type";
+import { IsEqual } from "@/type/utility";
+import { LatestProjectType } from "@/infrastructures/projectFile/type";
 import { DEFAULT_TRACK_NAME } from "@/sing/domain";
 
 const { dialogRef, onDialogOK, onDialogCancel } = useDialogPluginComponent();
 
 const store = useStore();
 const log = createLogger("ImportExternalProjectDialog");
+
+// 受け入れる拡張子
+const acceptExtensions = computed(
+  () => supportedExtensions.map((ext) => `.${ext}`).join(",") + ",.vvproj",
+);
 
 type SupportedExtensions = UfSupportedExtensions | "vvproj";
 
@@ -130,14 +139,6 @@ const _: IsEqual<
   (typeof projectNameToExtensions)[number][1][number],
   SupportedExtensions
 > = true;
-
-// 受け入れる拡張子
-const acceptExtensions = computed(() =>
-  projectNameToExtensions
-    .flatMap((value) => value[1])
-    .map((ext) => `.${ext}`)
-    .join(","),
-);
 
 // プロジェクトファイル
 const projectFile = ref<File | null>(null);
@@ -275,8 +276,6 @@ const handleFileChange = async (event: Event) => {
         project: parsedProject,
       };
     } else {
-      const { Project: UfProject } =
-        await import("@sevenc-nanashi/utaformatix-ts");
       project.value = {
         type: "utaformatix",
         project: await UfProject.fromAny(file, {
@@ -297,11 +296,6 @@ const handleFileChange = async (event: Event) => {
     }
     selectedTrackIndexes.value = [firstSelectableTrack];
   } catch (e) {
-    const {
-      EmptyProjectException,
-      IllegalFileException,
-      NotesOverlappingException,
-    } = await import("@sevenc-nanashi/utaformatix-ts");
     log.error(e);
     error.value = "unknown";
     if (e instanceof EmptyProjectException) {

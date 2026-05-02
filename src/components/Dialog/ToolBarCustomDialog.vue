@@ -10,7 +10,9 @@
       <QPageContainer class="root">
         <QHeader class="q-py-sm">
           <QToolbar>
-            <QToolbarTitle class="text-display">工具栏自定义</QToolbarTitle>
+            <QToolbarTitle class="text-display"
+              >工具栏自定义</QToolbarTitle
+            >
             <QSpace />
             <QBtn
               unelevated
@@ -100,14 +102,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch, type Ref } from "vue";
+import { computed, ref, watch, Ref } from "vue";
 import Draggable from "vuedraggable";
 import BaseSwitch from "@/components/Base/BaseSwitch.vue";
 import BaseScrollArea from "@/components/Base/BaseScrollArea.vue";
 import BaseRowCard from "@/components/Base/BaseRowCard.vue";
 import BaseTooltip from "@/components/Base/BaseTooltip.vue";
 import { useStore } from "@/store";
-import type { ToolbarButtonTagType, ToolbarSettingType } from "@/type/preload";
+import { ToolbarButtonTagType, ToolbarSettingType } from "@/type/preload";
 import { getToolbarButtonName } from "@/store/utility";
 
 const dialogOpened = defineModel<boolean>("dialogOpened", { default: false });
@@ -147,16 +149,21 @@ const toggleToolbarButtons = (key: ToolbarButtonTagType) => {
 };
 
 const usableButtonsDesc: Record<ToolbarButtonTagType, string> = {
-  PLAY_CONTINUOUSLY: "朗读从所选文本开始之后的所有文本。",
+  PLAY_CONTINUOUSLY:
+    "朗读从所选文本开始之后的所有文本。",
   STOP: "在朗读文本时停止朗读。",
-  EXPORT_AUDIO_SELECTED: "将所选文本的朗读导出为音频文件。",
-  EXPORT_AUDIO_ALL: "将所有输入文本的朗读导出为音频文件。",
-  EXPORT_AUDIO_CONNECT_ALL: "将所有输入文本的朗读连接为一个音频文件导出。",
+  EXPORT_AUDIO_SELECTED:
+    "将所选文本的朗读导出为音频文件。",
+  EXPORT_AUDIO_ALL:
+    "将所有输入文本的朗读导出为音频文件。",
+  EXPORT_AUDIO_CONNECT_ALL:
+    "将所有输入文本的朗读连接为一个音频文件导出。",
   SAVE_PROJECT: "覆盖并保存项目",
   UNDO: "撤销一步操作。",
   REDO: "重做被撤销的操作。",
   IMPORT_TEXT: "读取文本文件 (.txt)。",
-  EMPTY: "这不是按钮，用于布局调整，实际不会显示。",
+  EMPTY:
+    "这不是按钮，用于布局调整，实际不会显示。",
 };
 
 const isChanged = computed(() => {
@@ -211,7 +218,8 @@ const finishOrNotDialog = async () => {
   if (isChanged.value) {
     const result = await store.actions.SHOW_WARNING_DIALOG({
       title: "要结束自定义吗？",
-      message: "不保存就退出会丢弃自定义内容并重置。",
+      message:
+        "不保存就退出会丢弃自定义内容并重置。",
       actionName: "结束",
     });
     if (result === "OK") {

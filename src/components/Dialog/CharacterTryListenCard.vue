@@ -49,12 +49,7 @@ import { computed, ref } from "vue";
 import BaseIconButton from "@/components/Base/BaseIconButton.vue";
 import BaseButton from "@/components/Base/BaseButton.vue";
 import BaseTooltip from "@/components/Base/BaseTooltip.vue";
-import type {
-  CharacterInfo,
-  SpeakerId,
-  StyleId,
-  StyleInfo,
-} from "@/type/preload";
+import { CharacterInfo, SpeakerId, StyleId, StyleInfo } from "@/type/preload";
 import { DEFAULT_STYLE_NAME } from "@/store/utility";
 
 const props = defineProps<{

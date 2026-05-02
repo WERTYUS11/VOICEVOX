@@ -2,7 +2,7 @@
  * エンジンマニフェストのモック。
  */
 
-import type { EngineManifest } from "@/openapi";
+import { EngineManifest } from "@/openapi";
 
 /** エンジンマニフェストを返すモック */
 export function getEngineManifestMock() {

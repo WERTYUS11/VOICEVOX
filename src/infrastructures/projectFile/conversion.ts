@@ -1,5 +1,5 @@
-import type { ProjectFileTrack } from "./type";
-import type { Track } from "@/domain/project/type";
+import { ProjectFileTrack } from "./type";
+import { Track } from "@/domain/project/type";
 import { mapToRecord, recordToMap } from "@/sing/utility";
 
 export function toProjectFileTrack(track: Track): ProjectFileTrack {

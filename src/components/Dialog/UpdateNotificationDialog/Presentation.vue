@@ -3,7 +3,9 @@
     <QCard class="q-py-sm q-px-md dialog-card">
       <QCardSection>
         <div class="text-h5">更新通知</div>
-        <div class="text-body2 text-grey-8">可从官方网站下载最新版本</div>
+        <div class="text-body2 text-grey-8">
+          可从官方网站下载最新版本
+        </div>
       </QCardSection>
 
       <QSeparator />
@@ -68,7 +70,7 @@
 </template>
 
 <script setup lang="ts">
-import type { UpdateInfo } from "@/type/preload";
+import { UpdateInfo } from "@/type/preload";
 
 const dialogOpened = defineModel<boolean>("dialogOpened", { default: false });
 const props = defineProps<{

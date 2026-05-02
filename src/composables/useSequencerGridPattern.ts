@@ -1,4 +1,4 @@
-import { computed, type Ref } from "vue";
+import { computed, Ref } from "vue";
 import { tickToBaseX } from "@/sing/viewHelper";
 import type { TimeSignature } from "@/domain/project/type";
 

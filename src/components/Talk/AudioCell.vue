@@ -80,17 +80,11 @@
       @keydown.prevent.enter.exact="pushAudioTextIfNeeded"
     >
       <template #error>
-        文章过长可能无法正常运行。 请在标点符号处分割文章。
+        文章过长可能无法正常运行。
+        请在标点符号处分割文章。
       </template>
-      <template #after>
-        <div
-          v-if="showAudioLength && audioDuration != undefined"
-          class="q-mr-sm audio-length"
-        >
-          {{ audioDuration.toFixed(2) }}s
-        </div>
+      <template v-if="enableDeleteButton" #after>
         <QBtn
-          v-if="enableDeleteButton"
           round
           flat
           icon="delete_outline"
@@ -118,10 +112,10 @@
 import { computed, watch, ref, nextTick } from "vue";
 import { QInput } from "quasar";
 import CharacterButton from "@/components/CharacterButton.vue";
-import type { MenuItemButton, MenuItemSeparator } from "@/components/Menu/type";
+import { MenuItemButton, MenuItemSeparator } from "@/components/Menu/type";
 import ContextMenu from "@/components/Menu/ContextMenu/Container.vue";
 import { useStore } from "@/store";
-import type { AudioKey, SplitTextWhenPasteType, Voice } from "@/type/preload";
+import { AudioKey, SplitTextWhenPasteType, Voice } from "@/type/preload";
 import { SelectionHelperForQInput } from "@/helpers/SelectionHelperForQInput";
 import { isOnCommandOrCtrlKeyDown } from "@/store/utility";
 import {
@@ -129,7 +123,6 @@ import {
   useCommandOrControlKey,
 } from "@/composables/useModifierKey";
 import { getDefaultStyle } from "@/domain/talk";
-import { calculateAudioLength } from "@/store/audioGenerate";
 
 const props = defineProps<{
   audioKey: AudioKey;
@@ -312,18 +305,6 @@ watch(
   },
 );
 
-const showAudioLength = computed(() => store.state.showAudioLength);
-
-const audioDuration = computed(() => {
-  if (!audioItem.value?.query) return undefined;
-  const engineId = audioItem.value.voice.engineId;
-  const supportedFeatures =
-    store.state.engineManifests[engineId]?.supportedFeatures;
-  if (!supportedFeatures?.adjustPhonemeLength) return undefined;
-
-  return calculateAudioLength(audioItem.value.query);
-});
-
 const pushAudioTextIfNeeded = async (event?: KeyboardEvent) => {
   if (event && event.isComposing) return;
   if (!willRemove.value && isChangeFlag.value && !willFocusOrBlur.value) {
@@ -494,7 +475,9 @@ const removeCell = async () => {
         }
       }
       if (willNextFocusIndex === -1) {
-        throw new Error("没有找到下一个要选择的audioKey（不可访问）");
+        throw new Error(
+          "没有找到下一个要选择的audioKey（不可访问）",
+        );
       }
       emit("focusCell", {
         audioKey: audioKeys.value[willNextFocusIndex],
@@ -630,7 +613,8 @@ const startContextMenuOperation = () => {
 const readyForContextMenu = () => {
   const getMenuItemButton = (label: string) => {
     const item = contextMenudata.value.find((item) => item.label === label);
-    if (item?.type !== "button") throw new Error("获取上下文菜单项失败。");
+    if (item?.type !== "button")
+      throw new Error("获取上下文菜单项失败。");
     return item;
   };
 
@@ -766,13 +750,5 @@ const isMultipleEngine = computed(() => store.state.engineIds.length > 1);
   background: none;
   z-index: 1;
   cursor: default;
-}
-
-.audio-length {
-  color: colors.$display;
-  opacity: 0.6;
-  white-space: nowrap;
-  font-size: 0.85rem;
-  user-select: none;
 }
 </style>

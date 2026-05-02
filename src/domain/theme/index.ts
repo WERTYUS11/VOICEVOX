@@ -1,4 +1,4 @@
-import type { ThemeConf } from "@/type/preload";
+import { ThemeConf } from "@/type/preload";
 
 const light = {
   name: "Default",

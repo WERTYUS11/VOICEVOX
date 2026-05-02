@@ -1,20 +1,20 @@
 import path from "node:path";
 import fs from "node:fs";
-import * as shlex from "shlex";
+import shlex from "shlex";
 
 import { dialog } from "electron"; // FIXME: ここでelectronをimportするのは良くない
 
 import { getConfigManager } from "../electronConfig";
 import {
-  type EngineInfo,
-  type EngineDirValidationResult,
-  type MinimumEngineManifestType,
-  type EngineId,
+  EngineInfo,
+  EngineDirValidationResult,
+  MinimumEngineManifestType,
+  EngineId,
   minimumEngineManifestSchema,
 } from "@/type/preload";
-import type { AltPortInfos } from "@/store/type";
+import { AltPortInfos } from "@/store/type";
 import { loadEnvEngineInfos } from "@/domain/defaultEngine/envEngineInfo";
-import { failure, type Result, success } from "@/type/result";
+import { failure, Result, success } from "@/type/result";
 import { createLogger } from "@/helpers/log";
 
 const log = createLogger("EngineInfoManager");
@@ -68,14 +68,6 @@ export class EngineInfoManager {
 
     const [command, ...args] = shlex.split(manifest.command);
 
-    const isDownloadVvpp =
-      type === "vvpp" &&
-      this.envEngineInfos.some(
-        (engineInfo) =>
-          engineInfo.uuid === manifest.uuid &&
-          engineInfo.type === "downloadVvpp",
-      );
-
     return success({
       uuid: manifest.uuid,
       protocol: "http:",
@@ -87,7 +79,7 @@ export class EngineInfoManager {
       executionEnabled: true,
       executionFilePath: path.join(engineDir, command),
       executionArgs: args,
-      type: isDownloadVvpp ? "downloadVvpp" : type,
+      type,
       isDefault: this.isDefaultEngine(manifest.uuid),
       version: manifest.version,
     } satisfies EngineInfo);
@@ -100,7 +92,7 @@ export class EngineInfoManager {
   private fetchEnvEngineInfos(): EngineInfo[] {
     // TODO: envから直接ではなく、envに書いたengine_manifest.jsonから情報を得るようにする
     return this.envEngineInfos
-      .filter((engineInfo) => engineInfo.type !== "downloadVvpp")
+      .filter((engineInfo) => engineInfo.type != "downloadVvpp")
       .map((engineInfo) => {
         const { protocol, hostname, port, pathname } = new URL(engineInfo.host);
         return {
@@ -140,7 +132,6 @@ export class EngineInfoManager {
         log.info(`Failed to load engine: ${result.code}, ${engineDir}`);
         continue;
       }
-      log.info(`Loaded VVPP engine: ${result.value.uuid}`);
       engineInfos.push(result.value);
     }
     return engineInfos;

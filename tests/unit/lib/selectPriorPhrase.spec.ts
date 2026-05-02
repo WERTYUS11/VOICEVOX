@@ -1,10 +1,6 @@
 import { it, expect } from "vitest";
 import { PhraseKey } from "@/store/type";
-import {
-  DEFAULT_TPQN,
-  type PhraseRange,
-  selectPriorPhrase,
-} from "@/sing/domain";
+import { DEFAULT_TPQN, PhraseRange, selectPriorPhrase } from "@/sing/domain";
 
 const createPhraseRange = (start: number, end: number): PhraseRange => {
   return {

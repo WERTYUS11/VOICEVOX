@@ -9,7 +9,9 @@
     @reject="handler(false)"
     @accept="handler(true)"
   >
-    <p>为了让更多人放心使用 VOICEVOX，请同意使用条款。</p>
+    <p>
+      为了让更多人放心使用 VOICEVOX，请同意使用条款。
+    </p>
   </AcceptDialog>
 </template>
 
@@ -28,7 +30,7 @@ const handler = (acceptTerms: boolean) => {
   });
   if (!acceptTerms) {
     void store.actions.CHECK_EDITED_AND_NOT_SAVE({
-      nextAction: "close",
+      closeOrReload: "close",
     });
   }
 

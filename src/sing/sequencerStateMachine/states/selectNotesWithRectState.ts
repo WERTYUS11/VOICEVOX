@@ -1,5 +1,5 @@
-import type { SetNextState, State } from "@/sing/stateMachine";
-import type {
+import { SetNextState, State } from "@/sing/stateMachine";
+import {
   Context,
   IdleStateId,
   Input,
@@ -8,14 +8,12 @@ import type {
 } from "@/sing/sequencerStateMachine/common";
 import { getButton, noteNumberToBaseY, tickToBaseX } from "@/sing/viewHelper";
 import { isOnCommandOrCtrlKeyDown } from "@/store/utility";
-import type { NoteId } from "@/type/preload";
-import { frequencyToNoteNumber } from "@/sing/music";
+import { NoteId } from "@/type/preload";
+import { frequencyToNoteNumber } from "@/sing/domain";
 
-export class SelectNotesWithRectState implements State<
-  SequencerStateDefinitions,
-  Input,
-  Context
-> {
+export class SelectNotesWithRectState
+  implements State<SequencerStateDefinitions, Input, Context>
+{
   readonly id = "selectNotesWithRect";
 
   private readonly cursorPosAtStart: PositionOnSequencer;
@@ -55,19 +53,19 @@ export class SelectNotesWithRectState implements State<
     context: Context;
     setNextState: SetNextState<SequencerStateDefinitions>;
   }) {
-    if (input.type === "pointerEvent") {
-      const mouseButton = getButton(input.pointerEvent);
+    if (input.type === "mouseEvent") {
+      const mouseButton = getButton(input.mouseEvent);
 
       if (input.targetArea === "Window") {
-        if (input.pointerEvent.type === "pointermove") {
+        if (input.mouseEvent.type === "mousemove") {
           this.currentCursorPos = input.cursorPos;
           this.updatePreviewRect(context);
         } else if (
-          input.pointerEvent.type === "pointerup" &&
+          input.mouseEvent.type === "mouseup" &&
           mouseButton === "LEFT_BUTTON"
         ) {
           this.applyPreview = true;
-          this.additive = isOnCommandOrCtrlKeyDown(input.pointerEvent);
+          this.additive = isOnCommandOrCtrlKeyDown(input.mouseEvent);
           setNextState(this.returnStateId, undefined);
         }
       }

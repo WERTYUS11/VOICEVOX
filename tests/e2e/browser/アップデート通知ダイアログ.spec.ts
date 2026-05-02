@@ -3,12 +3,12 @@ import dotenv from "dotenv";
 import semver from "semver";
 import { navigateToMain, gotoHome } from "../navigators";
 import { getNewestQuasarDialog } from "../locators";
-import type { UpdateInfo } from "@/type/preload";
+import { UpdateInfo } from "@/type/preload";
 import { assertNonNullable } from "@/type/utility";
 
 // アップデート通知が出る環境にする
 test.beforeEach(async ({ page }) => {
-  dotenv.config({ quiet: true });
+  dotenv.config();
 
   // 動作環境より新しいバージョン
   const latestVersion = semver.inc(

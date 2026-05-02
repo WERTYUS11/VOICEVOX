@@ -73,7 +73,7 @@
 
 <script setup lang="ts">
 import { useDialogPluginComponent } from "quasar";
-import type { ErrorTypeForSaveAllResultDialog } from "@/store/type";
+import { ErrorTypeForSaveAllResultDialog } from "@/store/type";
 
 const modelValue = defineModel<boolean>();
 

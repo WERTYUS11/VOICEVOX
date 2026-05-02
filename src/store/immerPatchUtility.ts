@@ -1,4 +1,4 @@
-import type { Patch } from "immer";
+import { Patch } from "immer";
 import { ExhaustiveError } from "@/type/utility";
 
 /**

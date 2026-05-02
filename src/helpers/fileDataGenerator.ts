@@ -1,20 +1,14 @@
 import Encoding from "encoding-japanese";
-import type { Encoding as EncodingType } from "@/type/preload";
-import { clamp } from "@/sing/utility";
-
-export type WavFormat = "signedInt16" | "float32";
+import { Encoding as EncodingType } from "@/type/preload";
 
 export function generateWavFileData(
   audioBuffer: Pick<
     AudioBuffer,
     "sampleRate" | "length" | "numberOfChannels" | "getChannelData"
   >,
-  format: WavFormat,
 ) {
-  const bytesPerSample = format === "signedInt16" ? 2 : 4;
-
-  // 1: WAVE_FORMAT_PCM, 3: WAVE_FORMAT_IEEE_FLOAT
-  const formatCode = format === "signedInt16" ? 1 : 3;
+  const bytesPerSample = 4; // Float32
+  const formatCode = 3; // WAVE_FORMAT_IEEE_FLOAT
 
   const numberOfChannels = audioBuffer.numberOfChannels;
   const numberOfSamples = audioBuffer.length;
@@ -42,13 +36,7 @@ export function generateWavFileData(
     pos += 2;
   };
   const writeSample = (offset: number, value: number) => {
-    if (format === "signedInt16") {
-      const clampedValue = clamp(value, -1, 1);
-      const int16Value = Math.round(clampedValue * 0x7fff);
-      dataView.setInt16(pos + offset * 2, int16Value, true);
-    } else {
-      dataView.setFloat32(pos + offset * 4, value, true);
-    }
+    dataView.setFloat32(pos + offset * 4, value, true);
   };
 
   writeString("RIFF");

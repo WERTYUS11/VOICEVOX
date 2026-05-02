@@ -1,6 +1,6 @@
 import { it, expect, describe } from "vitest";
 import { mount } from "@vue/test-utils";
-import type { Ref } from "vue";
+import { Ref } from "vue";
 import {
   useCommandOrControlKey,
   useShiftKey,

@@ -4,7 +4,7 @@
  * 音素は適当に別々の電子音にする。
  */
 
-import type { FrameAudioQuery } from "@/openapi";
+import { FrameAudioQuery } from "@/openapi";
 import { generateWavFileData } from "@/helpers/fileDataGenerator";
 import { applyGaussianFilter } from "@/sing/utility";
 
@@ -29,11 +29,13 @@ type WaveType = (typeof waveTypes)[number];
 function generateWave(
   f0: Array<number>,
   volume: Array<number>,
-  samplesPerFrame: number,
+  frameRate: number,
   sampleRate: number,
   type: WaveType,
 ) {
-  const wave = new Float32Array(f0.length * samplesPerFrame);
+  const duration = f0.length / frameRate;
+  const samplesPerOriginal = sampleRate / frameRate;
+  const wave = new Float32Array(sampleRate * duration);
 
   const seed =
     Math.round(f0.concat(volume).reduce((acc, v) => acc + v, 0)) % 2 ** 31; // そこそこ被らないシード値
@@ -44,8 +46,8 @@ function generateWave(
     const vol = volume[frameIndex];
     const omega = (2 * Math.PI * freq) / sampleRate;
 
-    for (let i = 0; i < samplesPerFrame; i++) {
-      const sampleIndex = frameIndex * samplesPerFrame + i;
+    for (let i = 0; i < samplesPerOriginal; i++) {
+      const sampleIndex = frameIndex * samplesPerOriginal + i;
       switch (type) {
         case "sine":
           wave[sampleIndex] = Math.sin(phase);
@@ -190,12 +192,13 @@ export function synthesisFrameAudioQueryMock(
 ): Uint8Array {
   const sampleRate = frameAudioQuery.outputSamplingRate;
   const samplePerFrame = 256;
+  const frameRate = sampleRate / samplePerFrame;
 
   const _generateWave = (type: WaveType) =>
     generateWave(
       frameAudioQuery.f0,
       frameAudioQuery.volume,
-      samplePerFrame,
+      frameRate,
       sampleRate,
       type,
     );
@@ -241,14 +244,11 @@ export function synthesisFrameAudioQueryMock(
 
   // Blobに変換
   const numberOfChannels = frameAudioQuery.outputStereo ? 2 : 1;
-  const buffer = generateWavFileData(
-    {
-      sampleRate,
-      length: wave.length,
-      numberOfChannels,
-      getChannelData: () => wave,
-    },
-    "float32",
-  );
+  const buffer = generateWavFileData({
+    sampleRate,
+    length: wave.length,
+    numberOfChannels,
+    getChannelData: () => wave,
+  });
   return buffer;
 }

@@ -1,6 +1,6 @@
-import { watch, ref, type WatchSource } from "vue";
+import { watch, ref, WatchSource } from "vue";
 import { base64ImageToUri } from "@/helpers/base64Helper";
-import type { EngineManifest } from "@/openapi";
+import { EngineManifest } from "@/openapi";
 import { EngineId } from "@/type/preload";
 
 export const useEngineIcons = (

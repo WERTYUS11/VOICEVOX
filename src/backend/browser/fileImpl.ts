@@ -1,7 +1,7 @@
 import { directoryHandleStoreKey } from "./contract";
 import { openDB } from "./browserConfig";
-import { createFakePath, type FakePath, isFakePath } from "./fakePath";
-import type { SandboxKey } from "@/type/preload";
+import { createFakePath, FakePath, isFakePath } from "./fakePath";
+import { SandboxKey } from "@/type/preload";
 import { failure, success } from "@/type/result";
 import { createLogger } from "@/helpers/log";
 import { normalizeError } from "@/helpers/normalizeError";
@@ -101,11 +101,15 @@ const getDirectoryHandleFromDirectoryPath = async (
     );
 
     if (maybeFixedDirectory == undefined) {
-      throw new Error(`无文件夹访问权限: ${maybeDirectoryPathKey}`);
+      throw new Error(
+        `无文件夹访问权限: ${maybeDirectoryPathKey}`,
+      );
     }
 
     if (!(await maybeFixedDirectory.requestPermission({ mode: "readwrite" }))) {
-      throw new Error("无权访问文件夹，需要读写权限。");
+      throw new Error(
+        "无权访问文件夹，需要读写权限。",
+      );
     }
 
     return maybeFixedDirectory;

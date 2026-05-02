@@ -1,17 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // FIXME: anyを使わないようにする
-import type { InjectionKey } from "vue";
+import { InjectionKey } from "vue";
 import {
   Store as BaseStore,
   useStore as baseUseStore,
-  type ModuleTree,
-  type Plugin,
-  type StoreOptions as OriginalStoreOptions,
-  type GetterTree as OriginalGetterTree,
-  type ActionTree as OriginalActionTree,
-  type MutationTree as OriginalMutationTree,
-  type Dispatch as DefaultDispatch,
-  type Commit as DefaultCommit,
+  ModuleTree,
+  Plugin,
+  StoreOptions as OriginalStoreOptions,
+  GetterTree as OriginalGetterTree,
+  ActionTree as OriginalActionTree,
+  MutationTree as OriginalMutationTree,
+  Dispatch as DefaultDispatch,
+  Commit as DefaultCommit,
 } from "vuex";
 import type {
   AllActions,

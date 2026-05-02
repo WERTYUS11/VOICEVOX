@@ -3,7 +3,7 @@
  * なんとなくVOICEVOX ENGINEリポジトリのモック実装と揃えている。
  */
 
-import type { Speaker, SpeakerInfo } from "@/openapi";
+import { Speaker, SpeakerInfo } from "@/openapi";
 
 /** 立ち絵のURLを得る */
 function getPortraitUrl(characterIndex: number) {

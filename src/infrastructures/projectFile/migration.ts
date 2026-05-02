@@ -2,16 +2,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
 import semver from "semver";
-import type { z } from "zod";
+import { z } from "zod";
 
-import type { AccentPhrase } from "@/openapi";
-import {
-  EngineId,
-  SpeakerId,
-  type StyleId,
-  TrackId,
-  type Voice,
-} from "@/type/preload";
+import { AccentPhrase } from "@/openapi";
+import { EngineId, SpeakerId, StyleId, TrackId, Voice } from "@/type/preload";
 import {
   DEFAULT_BEAT_TYPE,
   DEFAULT_BEATS,

@@ -38,7 +38,7 @@
 import { computed, ref, watch } from "vue";
 import { debounce } from "quasar";
 import MenuItem from "./MenuItem.vue";
-import type { MenuItemData } from "./type";
+import { MenuItemData } from "./type";
 import { useStore } from "@/store";
 
 const props = withDefaults(

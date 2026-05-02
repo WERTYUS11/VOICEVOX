@@ -2,33 +2,37 @@ import path from "node:path";
 import {
   BrowserWindow,
   dialog,
-  type MessageBoxOptions,
-  type MessageBoxSyncOptions,
-  type OpenDialogOptions,
-  type OpenDialogSyncOptions,
-  type SaveDialogOptions,
+  MessageBoxOptions,
+  MessageBoxSyncOptions,
+  OpenDialogOptions,
+  OpenDialogSyncOptions,
+  SaveDialogOptions,
 } from "electron";
-import { getConfigManager } from "../../electronConfig";
-import { getAppStateController } from "../../appStateController";
-import { createIpcSendProxy, type IpcSendProxy } from "../../ipc";
-import { getWelcomeIpcMainHandleManager } from "../welcomeIpcMainHandleManager";
+import windowStateKeeper from "electron-window-state";
+import { getConfigManager } from "../electronConfig";
+import { getEngineAndVvppController } from "../engineAndVvppController";
+import { ipcMainSendProxy } from "../ipc";
 import { themes } from "@/domain/theme";
-import type { WelcomeIpcSOData } from "@/welcome/backend/ipcType";
+import { createLogger } from "@/helpers/log";
+
+const log = createLogger("WindowManager");
 
 type WindowManagerOption = {
+  appStateGetter: () => { willQuit: boolean };
   staticDir: string;
   isDevelopment: boolean;
   isTest: boolean;
 };
 
-class WelcomeWindowManager {
+class WindowManager {
   private _win: BrowserWindow | undefined;
-  private _ipc: IpcSendProxy<WelcomeIpcSOData> | undefined;
+  private appStateGetter: () => { willQuit: boolean };
   private staticDir: string;
   private isDevelopment: boolean;
   private isTest: boolean;
 
   constructor(payload: WindowManagerOption) {
+    this.appStateGetter = payload.appStateGetter;
     this.staticDir = payload.staticDir;
     this.isDevelopment = payload.isDevelopment;
     this.isTest = payload.isTest;
@@ -41,10 +45,6 @@ class WelcomeWindowManager {
     return this._win;
   }
 
-  public isInitialized() {
-    return this._win != undefined;
-  }
-
   /**
    * BrowserWindowを取得するが存在しない場合は例外を投げる
    */
@@ -55,90 +55,123 @@ class WelcomeWindowManager {
     return this._win;
   }
 
-  /**
-   * BrowserWindowのIPC送信用プロキシを取得する
-   */
-  public get ipc() {
-    if (this._ipc == undefined) {
-      throw new Error("_ipc == undefined");
-    }
-    return this._ipc;
-  }
-
   public async createWindow() {
     if (this.win != undefined) {
       throw new Error("Window has already been created");
     }
+    const mainWindowState = windowStateKeeper({
+      defaultWidth: 1024,
+      defaultHeight: 630,
+    });
+
     const configManager = getConfigManager();
     const currentTheme = configManager.get("currentTheme");
     const backgroundColor = themes.find((value) => value.name == currentTheme)
       ?.colors.background;
 
     const win = new BrowserWindow({
-      minWidth: 320,
-      backgroundColor,
-      webPreferences: {
-        preload: path.join(import.meta.dirname, "welcomePreload.cjs"),
-      },
-      icon: path.join(this.staticDir, "icon.png"),
+      x: mainWindowState.x,
+      y: mainWindowState.y,
+      width: mainWindowState.width,
+      height: mainWindowState.height,
+      frame: false,
       titleBarStyle: "hidden",
       trafficLightPosition: { x: 6, y: 4 },
-      frame: false,
+      minWidth: 320,
+      show: false,
+      backgroundColor,
+      webPreferences: {
+        preload: path.join(import.meta.dirname, "preload.mjs"),
+      },
+      icon: path.join(this.staticDir, "icon.png"),
     });
-    const ipc = createIpcSendProxy<WelcomeIpcSOData>(win);
-    this._ipc = ipc;
-    const welcomeIpcMainHandleManager = getWelcomeIpcMainHandleManager();
-    welcomeIpcMainHandleManager.attachTo(win);
 
     win.on("maximize", () => {
-      ipc.DETECT_MAXIMIZED();
+      ipcMainSendProxy.DETECT_MAXIMIZED(win);
     });
     win.on("unmaximize", () => {
-      ipc.DETECT_UNMAXIMIZED();
+      ipcMainSendProxy.DETECT_UNMAXIMIZED(win);
     });
     win.on("enter-full-screen", () => {
-      ipc.DETECT_ENTER_FULLSCREEN();
+      ipcMainSendProxy.DETECT_ENTER_FULLSCREEN(win);
     });
     win.on("leave-full-screen", () => {
-      ipc.DETECT_LEAVE_FULLSCREEN();
+      ipcMainSendProxy.DETECT_LEAVE_FULLSCREEN(win);
+    });
+    win.on("always-on-top-changed", () => {
+      if (win.isAlwaysOnTop()) {
+        ipcMainSendProxy.DETECT_PINNED(win);
+      } else {
+        ipcMainSendProxy.DETECT_UNPINNED(win);
+      }
     });
     win.on("close", (event) => {
-      const appStateController = getAppStateController();
-      void appStateController.onQuitRequest({
-        preventQuit: () => event.preventDefault(),
-      });
+      const appState = this.appStateGetter();
+      if (!appState.willQuit) {
+        event.preventDefault();
+        ipcMainSendProxy.CHECK_EDITED_AND_NOT_SAVE(win, {
+          closeOrReload: "close",
+        });
+        return;
+      }
     });
     win.on("closed", () => {
       this._win = undefined;
-      this._ipc = undefined;
     });
+    win.on("resize", () => {
+      const windowSize = win.getSize();
+      ipcMainSendProxy.DETECT_RESIZED(win, {
+        width: windowSize[0],
+        height: windowSize[1],
+      });
+    });
+    mainWindowState.manage(win);
     this._win = win;
 
-    await this.load();
+    await this.load({});
 
     if (this.isDevelopment && !this.isTest) win.webContents.openDevTools();
   }
 
-  public async load() {
+  /**
+   * 画面の読み込みを開始する。
+   * @param obj.isMultiEngineOffMode マルチエンジンオフモードにするかどうか。無指定時はfalse扱いになる。
+   * @returns ロードの完了を待つPromise。
+   */
+  public async load(obj: { isMultiEngineOffMode?: boolean }) {
     const win = this.getWindow();
-    let firstUrl: URL;
-    if (import.meta.env.VITE_DEV_SERVER_URL != undefined) {
-      firstUrl = new URL(import.meta.env.VITE_DEV_SERVER_URL);
-      firstUrl.pathname = "/welcome/index.html";
-    } else {
-      firstUrl = new URL(`app://./welcome/index.html`);
-    }
-    await win.loadURL(firstUrl.toString());
+    const firstUrl =
+      import.meta.env.VITE_DEV_SERVER_URL ?? "app://./index.html";
+    const url = new URL(firstUrl);
+    url.searchParams.append(
+      "isMultiEngineOffMode",
+      (obj?.isMultiEngineOffMode ?? false).toString(),
+    );
+    await win.loadURL(url.toString());
   }
 
-  public async reload() {
+  public async reload(isMultiEngineOffMode: boolean | undefined) {
     const win = this.getWindow();
     win.hide(); // FIXME: ダミーページ表示のほうが良い
 
     // 一旦適当なURLに飛ばしてページをアンロードする
     await win.loadURL("about:blank");
 
-    await this.load();
+    log.info("Checking ENGINE status before reload app");
+    const engineAndVvppController = getEngineAndVvppController();
+    const engineCleanupResult = engineAndVvppController.cleanupEngines();
+
+    // エンジンの停止とエンジン終了後処理の待機
+    if (engineCleanupResult != "alreadyCompleted") {
+      await engineCleanupResult;
+    }
+    log.info("Post engine kill process done. Now reloading app");
+
+    await engineAndVvppController.launchEngines();
+
+    await this.load({
+      isMultiEngineOffMode: !!isMultiEngineOffMode,
+    });
     win.show();
   }
 
@@ -244,13 +277,13 @@ class WelcomeWindowManager {
   }
 }
 
-let windowManager: WelcomeWindowManager | undefined;
+let windowManager: WindowManager | undefined;
 
-export function initializeWelcomeWindowManager(payload: WindowManagerOption) {
-  windowManager = new WelcomeWindowManager(payload);
+export function initializeWindowManager(payload: WindowManagerOption) {
+  windowManager = new WindowManager(payload);
 }
 
-export function getWelcomeWindowManager() {
+export function getWindowManager() {
   if (windowManager == undefined) {
     throw new Error("WindowManager is not initialized");
   }

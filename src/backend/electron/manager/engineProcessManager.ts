@@ -1,8 +1,4 @@
-import {
-  spawn,
-  type ChildProcess,
-  type ChildProcessWithoutNullStreams,
-} from "node:child_process";
+import { spawn, ChildProcess } from "node:child_process";
 import path from "node:path";
 import treeKill from "tree-kill";
 
@@ -18,7 +14,7 @@ import {
 
 import { getConfigManager } from "../electronConfig";
 import { getEngineInfoManager } from "./engineInfoManager";
-import { EngineId, type EngineInfo } from "@/type/preload";
+import { EngineId, EngineInfo } from "@/type/preload";
 import { createLogger } from "@/helpers/log";
 
 const log = createLogger("EngineProcessManager");
@@ -165,21 +161,10 @@ export class EngineProcessManager {
     log.info(`ENGINE ${engineId} path: ${enginePath}`);
     log.info(`ENGINE ${engineId} args: ${JSON.stringify(args)}`);
 
-    let engineProcess: ChildProcessWithoutNullStreams;
-    try {
-      engineProcess = spawn(enginePath, args, {
-        cwd: path.dirname(enginePath),
-        env: { ...process.env, VV_OUTPUT_LOG_UTF8: "1" },
-      });
-    } catch (error) {
-      log.error(`ENGINE ${engineId}: Failed to start process`);
-      log.error(error instanceof Error ? error : String(error));
-      this.onEngineProcessError(
-        engineInfo,
-        error instanceof Error ? error : new Error(String(error)),
-      );
-      return;
-    }
+    const engineProcess = spawn(enginePath, args, {
+      cwd: path.dirname(enginePath),
+      env: { ...process.env, VV_OUTPUT_LOG_UTF8: "1" },
+    });
     engineProcessContainer.engineProcess = engineProcess;
 
     engineProcess.stdout?.on("data", (data: Buffer) => {

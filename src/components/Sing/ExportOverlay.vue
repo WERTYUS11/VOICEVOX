@@ -3,7 +3,11 @@
     <div>
       <QSpinner color="primary" size="2.5rem" />
       <div class="q-mt-xs">
-        {{ nowRendering ? "渲染中..." : `${exportingInfo.mediaName}导出中...` }}
+        {{
+          nowRendering
+            ? "渲染中..."
+            : `${exportingInfo.mediaName}导出中...`
+        }}
       </div>
       <!-- NOTE: 書き出しのキャンセルはレンダリング中にのみ可能 -->
       <QBtn

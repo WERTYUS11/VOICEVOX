@@ -1,24 +1,22 @@
 import { getOrThrow } from "@/helpers/mapHelper";
-import type { State, SetNextState } from "@/sing/stateMachine";
+import { State, SetNextState } from "@/sing/stateMachine";
 import { clamp } from "@/sing/utility";
 import { getButton, PREVIEW_SOUND_DURATION } from "@/sing/viewHelper";
 import type { Note } from "@/domain/project/type";
-import type { TrackId, NoteId } from "@/type/preload";
+import { TrackId, NoteId } from "@/type/preload";
 import {
-  type Context,
+  Context,
   getGuideLineTicks,
-  type IdleStateId,
-  type Input,
-  type PositionOnSequencer,
-  type SequencerStateDefinitions,
+  IdleStateId,
+  Input,
+  PositionOnSequencer,
+  SequencerStateDefinitions,
   shouldStartDrag,
 } from "@/sing/sequencerStateMachine/common";
 
-export class MoveNoteState implements State<
-  SequencerStateDefinitions,
-  Input,
-  Context
-> {
+export class MoveNoteState
+  implements State<SequencerStateDefinitions, Input, Context>
+{
   readonly id = "moveNote";
 
   private readonly cursorPosAtStart: PositionOnSequencer;
@@ -111,11 +109,11 @@ export class MoveNoteState implements State<
     if (this.innerContext == undefined) {
       throw new Error("innerContext is undefined.");
     }
-    if (input.type === "pointerEvent") {
-      const mouseButton = getButton(input.pointerEvent);
+    if (input.type === "mouseEvent") {
+      const mouseButton = getButton(input.mouseEvent);
 
       if (input.targetArea === "Window") {
-        if (input.pointerEvent.type === "pointermove") {
+        if (input.mouseEvent.type === "mousemove") {
           this.currentCursorPos = input.cursorPos;
           if (
             !this.dragging &&
@@ -127,7 +125,7 @@ export class MoveNoteState implements State<
             this.innerContext.executePreviewProcess = true;
           }
         } else if (
-          input.pointerEvent.type === "pointerup" &&
+          input.mouseEvent.type === "mouseup" &&
           mouseButton === "LEFT_BUTTON"
         ) {
           this.applyPreview = this.innerContext.edited;

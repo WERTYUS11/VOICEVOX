@@ -7,7 +7,7 @@
  */
 import fs from "node:fs/promises";
 import path from "node:path";
-import { test, expect, type Locator } from "@playwright/test";
+import { test, expect, Locator } from "@playwright/test";
 import z from "zod";
 
 // Storybook 8.3.5時点でのindex.jsonのスキーマ。
@@ -15,7 +15,6 @@ import z from "zod";
 const storybookIndexSchema = z.object({
   v: z.literal(5),
   entries: z.record(
-    z.string(),
     z.object({
       type: z.string(),
       id: z.string(),
@@ -73,7 +72,10 @@ for (const [story, stories] of Object.entries(allStories)) {
           ["dark", "深色模式"],
         ] as const) {
           test(`テーマ：${name}`, async ({ page }) => {
-            test.skip(process.platform !== "win32", "跳过 Windows 以外的系统");
+            test.skip(
+              process.platform !== "win32",
+              "跳过 Windows 以外的系统",
+            );
 
             const params = new URLSearchParams();
             params.append("id", story.id);

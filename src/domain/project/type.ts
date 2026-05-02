@@ -1,6 +1,6 @@
-import type { z } from "zod";
+import { z } from "zod";
 
-import type {
+import {
   noteSchema,
   phonemeTimingEditSchema,
   singerSchema,
@@ -8,7 +8,7 @@ import type {
   timeSignatureSchema,
   trackSchema,
 } from "@/domain/project/schema";
-import type { NoteId } from "@/type/preload";
+import { NoteId } from "@/type/preload";
 
 export type Tempo = z.infer<typeof tempoSchema>;
 

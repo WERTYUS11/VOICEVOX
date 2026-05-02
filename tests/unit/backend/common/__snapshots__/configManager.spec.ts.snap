@@ -11,7 +11,6 @@ exports[`0.13.0からマイグレーションできる 1`] = `
     "tweakableSliderByScroll": false,
   },
   "currentTheme": "Default",
-  "defaultLyricMode": "doremi",
   "defaultPresetKeys": {},
   "defaultStyleIds": [],
   "editorFont": "default",
@@ -131,10 +130,6 @@ exports[`0.13.0からマイグレーションできる 1`] = `
       "combination": "Ctrl O",
     },
     {
-      "action": "串联文本并写出",
-      "combination": "",
-    },
-    {
       "action": "加载文本",
       "combination": "",
     },
@@ -230,7 +225,6 @@ exports[`0.13.0からマイグレーションできる 1`] = `
   },
   "shouldApplyDefaultPresetOnVoiceChanged": false,
   "showAddAudioItemButton": true,
-  "showAudioLength": false,
   "showSingCharacterPortrait": true,
   "showTextLineNumber": false,
   "splitTextWhenPaste": "PERIOD_AND_NEW_LINE",

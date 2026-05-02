@@ -39,7 +39,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import type { Singer } from "@/domain/project/type";
-import type { CharacterInfo } from "@/type/preload";
+import { CharacterInfo } from "@/type/preload";
 import { getStyleDescription } from "@/sing/viewHelper";
 
 const props = defineProps<{

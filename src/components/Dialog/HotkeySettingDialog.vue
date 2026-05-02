@@ -9,7 +9,9 @@
     <QLayout container view="hHh Lpr lff" class="bg-background">
       <QHeader class="q-py-sm">
         <QToolbar>
-          <QToolbarTitle class="text-display">设置 / 快捷键分配</QToolbarTitle>
+          <QToolbarTitle class="text-display"
+            >设置 / 快捷键分配</QToolbarTitle
+          >
           <QInput
             v-model="hotkeyFilter"
             hideBottomSpace
@@ -127,7 +129,7 @@ import { useStore } from "@/store";
 import { useHotkeyManager, eventToCombination } from "@/plugins/hotkeyPlugin";
 import {
   HotkeyCombination,
-  type HotkeyActionNameType,
+  HotkeyActionNameType,
   getDefaultHotkeySettings,
 } from "@/domain/hotkeyAction";
 import { isMac } from "@/helpers/platform";

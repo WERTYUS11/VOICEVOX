@@ -1,6 +1,6 @@
 import { vi, expect, test } from "vitest";
 import latestDefaultEngineInfos from "./latestDefaultEngineInfos.json";
-import { fetchLatestDefaultEngineInfo } from "@/domain/defaultEngine/latestDefaultEngine";
+import { fetchLatestDefaultEngineInfo } from "@/domain/defaultEngine/latetDefaultEngine";
 
 test("fetchLatestDefaultEngineInfo", async () => {
   // テスト用のjsonファイルでfetchをモックする

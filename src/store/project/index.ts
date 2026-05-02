@@ -1,4 +1,4 @@
-import { createPartialStore, type DotNotationDispatch } from "../vuex";
+import { createPartialStore, DotNotationDispatch } from "../vuex";
 import {
   executeWritePromiseOrDialog,
   promptProjectSaveFilePath,
@@ -6,7 +6,7 @@ import {
   writeProjectFile,
 } from "./saveProjectHelper";
 import { createUILockAction } from "@/store/ui";
-import type {
+import {
   AllActions,
   AudioItem,
   ProjectStoreState,
@@ -15,7 +15,7 @@ import type {
 import { TrackId } from "@/type/preload";
 import path from "@/helpers/path";
 import { getValueOrThrow, ResultError } from "@/type/result";
-import type { LatestProjectType } from "@/infrastructures/projectFile/type";
+import { LatestProjectType } from "@/infrastructures/projectFile/type";
 import { ProjectFileFormatError } from "@/infrastructures/projectFile/type";
 import {
   createDefaultTempo,
@@ -23,8 +23,8 @@ import {
   createDefaultTrack,
   DEFAULT_TPQN,
 } from "@/sing/domain";
-import type { EditorType } from "@/type/preload";
-import { type IsEqual, UnreachableError } from "@/type/utility";
+import { EditorType } from "@/type/preload";
+import { IsEqual, UnreachableError } from "@/type/utility";
 import {
   showAlertDialog,
   showMessageDialog,
@@ -169,7 +169,8 @@ export const projectStore = createPartialStore<ProjectStoreTypes>({
         showNewerVersionWarningDialog: async () => {
           const result = await showQuestionDialog({
             type: "warning",
-            title: "项目文件是由新版本的 VOICEVOX 创建",
+            title:
+              "项目文件是由新版本的 VOICEVOX 创建",
             message:
               "项目文件是由新版本的 VOICEVOX 创建, 可能会导致部分功能异常。是否继续加载？",
             buttons: ["不彳亍", { text: "彳亍", color: "warning" }],
@@ -238,7 +239,8 @@ export const projectStore = createPartialStore<ProjectStoreTypes>({
 
           if (getters.IS_EDITED) {
             const result = await actions.SAVE_OR_DISCARD_PROJECT_FILE({
-              additionalMessage: "加载工程时，当前工程将被销毁！",
+              additionalMessage:
+                "加载工程时，当前工程将被销毁！",
             });
             if (result == "canceled") {
               return false;
@@ -258,7 +260,8 @@ export const projectStore = createPartialStore<ProjectStoreTypes>({
             if (!(err instanceof Error)) return "发生错误";
             if (err instanceof ResultError && err.code === "ENOENT")
               return "项目文件不存在或已被移动/删除";
-            if (err instanceof ProjectFileFormatError) return "文件格式错误";
+            if (err instanceof ProjectFileFormatError)
+              return "文件格式错误";
             return err.message;
           })();
           await showAlertDialog({
@@ -309,16 +312,13 @@ export const projectStore = createPartialStore<ProjectStoreTypes>({
       );
       if (!result) return false;
 
-      const previousFilePath = context.state.projectFilePath;
-      if (previousFilePath !== filePath) {
+      if (context.state.projectFilePath !== filePath) {
         context.mutations.SET_PROJECT_FILEPATH({ filePath });
-        if (previousFilePath != undefined) {
-          await showMessageDialog({
-            type: "info",
-            title: "保存",
-            message: `项目 ${filePath} 已切换为正在编辑`,
-          });
-        }
+        await showMessageDialog({
+          type: "info",
+          title: "保存",
+          message: `项目 ${filePath} 已切换为正在编辑`,
+        });
       }
 
       await markCurrentProjectAsSaved(context, filePath);

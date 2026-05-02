@@ -1,19 +1,17 @@
-import type { SetNextState, State } from "@/sing/stateMachine";
-import type {
+import { SetNextState, State } from "@/sing/stateMachine";
+import {
   Context,
   IdleStateId,
   Input,
   SequencerStateDefinitions,
 } from "@/sing/sequencerStateMachine/common";
-import type { NoteId, TrackId } from "@/type/preload";
+import { NoteId, TrackId } from "@/type/preload";
 import type { Note } from "@/domain/project/type";
 import { splitLyricsByMoras } from "@/sing/domain";
 
-export class EditLyricState implements State<
-  SequencerStateDefinitions,
-  Input,
-  Context
-> {
+export class EditLyricState
+  implements State<SequencerStateDefinitions, Input, Context>
+{
   readonly id = "editNoteLyric";
 
   private readonly targetTrackId: TrackId;
