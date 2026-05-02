@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { retryFetch } from "./helper";
 
-const APPIMAGETOOL_VERSION = "1.9.1";
+const APPIMAGETOOL_VERSION = "1.9.0";
 
 const distDir = path.join(
   import.meta.dirname,
@@ -35,7 +35,7 @@ function getDownloadURL() {
     ia32: "i686",
     x64: "x86_64",
   };
-  return `https://github.com/AppImage/appimagetool/releases/download/${APPIMAGETOOL_VERSION}/appimagetool-${arch[process.arch]}.AppImage`;
+  return `https://ghproxy.net/https://github.com/AppImage/appimagetool/releases/download/${APPIMAGETOOL_VERSION}/appimagetool-${arch[process.arch]}.AppImage`;
 }
 
 async function main() {
