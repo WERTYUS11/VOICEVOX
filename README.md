@@ -298,3 +298,6 @@ pnpm exec openapi-generator-cli version-manager list
 **LGPL v3 + 商用可选许可（双许可）**  
 如需商业许可，请联系：  
 X：[@hiho_karuta](https://x.com/hiho_karuta)
+---
+**必读**
+本项目基于原本的VOICEVOX项目进行汉化，原仓库在[这里](https://github.com/VOICEVOX/VOICEVOX "这里")，使用脚本 "Script/zh-cn.js" 批量汉化，修改的文件均可在此脚本与src目录查看。本项目使用LGPLv3许可证, 请在使用前确认许可证内容，否则可能会导致法律问题。
