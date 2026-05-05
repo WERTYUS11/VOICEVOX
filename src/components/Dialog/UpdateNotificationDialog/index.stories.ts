@@ -94,6 +94,6 @@ export const OpenOfficialSite: Story = {
 };
 
 export const Closed: Story = {
-  name: "閉じている",
+  name: "已关闭",
   tags: ["skip-screenshot"],
 };
