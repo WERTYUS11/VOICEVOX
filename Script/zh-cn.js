@@ -622,6 +622,7 @@ replaceInFile("src/components/Dialog/SettingDialog/FileNameTemplateDialog.storie
    "無効な入力：不明なタグ":"无效输入：未知标签",
    "無効な入力：空欄":"无效输入：空白",
    "無効な入力：連番がない":"无效输入：没有序列号",
+   "不正なタグが存在するか、$が単体で含まれています":"存在非法标签或单独包含 '$'",
    "確定ボタンを押す":"点击确定按钮",
    "ファイル名パターン":"文件名模式",
    "何か入力してください":"请输入内容",
@@ -1339,23 +1340,23 @@ replaceInFile("src/welcome/components/App.vue", {
 //---------------------------
 
 replaceInFile(".env.production", {
-   "https://voicevox.hiroshiba.jp/":"https://github.com/WERTYUS11/VOICEVOX/",
-   "VITE_LATEST_UPDATE_INFOS_URL=https://github.com/WERTYUS11/VOICEVOX//updateInfos.json":"VITE_LATEST_UPDATE_INFOS_URL=https://voicevox.hiroshiba.jp/updateInfos.json"
+   "https://voicevox.hiroshiba.jp/":"https://vv.nashdush.xyz/",
+   "VITE_LATEST_UPDATE_INFOS_URL=https://vv.nashdush.xyz//updateInfos.json":"VITE_LATEST_UPDATE_INFOS_URL=https://voicevox.hiroshiba.jp/updateInfos.json"
 });
 
 replaceInFile("src/components/Dialog/UpdateNotificationDialog/index.stories.ts", {
-   "https://voicevox.hiroshiba.jp/":"https://github.com/WERTYUS11/VOICEVOX/",
+   "https://voicevox.hiroshiba.jp/":"https://vv.nashdush.xyz/",
 });
 
 replaceInFile("tests/env/.env.test-electron", {
-   "https://voicevox.hiroshiba.jp/":"https://github.com/WERTYUS11/VOICEVOX/",
-   "https://github.com/WERTYUS11/VOICEVOX/updateInfos.json":"https://voicevox.hiroshiba.jp/updateInfos.json",
+   "https://voicevox.hiroshiba.jp/":"https://vv.nashdush.xyz/",
+   "https://vv.nashdush.xyz/updateInfos.json":"https://voicevox.hiroshiba.jp/updateInfos.json",
 });
 
 replaceInFile("tests/env/.env.test-electron", {
-   "https://voicevox.hiroshiba.jp/":"https://github.com/WERTYUS11/VOICEVOX/",
-   "https://https://github.com/WERTYUS11/VOICEVOX/nemoLatestDefaultEngineInfos.json":"https://voicevox.hiroshiba.jp/nemoLatestDefaultEngineInfos.json",
-   "https://github.com/WERTYUS11/VOICEVOX/updateInfos.json":"https://voicevox.hiroshiba.jp/updateInfos.json",
+   "https://voicevox.hiroshiba.jp/":"https://vv.nashdush.xyz/",
+   "https://vv.nashdush.xyz/nemoLatestDefaultEngineInfos.json":"https://voicevox.hiroshiba.jp/nemoLatestDefaultEngineInfos.json",
+   "https://vv.nashdush.xyz/updateInfos.json":"https://voicevox.hiroshiba.jp/updateInfos.json",
 });
 //---------------------------
 // 以上是链接的替换
