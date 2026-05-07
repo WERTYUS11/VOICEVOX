@@ -614,20 +614,20 @@ replaceInFile("src/components/Dialog/SettingDialog/EditButtonCell.vue", {
 });
 
 replaceInFile("src/components/Dialog/SettingDialog/FileNameTemplateDialog.stories.ts", {
-   "不正なタグが存在するか、$が単体で含まれています":"存在非法标签或单独包含 '$'",
+   "不正なタグが存在するか、$が単体で含まれています":"存在非法标签或单独的 $ 符号",
    "無効な入力だと確定ボタンが押せない":"无效输入时无法点击确定按钮",
    "キャンセルボタンを押す":"点击取消按钮",
    "無効な入力：禁じられた文字":"无效的输入：禁用字符",
    "無効な入力：閉じられていないタグ":"无效输入：未闭合的标签",
    "無効な入力：不明なタグ":"无效输入：未知标签",
    "無効な入力：空欄":"无效输入：空白",
-   "無効な入力：連番がない":"无效输入：没有序列号",
-   "不正なタグが存在するか、$が単体で含まれています":"存在非法标签或单独包含 '$'",
+   "無効な入力：連番がない":"无效输入：没有关键字",
+   "不正なタグが存在するか、$が単体で含まれています":"存在非法标签或单独的 $ 符号",
    "確定ボタンを押す":"点击确定按钮",
    "ファイル名パターン":"文件名模式",
    "何か入力してください":"请输入内容",
    "使用できない文字が含まれています":"包含不可用字符",
-   "連番$は必須です":"序列号 $ 是必需的",
+   "連番$は必須です":"关键字 $ 是必需的",
    "無効な入力":"无效输入",
    "開いている":"打开状态",
    "閉じている":"关闭",
@@ -640,15 +640,16 @@ replaceInFile("src/components/Dialog/SettingDialog/FileNameTemplateDialog.storie
 
 replaceInFile("src/components/Dialog/SettingDialog/FileNameTemplateDialog.vue", {
    "のようなタグを使って書き出すファイル名をカスタマイズできます。":"您可以使用类似的标签自定义导出的文件名",
-   "不正なタグが存在するか、$が単体で含まれています":"存在非法标签或单独包含 '$'",
+   "不正なタグが存在するか、$が単体で含まれています":"存在非法标签或单独的 $ 符号",
    "書き出しファイル名パターン":"导出文件名模式",
    "使用できない文字が含まれています：":"包含不可用字符：",
    "デフォルトにリセット":"重置为默认",
    "ファイル名パターン":"文件名模式",
+   "何か入力してください":"请输入内容",
    "キャンセル":"取消",
    "確定":"确定",
    "は必須です":"是必需的",
-   "出力例：":"",
+   "出力例：":"输出示例：",
 });
 
 replaceInFile("src/components/Dialog/SettingDialog/SettingDialog.vue", {
@@ -666,7 +667,7 @@ replaceInFile("src/components/Dialog/SettingDialog/SettingDialog.vue", {
    "テキスト貼り付けの際のテキストの分割箇所を選べます。":"可选择粘贴文本时文本的分割位置。",
    "句点と改行を基にテキストを分割します。":"根据句号和换行符分割文本。",
    "改行のみを基にテキストを分割します。":"仅根据换行符分割文本。",
-   "ONの場合、テキストを [] で囲むことで、テキスト中にメモを書けます。":"开启时，可以通过将文本用 [] 括起来，在文本中写入备忘录。",
+   "ONの場合、テキストを [] で囲むことで、テキスト中にメモを書けます。":"开启时，可以通过将文本用 [] 括起来，让文本写入备忘录。",
    "ONの場合、テキストに {ルビ対象|よみかた} と書くことで、テキストの読み方を変えられます。":"开启时，通过在文本中写入 {注音对象|读法}，可以改变文本的读法。",
    "過去に非表示にしたヒントを全て再表示できます。":"可以重新显示所有过去已隐藏的提示。",
    "ONの場合、複数のテキスト欄を選択できるようにします。":"开启时，可以同时选择多个文本框。",
@@ -1335,9 +1336,7 @@ replaceInFile("src/welcome/components/App.vue", {
    "読み込み中...":"加载中...",
 });
 
-//---------------------------
-//以上是汉化
-//---------------------------
+
 
 replaceInFile(".env.production", {
    "https://voicevox.hiroshiba.jp/":"https://vv.nashdush.xyz/",
@@ -1358,9 +1357,12 @@ replaceInFile("tests/env/.env.test-electron", {
    "https://vv.nashdush.xyz/nemoLatestDefaultEngineInfos.json":"https://voicevox.hiroshiba.jp/nemoLatestDefaultEngineInfos.json",
    "https://vv.nashdush.xyz/updateInfos.json":"https://voicevox.hiroshiba.jp/updateInfos.json",
 });
-//---------------------------
-// 以上是链接的替换
-//---------------------------
+
+replaceInFile(".env", {
+   "https://voicevox.hiroshiba.jp/":"https://vv.nashdush.xyz/",
+   "https://vv.nashdush.xyz/updateInfos.json":"https://voicevox.hiroshiba.jp/updateInfos.json",
+});
+
 
 
 replaceInFile("build/installer.nsh", {
@@ -1421,9 +1423,7 @@ replaceInFile("build/installer.nsh", {
    "のインストールをガイドしていきます。":"在您的计算机上。"
 });
 
-//---------------------------
-// 以上是NSH配置文件的替换
-//---------------------------
+
 
 replaceInFile("tests/e2e/storybook/スクリーンショット.spec.ts", {
    "Storybookのindex.jsonの取得に失敗しました":"获取 Storybook 的 index.json 失败",
@@ -1433,7 +1433,3 @@ replaceInFile("tests/e2e/storybook/スクリーンショット.spec.ts", {
    "スクリーンショットの一覧に過不足が無い":"屏幕截图列表无多余或缺失项",
 });
 
-//---------------------------
-// 以上是test/的替换
-//---------------------------
-//请注意！请勿多打多余的空格，否则报错会折磨你的！
