@@ -92,9 +92,9 @@ export const UnclosedTagInput: Story = {
 };
 
 export const MissingIndexInput: Story = {
-  name: "无效输入：没有序列号",
+  name: "无效输入：没有关键字",
   args: { ...Opened.args },
-  play: createInvalidInputPlay("a", "$連番$是必需的"),
+  play: createInvalidInputPlay("a", "$連番$ 必需添加"),
 };
 
 export const Save: Story = {

@@ -627,7 +627,7 @@ replaceInFile("src/components/Dialog/SettingDialog/FileNameTemplateDialog.storie
    "ファイル名パターン":"文件名模式",
    "何か入力してください":"请输入内容",
    "使用できない文字が含まれています":"包含不可用字符",
-   "連番$は必須です":"关键字 $ 是必需的",
+   "$連番$は必須です":"$連番$ 必需添加",
    "無効な入力":"无效输入",
    "開いている":"打开状态",
    "閉じている":"关闭",
@@ -648,7 +648,7 @@ replaceInFile("src/components/Dialog/SettingDialog/FileNameTemplateDialog.vue", 
    "何か入力してください":"请输入内容",
    "キャンセル":"取消",
    "確定":"确定",
-   "は必須です":"是必需的",
+   "は必須です":" 必需添加",
    "出力例：":"输出示例：",
 });
 

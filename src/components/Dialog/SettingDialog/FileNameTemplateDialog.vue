@@ -35,7 +35,7 @@
           </div>
         </div>
         <div class="text-body2 text-ellipsis">
-          {{ previewFileName }}
+          输出示例：{{ previewFileName }}
         </div>
         <div class="row full-width q-my-md">
           <QBtn
@@ -127,7 +127,7 @@ const errorMessage = computed(() => {
     result.push(`存在非法标签或单独的 $ 符号`);
   }
   if (missingIndexTagString.value) {
-    result.push(`$${replaceTagIdToTagString["index"]}$是必需的`);
+    result.push(`$${replaceTagIdToTagString["index"]}$ 必需添加`);
   }
   return result.join(", ");
 });
