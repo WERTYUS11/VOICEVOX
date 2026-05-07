@@ -78,7 +78,7 @@ export const UnknownTagInput: Story = {
   args: { ...Opened.args },
   play: createInvalidInputPlay(
     "$連番$测试$",
-    "存在非法标签或单独包含 '",
+    "存在非法标签或单独的 $ 符号",
   ),
 };
 
@@ -87,14 +87,14 @@ export const UnclosedTagInput: Story = {
   args: { ...Opened.args },
   play: createInvalidInputPlay(
     "$連番$",
-    "存在非法标签或单独包含 '",
+    "存在非法标签或单独的 $ 符号",
   ),
 };
 
 export const MissingIndexInput: Story = {
   name: "无效输入：没有序列号",
   args: { ...Opened.args },
-  play: createInvalidInputPlay("a", "$序列号 $ 是必需的"),
+  play: createInvalidInputPlay("a", "$連番$是必需的"),
 };
 
 export const Save: Story = {
