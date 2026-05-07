@@ -116,7 +116,7 @@ const invalidChar = computed(() => {
 });
 const errorMessage = computed(() => {
   if (temporaryTemplate.value === "") {
-    return "何か入力してください";
+    return "请输入内容";
   }
 
   const result: string[] = [];
@@ -124,7 +124,7 @@ const errorMessage = computed(() => {
     result.push(`包含不可用字符：「${invalidChar.value}」`);
   }
   if (previewFileName.value.includes("$")) {
-    result.push(`存在非法标签或单独包含 '`);
+    result.push(`存在非法标签或单独的 $ 符号`);
   }
   if (missingIndexTagString.value) {
     result.push(`$${replaceTagIdToTagString["index"]}$是必需的`);

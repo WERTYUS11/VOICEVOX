@@ -85,7 +85,7 @@ export const OpenOfficialSite: Story = {
 
     // 公式サイトが開かれる
     await expect(window.open).toBeCalledWith(
-      "https://github.com/WERTYUS11/VOICEVOX/",
+      "https://vv.nashdush.xyz/",
       "_blank",
     );
     // ダイアログを关闭イベントが呼ばれる
