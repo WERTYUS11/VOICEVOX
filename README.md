@@ -76,7 +76,7 @@ pnpm run setup-agents
 
 - Windows（默认路径）  
   ```
-  C:/Users/(用户名)/AppData/Local/Programs/VOICEVOX/vv-engine/run.exe
+  %LOCALAPPDATA%/Programs/VOICEVOX/vv-engine/run.exe
   ```
   ⚠️ **路径分隔符请使用 `/`，不要用 `\`**
 
