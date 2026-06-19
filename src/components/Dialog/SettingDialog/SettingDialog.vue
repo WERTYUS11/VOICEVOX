@@ -161,7 +161,7 @@
                 />
                 <ToggleCell
                   title="备忘录功能"
-                  description="开启时，可以通过将文本用 [] 括起来，在文本中写入备忘录。"
+                  description="开启时，可以通过将文本用 [] 括起来，让文本写入备忘录。"
                   :modelValue="enableMemoNotation"
                   @update:modelValue="changeEnableMemoNotation"
                 />
@@ -342,6 +342,12 @@
                   @update:modelValue="changeShowTextLineNumber"
                 />
                 <ToggleCell
+                  title="音声の長さの表示"
+                  description="ONの場合、テキスト欄の右側に音声の長さが表示されます。"
+                  :modelValue="showAudioLength"
+                  @update:modelValue="changeShowAudioLength"
+                />
+                <ToggleCell
                   title="显示添加文本按钮"
                   description="关闭时，右下角不会显示添加文本按钮。（文本框可通过 Shift + Enter 添加）"
                   :modelValue="showAddAudioItemButton"
@@ -397,6 +403,15 @@
                     description="开启时，如果引擎支持，将未知英文单词转换为片假名读音。"
                   />
                 </BaseTooltip>
+                <ButtonToggleCell
+                  v-model="defaultLyricModeComputed"
+                  title="ソング：默认歌詞"
+                  description="歌詞が未設定の音符に対して默认で設定される歌詞を設定できます。"
+                  :options="[
+                    { label: 'ドレミ（階名）', value: 'doremi' },
+                    { label: 'ら（固定）', value: 'la' },
+                  ]"
+                />
                 <BaseRowCard
                   title="歌曲：撤销轨道操作"
                   description="指定“撤销”功能所针对的轨道操作。"
@@ -406,7 +421,11 @@
                       v-for="(value, key) in undoableTrackOperations"
                       :key
                       :checked="value"
-                      :label="undoableTrackOperationsLabels[key]"
+                      :label="
+                        undoableTrackOperationsLabels[
+                          key as keyof typeof undoableTrackOperationsLabels
+                        ]
+                      "
                       @update:checked="
                         (newValue) =>
                           (undoableTrackOperations = {
@@ -502,7 +521,7 @@ import {
   buildAudioFileNameFromRawData,
   buildSongTrackAudioFileNameFromRawData,
 } from "@/store/utility";
-import {
+import type {
   SavingSetting,
   EngineSettingType,
   ExperimentalSettingType,
@@ -651,6 +670,11 @@ const [showTextLineNumber, changeShowTextLineNumber] = useRootMiscSetting(
   "showTextLineNumber",
 );
 
+const [showAudioLength, changeShowAudioLength] = useRootMiscSetting(
+  store,
+  "showAudioLength",
+);
+
 const [_enableKatakanaEnglish, setEnableKatakanaEnglish] = useRootMiscSetting(
   store,
   "enableKatakanaEnglish",
@@ -718,6 +742,18 @@ const [enableMultiSelect, setEnableMultiSelect] = useRootMiscSetting(
   store,
   "enableMultiSelect",
 );
+
+const [defaultLyricMode, setDefaultLyricMode] = useRootMiscSetting(
+  store,
+  "defaultLyricMode",
+);
+
+const defaultLyricModeComputed = computed({
+  get: () => defaultLyricMode.value,
+  set: (value: "doremi" | "la") => {
+    setDefaultLyricMode(value);
+  },
+});
 
 const canSetAudioOutputDevice = computed(() => {
   return !!HTMLAudioElement.prototype.setSinkId;

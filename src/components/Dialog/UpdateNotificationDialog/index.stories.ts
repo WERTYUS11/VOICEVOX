@@ -1,6 +1,6 @@
 import { userEvent, within, expect, fn } from "storybook/test";
 
-import { Meta, StoryObj } from "@storybook/vue3-vite";
+import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import Presentation from "./Presentation.vue";
 
 const meta: Meta<typeof Presentation> = {
@@ -94,6 +94,6 @@ export const OpenOfficialSite: Story = {
 };
 
 export const Closed: Story = {
-  name: "已关闭",
+  name: "閉じている",
   tags: ["skip-screenshot"],
 };
