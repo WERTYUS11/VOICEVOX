@@ -169,8 +169,7 @@ export const projectStore = createPartialStore<ProjectStoreTypes>({
         showNewerVersionWarningDialog: async () => {
           const result = await showQuestionDialog({
             type: "warning",
-            title:
-              "项目文件是由新版本的 VOICEVOX 创建",
+            title: "项目文件是由新版本的 VOICEVOX 创建",
             message:
               "项目文件是由新版本的 VOICEVOX 创建, 可能会导致部分功能异常。是否继续加载？",
             buttons: ["不彳亍", { text: "彳亍", color: "warning" }],
@@ -239,8 +238,7 @@ export const projectStore = createPartialStore<ProjectStoreTypes>({
 
           if (getters.IS_EDITED) {
             const result = await actions.SAVE_OR_DISCARD_PROJECT_FILE({
-              additionalMessage:
-                "加载工程时，当前工程将被销毁！",
+              additionalMessage: "加载工程时，当前工程将被销毁！",
             });
             if (result == "canceled") {
               return false;
@@ -260,8 +258,7 @@ export const projectStore = createPartialStore<ProjectStoreTypes>({
             if (!(err instanceof Error)) return "发生错误";
             if (err instanceof ResultError && err.code === "ENOENT")
               return "项目文件不存在或已被移动/删除";
-            if (err instanceof ProjectFileFormatError)
-              return "文件格式错误";
+            if (err instanceof ProjectFileFormatError) return "文件格式错误";
             return err.message;
           })();
           await showAlertDialog({

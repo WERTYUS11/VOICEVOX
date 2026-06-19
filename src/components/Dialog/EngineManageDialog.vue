@@ -405,8 +405,7 @@ const getEngineDirValidationMessage = (result: EngineDirValidationResult) => {
 const addEngine = async () => {
   const result = await store.actions.SHOW_WARNING_DIALOG({
     title: "要添加引擎吗？",
-    message:
-      "此操作可能会对电脑造成损害。如不信任引擎来源，请不要添加。",
+    message: "此操作可能会对电脑造成损害。如不信任引擎来源，请不要添加。",
     actionName: "添加",
   });
   if (result === "OK") {
@@ -418,9 +417,7 @@ const addEngine = async () => {
         }),
       );
 
-      void requireReload(
-        "已添加引擎。需重新加载才能生效。",
-      );
+      void requireReload("已添加引擎。需重新加载才能生效。");
     } else {
       try {
         await lockUi(
@@ -428,9 +425,7 @@ const addEngine = async () => {
           store.actions.INSTALL_VVPP_ENGINE(vvppFilePath.value),
         );
 
-        void requireReload(
-          "已添加引擎。需重新加载才能生效。",
-        );
+        void requireReload("已添加引擎。需重新加载才能生效。");
       } catch (e) {
         console.error(e);
         void store.actions.SHOW_ALERT_DIALOG({
@@ -470,9 +465,7 @@ const deleteEngine = async () => {
             engineDir,
           }),
         );
-        void requireReload(
-          "已删除引擎。需重新加载才能生效。",
-        );
+        void requireReload("已删除引擎。需重新加载才能生效。");
         break;
       }
       case "vvpp": {
