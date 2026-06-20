@@ -14,111 +14,111 @@
   },
   "hotkeySettings": [
     {
-      "action": "音声書き出し",
+      "action": "语音导出",
       "combination": "Meta E"
     },
     {
-      "action": "選択音声を書き出し",
+      "action": "导出选定声音",
       "combination": "E"
     },
     {
-      "action": "音声を繋げて書き出し",
+      "action": "串联声音并输出",
       "combination": ""
     },
     {
-      "action": "再生/停止",
+      "action": "播放/停止",
       "combination": "Space"
     },
     {
-      "action": "連続再生/停止",
+      "action": "连续播放/停止",
       "combination": "Shift Space"
     },
     {
-      "action": "ｱｸｾﾝﾄ欄を表示",
+      "action": "显示重音栏",
       "combination": "1"
     },
     {
-      "action": "ｲﾝﾄﾈｰｼｮﾝ欄を表示",
+      "action": "显示语调字段",
       "combination": "2"
     },
     {
-      "action": "長さ欄を表示",
+      "action": "显示长度栏",
       "combination": "3"
     },
     {
-      "action": "テキスト欄を追加",
+      "action": "添加文本栏",
       "combination": "Shift Enter"
     },
     {
-      "action": "テキスト欄を複製",
+      "action": "复制文本字段",
       "combination": "Meta D"
     },
     {
-      "action": "テキスト欄を削除",
+      "action": "删除文本字段",
       "combination": "Shift Delete"
     },
     {
-      "action": "テキスト欄からフォーカスを外す",
+      "action": "从文本字段移出焦点",
       "combination": "Escape"
     },
     {
-      "action": "テキスト欄にフォーカスを戻す",
+      "action": "重新聚焦文本字段",
       "combination": "Enter"
     },
     {
-      "action": "元に戻す",
+      "action": "撤销",
       "combination": "Meta Z"
     },
     {
-      "action": "やり直す",
+      "action": "重做",
       "combination": "Shift Meta Z"
     },
     {
-      "action": "新規プロジェクト",
+      "action": "新项目",
       "combination": "Meta N"
     },
     {
-      "action": "プロジェクトを名前を付けて保存",
+      "action": "项目另存为",
       "combination": "Shift Meta S"
     },
     {
-      "action": "プロジェクトを上書き保存",
+      "action": "覆盖并保存项目",
       "combination": "Meta S"
     },
     {
-      "action": "プロジェクト読み込み",
+      "action": "加载项目",
       "combination": "Meta O"
     },
     {
-      "action": "テキスト読み込む",
+      "action": "加载文本",
       "combination": ""
     },
     {
-      "action": "全体のイントネーションをリセット",
+      "action": "重置语调",
       "combination": "Meta G"
     },
     {
-      "action": "選択中のアクセント句のイントネーションをリセット",
+      "action": "重置所选重音短语语调",
       "combination": "R"
     },
     {
-      "action": "コピー",
+      "action": "复制",
       "combination": "Meta C"
     },
     {
-      "action": "切り取り",
+      "action": "剪切",
       "combination": "Meta X"
     },
     {
-      "action": "貼り付け",
+      "action": "粘贴",
       "combination": "Meta V"
     },
     {
-      "action": "すべて選択",
+      "action": "全选",
       "combination": "Meta A"
     },
     {
-      "action": "選択解除",
+      "action": "取消选择",
       "combination": ""
     }
   ],

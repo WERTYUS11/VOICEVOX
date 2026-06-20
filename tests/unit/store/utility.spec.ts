@@ -108,7 +108,7 @@ describe.each([
   }) => {
     const text = memoText + rubyText;
 
-    it("無指定の場合はそのまま", () => {
+    it("未指定则保持不变", () => {
       const param = {
         enableMemoNotation: false,
         enableRubyNotation: false,
@@ -117,7 +117,7 @@ describe.each([
       expect(extractYomiText(text, param)).toBe(text);
     });
 
-    it("メモをスキップ", () => {
+    it("跳过重音词", () => {
       const param = {
         enableMemoNotation: true,
         enableRubyNotation: false,
@@ -130,7 +130,7 @@ describe.each([
       );
     });
 
-    it("ルビをスキップ", () => {
+    it("跳过读法", () => {
       const param = {
         enableMemoNotation: false,
         enableRubyNotation: true,
@@ -143,7 +143,7 @@ describe.each([
       );
     });
 
-    it("メモとルビをスキップ", () => {
+    it("同时跳过重音词和读法", () => {
       const param = {
         enableMemoNotation: true,
         enableRubyNotation: true,
@@ -268,16 +268,16 @@ test("buildAudioFileNameFromRawData", () => {
 });
 
 test("getToolbarButtonName", () => {
-  expect(getToolbarButtonName("PLAY_CONTINUOUSLY")).toBe("連続再生");
+  expect(getToolbarButtonName("PLAY_CONTINUOUSLY")).toBe("连续播放");
   expect(getToolbarButtonName("STOP")).toBe("停止");
   expect(getToolbarButtonName("EXPORT_AUDIO_SELECTED")).toBe(
-    "選択音声を書き出し",
+    "导出选定声音",
   );
-  expect(getToolbarButtonName("EXPORT_AUDIO_ALL")).toBe("全部書き出し");
+  expect(getToolbarButtonName("EXPORT_AUDIO_ALL")).toBe("全部导出");
   expect(getToolbarButtonName("EXPORT_AUDIO_CONNECT_ALL")).toBe(
-    "音声を繋げて書き出し",
+    "串联声音并输出",
   );
-  expect(getToolbarButtonName("存在しないタグ" as ToolbarButtonTagType)).toBe(
+  expect(getToolbarButtonName("不存在的标签" as ToolbarButtonTagType)).toBe(
     undefined,
   );
 });
@@ -327,7 +327,7 @@ describe("filterCharacterInfosByStyleType", () => {
   ];
 
   for (const styleType of ["frame_decode", "sing"] as const) {
-    test(`${styleType}のキャラクターが取得できる`, () => {
+    test(`${styleType}获取角色`, () => {
       const filtered = filterCharacterInfosByStyleType(
         characterInfos,
         styleType,
@@ -343,7 +343,7 @@ describe("filterCharacterInfosByStyleType", () => {
     });
   }
 
-  test(`singerLikeを指定するとsingとhummingのキャラクターが取得できる`, () => {
+  test(`singerLikeを指定するとsingとhumming获取角色`, () => {
     const filtered = filterCharacterInfosByStyleType(
       characterInfos,
       "singerLike",
@@ -354,7 +354,7 @@ describe("filterCharacterInfosByStyleType", () => {
     expect(filtered[2].metas.styles.length).toBe(2);
   });
 
-  test(`talkを指定するとsingerLike以外のキャラクターが取得できる`, () => {
+  test(`talkを指定するとsingerLike以外获取角色`, () => {
     const filtered = filterCharacterInfosByStyleType(characterInfos, "talk");
     expect(filtered.length).toBe(3);
     expect(filtered[0].metas.styles.length).toBe(1);

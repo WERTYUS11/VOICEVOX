@@ -206,7 +206,7 @@ registerHotkeyWithCleanup({
 });
 registerHotkeyWithCleanup({
   editor: "talk",
-  name: "テキストを繋げて書き出す",
+  name: "串联文本并输出",
   callback: () => {
     if (!uiLocked.value) {
       void store.actions.SHOW_CONNECT_AND_EXPORT_TEXT_DIALOG();

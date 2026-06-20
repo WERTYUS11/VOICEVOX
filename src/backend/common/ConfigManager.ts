@@ -289,7 +289,7 @@ const migrations: [string, (store: Record<string, unknown>) => unknown][] = [
   [
     ">=0.26",
     (config) => {
-      // 加载文本 をショートカットで呼び出すと テキストを繋げて書き出す が動いていたのでキー割り当てを移行する
+      // 加载文本 をショートカットで呼び出すと 串联文本并输出 が動いていたのでキー割り当てを移行する
       const hotkeySettings =
         config.hotkeySettings as ConfigType["hotkeySettings"];
       const newHotkeySettings: ConfigType["hotkeySettings"] =
@@ -297,7 +297,7 @@ const migrations: [string, (store: Record<string, unknown>) => unknown][] = [
           if (hotkeySetting.action === "加载文本") {
             return {
               ...hotkeySetting,
-              action: "テキストを繋げて書き出す",
+              action: "串联声音并输出",
             };
           }
           return hotkeySetting;
