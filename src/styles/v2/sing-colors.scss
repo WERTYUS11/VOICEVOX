@@ -125,7 +125,8 @@ eg: 50%: --lr-50
     (
         $k3 * $l - $k2 +
           math.sqrt(math.pow($k3 * $l - $k2, 2) + 4 * $k1 * $k3 * $l)
-      ) / 2
+      ) /
+      2
   );
   @return $Lr;
 }

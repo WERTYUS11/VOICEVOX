@@ -78,7 +78,6 @@ VOICEVOXには、下記のような貢献の仕方があります。
 ### 2. 開発環境の構築
 
 - 必須ツール
-
   - [Node.js](https://nodejs.org/en/download/releases/)\
     [こちら](https://github.com/VOICEVOX/voicevox/blob/main/.node-version)に記載されているバージョンのインストーラを入手し、インストールします。
 
@@ -287,7 +286,6 @@ ESLintがバージョンアップした場合や、設定が変わった場合�
   Request（プルリクエスト）」といいます。
 
 - Pull Requestには2つの種類があります。
-
   - Draft Pull Request
   - Pull Request
 
@@ -336,7 +334,6 @@ ESLintがバージョンアップした場合や、設定が変わった場合�
 
 - コンフリクトが発生した場合には、Pull
   Requestのページに「コンフリクトが発生している」と表示されるので、次の手順で修正を行います。
-
   1. 自分の作業リポジトリにプルします。プル元は、自分のGitHubリポジトリではなく、[VOICEVOXのリポジトリ](https://github.com/VOICEVOX/voicevox.git)を指定します。
 
   2. 変更差分をみながら、コンフリクトしている部分を正しい実装に修正します。

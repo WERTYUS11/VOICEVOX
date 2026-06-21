@@ -1,6 +1,6 @@
 ---
 root: true
-targets: ["*"] 
+targets: ["*"]
 description: "このプロジェクトについて"
 globs: ["**/*"]
 ---

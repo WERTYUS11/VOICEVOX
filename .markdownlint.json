@@ -1,5 +1,5 @@
 {
-    "no-inline-html": false,
-    "line-length": false,
-    "no-duplicate-heading": false
+  "no-inline-html": false,
+  "line-length": false,
+  "no-duplicate-heading": false
 }
