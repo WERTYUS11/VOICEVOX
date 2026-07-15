@@ -28,7 +28,7 @@ export const useMenuBarData = (store: Store): MaybeComputedMenuBarContent => {
       },
       {
         type: "button",
-        label: "串联声音并输出",
+        label: "串联音频并导出",
         onClick: () => {
           void store.actions.SHOW_GENERATE_AND_CONNECT_ALL_AUDIO_DIALOG();
         },

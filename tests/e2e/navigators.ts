@@ -36,22 +36,22 @@ export async function toggleSetting(page: Page, settingName: string) {
       })
       .click();
     await page.waitForTimeout(100);
-    await page.getByRole("button", { name: "关闭设置" }).click();
+    await page.getByRole("button", { name: "设置を閉じる" }).click();
   });
   await page.waitForTimeout(500);
 }
 
 export async function navigateToHelpDialog(page: Page): Promise<Locator> {
-  return await test.step("", async () => {
+  return await test.step("转到帮助界面", async () => {
     await navigateToMain(page);
     await page.waitForTimeout(100);
-    await page.getByRole("button", { name: "" }).click();
+    await page.getByRole("button", { name: "帮助" }).click();
     return getNewestQuasarDialog(page);
   });
 }
 
 export async function navigateToSettingDialog(page: Page): Promise<Locator> {
-  return await test.step("转到设置界面", async () => {
+  return await test.step("设置ダイアログの表示まで移動", async () => {
     await navigateToMain(page);
     await page.waitForTimeout(100);
     await page.getByRole("button", { name: "设置" }).click();
@@ -66,8 +66,8 @@ export async function navigateToSong(page: Page) {
     await expect(page.getByText("歌曲")).toBeVisible();
     await page.getByText("歌曲").click();
 
-    // 見やすいように截图を1/8に変更
-    await page.getByLabel("截图").click();
+    // 見やすいようにSNAPを1/8に変更
+    await page.getByLabel("SNAP").click();
     await page.getByRole("option", { name: "1/8", exact: true }).click();
   });
 }

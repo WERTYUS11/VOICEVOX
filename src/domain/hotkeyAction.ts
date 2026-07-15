@@ -12,7 +12,7 @@ export const actionPostfixSelectNthCharacter = "号角色选择";
 export const hotkeyActionNameSchema = z.enum([
   "语音导出",
   "导出选定声音",
-  "串联声音并输出",
+  "串联音频并导出",
   "播放/停止",
   "连续播放/停止",
   "显示重音栏",
@@ -77,7 +77,7 @@ export function getDefaultHotkeySettings({
       combination: HotkeyCombination("E"),
     },
     {
-      action: "串联声音并输出",
+      action: "串联音频并导出",
       combination: HotkeyCombination(""),
     },
     {

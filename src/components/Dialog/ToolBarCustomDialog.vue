@@ -10,7 +10,7 @@
       <QPageContainer class="root">
         <QHeader class="q-py-sm">
           <QToolbar>
-            <QToolbarTitle class="text-display">工具栏自定义</QToolbarTitle>
+            <QToolbarTitle class="text-display">自定义工具栏</QToolbarTitle>
             <QSpace />
             <QBtn
               unelevated
@@ -36,7 +36,7 @@
               flat
               icon="close"
               color="display"
-              aria-label="工具栏自定义を閉じる"
+              aria-label="自定义工具栏を閉じる"
               @click="finishOrNotDialog"
             />
           </QToolbar>

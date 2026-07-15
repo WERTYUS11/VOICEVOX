@@ -12,7 +12,7 @@ import {
 
 test.beforeEach(gotoHome);
 
-test("過去のプロジェクトを読み込める", async ({ page }) => {
+test("加载旧项目", async ({ page }) => {
   await navigateToMain(page);
   const projectJson = await fs.readFile(
     `${import.meta.dirname}/vvproj/0.14.11.vvproj`,
@@ -29,9 +29,9 @@ test("過去のプロジェクトを読み込める", async ({ page }) => {
   );
 });
 
-test("プロジェクトを保存して読み込み直せる", async ({ page }) => {
+test("保存项目后可以直接加载", async ({ page }) => {
   const savedProject =
-    await test.step("AudioCellにテキストを入れて保存", async () => {
+    await test.step("在AudioCell中输入文本后保存", async () => {
       await navigateToMain(page);
 
       await page.getByRole("button").filter({ hasText: "add" }).click();
@@ -48,7 +48,7 @@ test("プロジェクトを保存して読み込み直せる", async ({ page }) 
       return await saveProject(page);
     });
 
-  await test.step("保存したプロジェクトを読み込み直す", async () => {
+  await test.step("可以直接加载保存的项目", async () => {
     await page.reload();
     await gotoHome({ page });
 
@@ -62,9 +62,7 @@ test("プロジェクトを保存して読み込み直せる", async ({ page }) 
   });
 });
 
-test("未来のバージョンのプロジェクトを読み込むと警告を出す", async ({
-  page,
-}) => {
+test("加载新版本时会显示警告", async ({ page }) => {
   await navigateToMain(page);
   const content = await fs.readFile(
     `${import.meta.dirname}/vvproj/future.vvproj`,
@@ -72,8 +70,6 @@ test("未来のバージョンのプロジェクトを読み込むと警告を�
   );
   await loadProject(page, content);
   await expect(
-    page.getByText(
-      "プロジェクトファイルが新しいバージョンのVOICEVOXで作成されています",
-    ),
+    page.getByText("项目文件由新版本的 VOICEVOX 创建"),
   ).toBeVisible();
 });

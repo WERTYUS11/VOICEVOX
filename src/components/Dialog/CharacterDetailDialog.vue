@@ -102,7 +102,7 @@
                     </div>
                   </section>
                   <section class="section">
-                    <h2 class="headline">使用条款</h2>
+                    <h2 class="headline">使用条款条约</h2>
                     <BaseDocumentView class="character-policy">
                       <!-- eslint-disable-next-line vue/no-v-html -->
                       <div v-html="policyHtml"></div>

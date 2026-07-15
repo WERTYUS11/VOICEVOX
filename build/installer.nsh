@@ -253,7 +253,7 @@ verifyPartedFile_finish${UniqueID}:
       Delete "$1"
       Rename "$4" "$1"
       ${If} ${Errors}
-        MessageBox MB_RETRYCANCEL|MB_ICONEXCLAMATION "项目保存$\r$\n如果打开了其他应用程序，请关闭后再试。$\r$\n是否重试？" IDRETRY downloadFile_rename
+        MessageBox MB_RETRYCANCEL|MB_ICONEXCLAMATION "文件操作失败$\r$\n如果打开了其他应用程序，请关闭后再试。$\r$\n是否重试？" IDRETRY downloadFile_rename
         StrCpy $0 "Failed to rename"
       ${EndIf}
     ${ElseIf} $0 == "Filesize mismatch"
@@ -499,7 +499,7 @@ verifyPartedFile_finish${UniqueID}:
       ${myQuitSuccess}
     ${ElseIf} $0 == "File Not Found (404)"
       ; すぐに再試行しても望みが薄いので失敗したことを伝えつつ終わる
-      MessageBox MB_OK|MB_ICONSTOP "未能获取安装所需的文件列表。$\r$\n请稍后重试$\r$\n$\r$\n错误: $0"
+      MessageBox MB_OK|MB_ICONSTOP "未能获取安装所需的文件列表。$\r$\n请稍后重试。$\r$\n$\r$\n错误: $0"
       ${myQuit}
     ${ElseIf} $0 != "OK"
       ; https://nsis.sourceforge.io/Inetc_plug-in
@@ -511,7 +511,7 @@ verifyPartedFile_finish${UniqueID}:
     ; ダウンロードした ini ファイルの内容を元に変数を更新
     ${updateDefinedVariablesINI} $0
     ${If} $0 == "Broken"
-      MessageBox MB_OK|MB_ICONSTOP "准备安装程序时发生错误。$\r$\n请稍后重试"
+      MessageBox MB_OK|MB_ICONSTOP "准备安装程序时发生错误。$\r$\n请稍后重试。"
       ${myQuit}
     ${ElseIf} $0 != "OK"
       ; 知らない戻り値を返してきた
@@ -532,7 +532,7 @@ verifyPartedFile_finish${UniqueID}:
     ${ElseIf} $0 == "No entry"
       ; ini ファイルから必要な情報が見つけられなかった
       ; ウィルス対策ソフトや掃除系ソフトによって一時フォルダ内のファイルを削除されると起こるかもしれない
-      MessageBox MB_OK|MB_ICONSTOP "未找到文件验证所需数据，已中止处理。$\r$\n请稍后重试"
+      MessageBox MB_OK|MB_ICONSTOP "未找到文件验证所需数据，已中止处理。$\r$\n请稍后重试。"
       ${myQuit}
     ${ElseIf} $0 == "Failed to get file size"
       ; リトライを諦めてここまできたのでそのまま終わる
@@ -595,7 +595,7 @@ Function welcomePageShow
     ${bytesToHumanReadable} $1 $1
     ${GetRoot} "$EXEDIR" $3
     StrCpy $3 $3 1 ; "C:" から "C" だけを取り出す
-    StrCpy $2 "$2$\r$\n安装程序所在的磁盘需要有 $0 以上的空闲空间。$\r$\n（现在磁盘$3可用空间为： $1）"
+    StrCpy $2 "$2$\r$\n安装程序所在的磁盘需要有 $0 以上的空闲空间。$\r$\n（现在磁盘$3可用空间为：$1）"
   ${EndIf}
 
   StrCpy $2 "$2$\r$\n$\r$\n要继续，请点击 [下一步]。"
@@ -624,7 +624,7 @@ Function welcomePageLeave
     ${bytesToHumanReadable} $1 $1
     ${GetRoot} "$EXEDIR" $2
     StrCpy $2 $2 1 ; "C:" から "C" だけを取り出す
-    MessageBox MB_ABORTRETRYIGNORE|MB_ICONEXCLAMATION "可用空间不足$\r$\n要开始下载文件，$2ドライブに $0 以上的空闲空间。$\r$\n$\r$\n所需容量： $0$\r$\n磁盘$2上的可用空间：$1" IDRETRY welcomePageLeave_checkFreeSpace IDIGNORE welcomePageLeave_download
+    MessageBox MB_ABORTRETRYIGNORE|MB_ICONEXCLAMATION "可用空间不足。$\r$\n要开始下载文件，$2ドライブに $0 以上的空闲空间。$\r$\n$\r$\n所需容量： $0$\r$\n磁盘$2上的可用空间：$1" IDRETRY welcomePageLeave_checkFreeSpace IDIGNORE welcomePageLeave_download
     Abort
   ${EndIf}
 
@@ -639,7 +639,7 @@ Function welcomePageLeave
         ${myQuitSuccess}
       ${ElseIf} $0 == "File Not Found (404)"
         ; すぐに再試行しても望みが薄いので失敗したことを伝えつつ終わる
-        MessageBox MB_OK|MB_ICONSTOP "下载文件失败$\r$\n请稍后重试$\r$\n$\r$\n错误: $0"
+        MessageBox MB_OK|MB_ICONSTOP "下载文件失败$\r$\n请稍后重试。$\r$\n$\r$\n错误: $0"
         ${myQuit}
       ${ElseIf} $0 == "Hash mismatch"
         MessageBox MB_OK|MB_ICONSTOP "下载的文件不正确。$\r$\n请尝试重新下载安装程序。"
@@ -651,7 +651,7 @@ Function welcomePageLeave
       ${ElseIf} $0 == "No entry"
         ; ini ファイルから必要な情報が見つけられなかった
         ; ウィルス対策ソフトや掃除系ソフトによって一時フォルダ内のファイルを削除されると起こるかもしれない
-        MessageBox MB_OK|MB_ICONSTOP "未找到文件验证所需数据，已中止处理。$\r$\n请稍后重试"
+        MessageBox MB_OK|MB_ICONSTOP "未找到文件验证所需数据，已中止处理。$\r$\n请稍后重试。"
         ${myQuit}
       ${ElseIf} $0 != "OK"
         ; https://nsis.sourceforge.io/Inetc_plug-in
@@ -765,7 +765,7 @@ Function readyPageLeave
     ${bytesToHumanReadable} $1 $1
     ${GetRoot} "$INSTDIR" $2
     StrCpy $2 $2 1 ; "C:" から "C" だけを取り出す
-    MessageBox MB_ABORTRETRYIGNORE|MB_ICONEXCLAMATION "可用空间不足$\r$\n要安装$(^Name) $2到磁盘$0 的临时空间$\r$\n$\r$\n所需容量： $0$\r$\n磁盘$2上的可用空间：$1" IDRETRY readyPageLeave_checkDiskSpace IDIGNORE readyPageLeave_finish
+    MessageBox MB_ABORTRETRYIGNORE|MB_ICONEXCLAMATION "可用空间不足。$\r$\n要安装$(^Name) $2到磁盘$0 的临时空间$\r$\n$\r$\n所需容量： $0$\r$\n磁盘$2上的可用空间：$1" IDRETRY readyPageLeave_checkDiskSpace IDIGNORE readyPageLeave_finish
     Abort
   ${EndIf}
   readyPageLeave_finish:

@@ -297,7 +297,7 @@ const migrations: [string, (store: Record<string, unknown>) => unknown][] = [
           if (hotkeySetting.action === "加载文本") {
             return {
               ...hotkeySetting,
-              action: "串联声音并输出",
+              action: "串联文本并输出",
             };
           }
           return hotkeySetting;

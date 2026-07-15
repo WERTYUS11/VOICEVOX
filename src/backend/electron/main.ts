@@ -54,7 +54,7 @@ try {
 } catch (e) {
   const err = e as NodeJS.ErrnoException;
   if (err?.code !== "ENOTEMPTY") {
-    // electron-logを初期化してからエラーを出力する
+    // electron-logを初期化してから错误を出力する
     errorForRemoveBeforeUserDataDir = err;
   }
 }
@@ -97,14 +97,14 @@ process.on("uncaughtException", (error) => {
   } else {
     const { message, name } = error;
     let detailedMessage = "";
-    detailedMessage += `メインプロセスで原因不明のエラーが発生しました。\n`;
-    detailedMessage += `エラー名: ${name}\n`;
-    detailedMessage += `メッセージ: ${message}\n`;
+    detailedMessage += `主进程发生不明错误。\n`;
+    detailedMessage += `错误： ${name}\n`;
+    detailedMessage += `Message: ${message}\n`;
     if (error.stack) {
-      detailedMessage += `スタックトレース: \n${error.stack}`;
+      detailedMessage += `堆栈追踪：\n${error.stack}`;
     }
 
-    dialog.showErrorBox("エラー", detailedMessage);
+    dialog.showErrorBox("错误", detailedMessage);
   }
 });
 process.on("unhandledRejection", (reason) => {
@@ -219,7 +219,7 @@ const onEngineProcessError = (engineInfo: EngineInfo, error: Error) => {
   const engineId = engineInfo.uuid;
   log.error(`ENGINE ${engineId} ERROR:`, error);
 
-  // winが作られる前にエラーが発生した場合はwinへの通知を諦める
+  // winが作られる前に错误が発生した場合はwinへの通知を諦める
   // FIXME: winが作られた後にエンジンを起動させる
   const win = mainWindowManager.win;
   if (win != undefined) {
@@ -228,7 +228,7 @@ const onEngineProcessError = (engineInfo: EngineInfo, error: Error) => {
     log.error(`onEngineProcessError: win is undefined`);
   }
 
-  dialog.showErrorBox("音声合成エンジンエラー", error.message);
+  dialog.showErrorBox("语音合成引擎错误", error.message);
 };
 
 initializeRuntimeInfoManager({
@@ -276,8 +276,8 @@ function checkMultiEngineEnabled(): boolean {
   if (!enabled) {
     mainWindowManager.showMessageBoxSync({
       type: "info",
-      title: "マルチエンジン機能が無効です",
-      message: `マルチエンジン機能が無効です。vvppファイルを使用するには設定からマルチエンジン機能を有効にしてください。`,
+      title: "多引擎功能已禁用",
+      message: `多引擎功能已禁用。要使用vvpp文件，请在设置中启用多引擎功能。`,
       buttons: ["OK"],
       noLink: true,
     });
@@ -338,7 +338,7 @@ app.on("web-contents-created", (_e, contents) => {
     if (protocol.match(/^https?:/)) {
       void shell.openExternal(url);
     } else {
-      log.error(`許可されないリンクです。url: ${url}`);
+      log.error(`不允许的链接。url: ${url}`);
     }
     return { action: "deny" };
   });
@@ -347,7 +347,7 @@ app.on("web-contents-created", (_e, contents) => {
   contents.on("will-navigate", (event) => {
     // preloadスクリプト変更時のホットリロードを許容する
     if (contents.getURL() !== event.url) {
-      log.error(`ナビゲーションは無効化されています。url: ${event.url}`);
+      log.error(`导航已被禁用。url: ${event.url}`);
       event.preventDefault();
     }
   });
@@ -394,11 +394,11 @@ void app.whenReady().then(async () => {
       await dialog
         .showMessageBox({
           type: "error",
-          title: "設定ファイルの読み込みエラー",
-          message: `設定ファイルの読み込みに失敗しました。${app.getPath(
+          title: "配置文件读取错误",
+          message: `加载配置文件失败。${app.getPath(
             "userData",
-          )} にある config.json の名前を変えることで解決することがあります（ただし設定がすべてリセットされます）。設定ファイルがあるフォルダを開きますか？`,
-          buttons: ["いいえ", "はい"],
+          )} 有时可以通过更改其中的 config.json 文件名来解决（但所有设置将被重置）。是否打开配置文件所在的文件夹？`,
+          buttons: ["不了", "好"],
           noLink: true,
           cancelId: 0,
         })
@@ -421,13 +421,9 @@ void app.whenReady().then(async () => {
       await dialog
         .showMessageBox({
           type: "error",
-          title: "設定ファイルの読み込みエラー（開発者向け案内）",
-          message: `設定ファイルの読み込みに失敗しました。設定ファイルの名前を変更するか、設定をリセットしてください。`,
-          buttons: [
-            "何もせず終了",
-            "設定ファイルのフォルダを開いて終了",
-            "設定をリセットして続行",
-          ],
+          title: "配置文件读取错误（开发信息）",
+          message: `加载配置文件失败。请更改配置文件的名称或重置设置。`,
+          buttons: ["不做操作并退出", "打开配置目录并退出", "重置设置并继续"],
           noLink: true,
           cancelId: 0,
         })

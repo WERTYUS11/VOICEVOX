@@ -5,14 +5,14 @@ import { gotoHome, navigateToMain } from "../navigators";
 test.beforeEach(gotoHome);
 
 function getNthAccentPhraseInput({ page, n }: { page: Page; n: number }) {
-  return page.getByLabel(`${n + 1}番目のアクセント区間の読み`);
+  return page.getByLabel(`${n + 1}第N个重音短语的读音`);
 }
 
-test("単体アクセント句の読み変更", async ({ page }) => {
+test("单体重音句的读音", async ({ page }) => {
   await navigateToMain(page);
   await page.waitForTimeout(100);
 
-  const textField = page.getByRole("textbox", { name: "1行目" });
+  const textField = page.getByRole("textbox", { name: "1行" });
   await textField.click();
   await textField.fill("あれもこれもそれもどれも");
   await textField.press("Enter");
@@ -50,22 +50,22 @@ test("単体アクセント句の読み変更", async ({ page }) => {
   await expect(page.getByText("ドレモ、")).not.toBeVisible();
 });
 
-test("詳細調整欄のコンテキストメニュー", async ({ page }) => {
+test("详细调整栏的上下文菜单", async ({ page }) => {
   await navigateToMain(page);
   await page.waitForTimeout(100);
 
-  // 削除
-  await page.getByRole("textbox", { name: "1行目" }).click();
+  // 删除
+  await page.getByRole("textbox", { name: "1行" }).click();
   await page
-    .getByRole("textbox", { name: "1行目" })
+    .getByRole("textbox", { name: "1行" })
     .fill("あれもこれもそれもどれも");
-  await page.getByRole("textbox", { name: "1行目" }).press("Enter");
+  await page.getByRole("textbox", { name: "1行" }).press("Enter");
   await page.getByText("ソレモ").click({
     button: "right",
   });
   await page
     .getByRole("listitem")
-    .filter({ has: page.getByText("削除") })
+    .filter({ has: page.getByText("删除") })
     .click();
   await page.waitForTimeout(100);
   await expect(page.getByText("ソレモ")).not.toBeVisible();

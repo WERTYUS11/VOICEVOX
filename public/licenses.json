@@ -1,8 +1,14 @@
 [
   {
-    "name": "LGPL",
-    "version": "v3",
-    "license": "LGPL_LICENSE",
-    "text": "LGPL license"
+    "name": "dummy name1",
+    "version": "0.0.1",
+    "license": "dummy license1",
+    "text": "dummy text1"
+  },
+  {
+    "name": "dummy name2",
+    "version": "0.0.2",
+    "license": "dummy license2",
+    "text": "dummy text2"
   }
 ]

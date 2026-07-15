@@ -3,11 +3,11 @@ import { gotoHome, navigateToMain } from "../navigators";
 
 test.beforeEach(gotoHome);
 
-test("メイン画面の表示", async ({ page }) => {
-  test.skip(process.platform !== "win32", "Windows以外のためスキップします");
+test("显示主界面", async ({ page }) => {
+  test.skip(process.platform !== "win32", "跳过 Windows 以外的系统");
   await navigateToMain(page);
 
-  // トーク画面の表示
+  // 对话模式屏幕截图の表示
   while (true) {
     await page.locator(".audio-cell:nth-child(1) .q-field").click(); // 一番上のテキスト欄をクリックする
     await page.waitForTimeout(100);
@@ -15,16 +15,16 @@ test("メイン画面の表示", async ({ page }) => {
     if (
       (await page
         .locator(".character-portrait-wrapper .character-name")
-        .innerText()) !== "（表示エラー）" &&
+        .innerText()) !== "（显示错误）" &&
       (await page.locator(".character-portrait-wrapper .loading").count()) === 0
     ) {
       break;
     }
   }
-  await expect(page).toHaveScreenshot("トーク画面.png");
+  await expect(page).toHaveScreenshot("对话模式屏幕截图.png");
 
-  // ソング画面の表示
-  await page.getByText("ソング").click();
-  await expect(page.getByText("ソング")).toBeEnabled(); // 無効化が解除されるまで待つ
-  await expect(page).toHaveScreenshot("ソング画面.png");
+  // 歌曲模式屏幕截图の表示
+  await page.getByText("歌曲模式").click();
+  await expect(page.getByText("歌曲模式")).toBeEnabled(); // 無効化が解除されるまで待つ
+  await expect(page).toHaveScreenshot("歌曲模式屏幕截图.png");
 });

@@ -13,10 +13,7 @@ $primitive-red: #d04756;
 :root[is-dark-theme="false"] {
   --color-v2-background: #{color.adjust($primitive-primary, $lightness: 25%)};
   --color-v2-background-alt: #{color.adjust($primitive-white, $lightness: -5%)};
-  --color-v2-background-drawer: #{rgba(
-      color.adjust($primitive-primary, $lightness: 20%),
-      0.75
-    )};
+  --color-v2-background-drawer: #{rgba(color.adjust($primitive-primary, $lightness: 20%), 0.75)};
 
   --color-v2-surface: #{$primitive-white};
   --color-v2-border: #{rgba($primitive-black, 0.2)};
@@ -30,24 +27,15 @@ $primitive-red: #d04756;
 
   --color-v2-control: #{$primitive-white};
   --color-v2-control-hovered: #{color.adjust($primitive-white, $lightness: -5%)};
-  --color-v2-control-pressed: #{color.adjust(
-      $primitive-white,
-      $lightness: -10%
-    )};
+  --color-v2-control-pressed: #{color.adjust($primitive-white, $lightness: -10%)};
 
   --color-v2-clear: #{rgba($primitive-black, 0)};
   --color-v2-clear-hovered: #{rgba($primitive-black, 0.05)};
   --color-v2-clear-pressed: #{rgba($primitive-black, 0.1)};
 
   --color-v2-primary: #{$primitive-primary};
-  --color-v2-primary-hovered: #{color.adjust(
-      $primitive-primary,
-      $lightness: -5%
-    )};
-  --color-v2-primary-pressed: #{color.adjust(
-      $primitive-primary,
-      $lightness: -10%
-    )};
+  --color-v2-primary-hovered: #{color.adjust($primitive-primary, $lightness: -5%)};
+  --color-v2-primary-pressed: #{color.adjust($primitive-primary, $lightness: -10%)};
 
   --color-v2-warning: #{$primitive-white};
   --color-v2-warning-hovered: #{color.adjust($primitive-red, $lightness: 40%)};
@@ -83,10 +71,7 @@ $primitive-red: #d04756;
   --color-v2-clear-pressed: #{rgba($primitive-white, 0.1)};
 
   --color-v2-primary: #{color.adjust($primitive-primary, $lightness: -10%)};
-  --color-v2-primary-hovered: #{color.adjust(
-      $primitive-primary,
-      $lightness: -5%
-    )};
+  --color-v2-primary-hovered: #{color.adjust($primitive-primary, $lightness: -5%)};
   --color-v2-primary-pressed: #{$primitive-primary};
 
   --color-v2-warning: #{color.adjust($primitive-black, $lightness: 10%)};

@@ -11,9 +11,7 @@
       <QPageContainer>
         <QHeader class="q-pa-sm">
           <QToolbar>
-            <QToolbarTitle class="text-display"
-              >読み方＆アクセント辞書</QToolbarTitle
-            >
+            <QToolbarTitle class="text-display">读法与重音字典</QToolbarTitle>
             <QSpace />
             <!-- close button -->
             <QBtn
@@ -21,7 +19,7 @@
               flat
               icon="close"
               color="display"
-              aria-label="辞書を閉じる"
+              aria-label="关闭词典"
               @click="closeDialog"
             />
           </QToolbar>
@@ -30,11 +28,9 @@
           <div>
             <QSpinner color="primary" size="2.5rem" />
             <div class="q-mt-xs">
-              <template v-if="loadingDictState === 'loading'"
-                >読み込み中・・・</template
-              >
+              <template v-if="loadingDictState === 'loading'">读取中…</template>
               <template v-if="loadingDictState === 'synchronizing'"
-                >同期中・・・</template
+                >同步中…</template
               >
             </div>
           </div>
@@ -42,10 +38,10 @@
         <BaseNavigationView>
           <template #sidebar>
             <div class="list-header">
-              <div class="list-title">単語一覧</div>
+              <div class="list-title">单词列表</div>
               <BaseButton
-                label="追加"
-                aria-label="単語を追加"
+                label="添加"
+                aria-label="単語を添加"
                 icon="add"
                 :disabled="uiLocked"
                 @click="selectNewWord"
@@ -77,7 +73,7 @@
                       (currentWord?.type === 'edit' && currentWord.id === key)
                     "
                     icon="delete_outline"
-                    label="削除"
+                    label="删除"
                     :disabled="uiLocked"
                     @click.stop="deleteWord(key)"
                   />
@@ -184,8 +180,8 @@ const saveEditedWord = async () => {
     };
   } catch (e) {
     void store.actions.SHOW_ALERT_DIALOG({
-      title: "単語の更新に失敗しました",
-      message: "エンジンの再起動をお試しください。",
+      title: "单词更新失败",
+      message: "请尝试重启引擎。",
     });
     window.backend.logError(e);
     return false;
@@ -215,8 +211,8 @@ const saveNewWord = async () => {
     selectWord(wordUuid);
   } catch (e) {
     void store.actions.SHOW_ALERT_DIALOG({
-      title: "単語の登録に失敗しました",
-      message: "エンジンの再起動をお試しください。",
+      title: "单词注册失败",
+      message: "请尝试重启引擎。",
     });
     window.backend.logError(e);
     return;
@@ -235,14 +231,14 @@ const beforeMove = async (proceed: () => void) => {
     return;
   }
 
-  // 単語の追加時は手動保存のため警告を表示する。
+  // 単語の添加時は手動保存のため警告を表示する。
   // 単語の変更時は、変更内容が有効でない場合は破棄されるので警告を表示する。
   if (currentWord.value.type === "new") {
     const result = await store.actions.SHOW_WARNING_DIALOG({
-      title: "単語の追加を破棄しますか？",
-      message: "変更を破棄すると、単語の追加はリセットされます。",
-      actionName: "破棄する",
-      cancel: "破棄しない",
+      title: "単語の添加を破棄しますか？",
+      message: "変更を丢弃と、単語の添加はリセットされます。",
+      actionName: "丢弃",
+      cancel: "不丢弃",
       isWarningColorButton: true,
     });
     if (result === "OK") {
@@ -251,10 +247,10 @@ const beforeMove = async (proceed: () => void) => {
     }
   } else if (wordEditor.value.editState.type === "invalid") {
     const result = await store.actions.SHOW_WARNING_DIALOG({
-      title: "単語の変更をキャンセルしますか？",
-      message: "変更を破棄すると、現在の編集内容はリセットされます。",
-      actionName: "破棄する",
-      cancel: "破棄しない",
+      title: "要取消单词的修改吗？",
+      message: "変更を丢弃と、現在の编辑内容はリセットされます。",
+      actionName: "丢弃",
+      cancel: "不丢弃",
       isWarningColorButton: true,
     });
     if (result === "OK") {
@@ -303,8 +299,8 @@ const loadUserDict = async () => {
   } catch {
     loadingDictState.value = null;
     const result = await store.actions.SHOW_ALERT_DIALOG({
-      title: "辞書の取得に失敗しました",
-      message: "エンジンの再起動をお試しください。",
+      title: "字典获取失败",
+      message: "请尝试重启引擎。",
     });
     if (result === "OK") {
       dialogOpened.value = false;
@@ -316,8 +312,8 @@ const loadUserDict = async () => {
     await lockUiWhile(store.actions.SYNC_ALL_USER_DICT());
   } catch {
     await store.actions.SHOW_ALERT_DIALOG({
-      title: "辞書の同期に失敗しました",
-      message: "エンジンの再起動をお試しください。",
+      title: "字典同步失败",
+      message: "请尝试重启引擎。",
     });
   }
   loadingDictState.value = null;
@@ -340,11 +336,11 @@ const wordEditor = ref<InstanceType<typeof WordEditor>>();
 
 const deleteWord = async (id: string) => {
   const result = await store.actions.SHOW_WARNING_DIALOG({
-    title: "単語を削除しますか？",
-    message: "削除された単語は元に戻せません。",
-    actionName: "削除する",
+    title: "要删除该单词吗？",
+    message: "已删除的单词无法恢复。",
+    actionName: "删除",
     isWarningColorButton: true,
-    cancel: "削除しない",
+    cancel: "保留",
   });
   if (result === "OK") {
     try {
@@ -358,8 +354,8 @@ const deleteWord = async (id: string) => {
       }
     } catch {
       void store.actions.SHOW_ALERT_DIALOG({
-        title: "単語の削除に失敗しました",
-        message: "エンジンの再起動をお試しください。",
+        title: "单词删除失败",
+        message: "请尝试重启引擎。",
       });
       return;
     }

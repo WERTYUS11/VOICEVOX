@@ -2,30 +2,30 @@
   <div class="detail">
     <BaseScrollArea>
       <div class="inner">
-        <h2 v-if="props.isNew" class="title">新しい単語の追加</h2>
-        <h2 v-else class="title">単語の編集</h2>
+        <h2 v-if="props.isNew" class="title">新しい单词の添加</h2>
+        <h2 v-else class="title">单词の編集</h2>
         <div class="form-row">
-          <h3 class="headline">単語</h3>
-          <div>単語は全角と半角は区別しません。</div>
+          <h3 class="headline">单词</h3>
+          <div>单词は全角と半角は区別しません。</div>
           <BaseTextField
             ref="surfaceInput"
             v-model="surface"
-            ariaLabel="単語"
+            ariaLabel="单词"
             :disabled="uiLocked"
             :hasError="surface.length === 0"
             @change="surface = convertHankakuToZenkaku(surface)"
             @enterkeydown="yomiInput?.focus()"
           >
-            <template #error>単語は必須です。</template>
+            <template #error>单词は必須です。</template>
           </BaseTextField>
         </div>
         <div class="form-row">
-          <h3 class="headline">読み</h3>
-          <div>読みに使える文字はひらがなとカタカナのみです。</div>
+          <h3 class="headline">读音</h3>
+          <div>读音只能使用平假名和片假名。</div>
           <BaseTextField
             ref="yomiInput"
             v-model="temporaryYomi"
-            ariaLabel="読み"
+            ariaLabel="读音"
             :disabled="uiLocked"
             :hasError="
               temporaryYomi.length === 0 || !isOnlyHiraOrKana(temporaryYomi)
@@ -33,18 +33,16 @@
             @change="setYomi(temporaryYomi)"
           >
             <template v-if="temporaryYomi.length === 0" #error>
-              読みは必須です。
+              读音は必須です。
             </template>
             <template v-else-if="!isOnlyHiraOrKana(temporaryYomi)" #error>
-              ひらがなとカタカナ以外の文字が入力されています。
+              使用了平假名和片假名以外的字符。
             </template>
           </BaseTextField>
         </div>
         <div class="form-row">
-          <h3 class="headline">アクセント調整</h3>
-          <div>
-            語尾のアクセントを考慮するため、「が」が自動で挿入されます。
-          </div>
+          <h3 class="headline">重音调整</h3>
+          <div>为了考虑尾音的重音，会自动插入“が”。</div>
           <div>
             <BaseButton
               :label="nowPlaying ? '停止' : '再生'"
@@ -91,14 +89,10 @@
           </div>
         </div>
         <div class="form-row">
-          <h3 class="headline">単語優先度</h3>
+          <h3 class="headline">单词优先级</h3>
           <div>
-            <div>
-              単語を登録しても反映されない場合は優先度を高くしてください。
-            </div>
-            <div>
-              高くしすぎると意図しない箇所にも反映されることがあります。
-            </div>
+            <div>如果注册单词后未生效，请提高优先级。</div>
+            <div>如果设置的优先级过高，可能会在其他单词中也生效。</div>
           </div>
           <div>
             <BaseSlider
@@ -109,20 +103,20 @@
               showStepMarkers
             />
             <div class="slider-label">
-              <span>低い</span>
-              <span>標準</span>
-              <span>高い</span>
+              <span>低</span>
+              <span>标准</span>
+              <span>高</span>
             </div>
           </div>
         </div>
       </div>
     </BaseScrollArea>
     <footer v-if="props.isNew" class="footer">
-      <BaseButton :disabled="uiLocked" label="リセット" @click="resetInputs" />
+      <BaseButton :disabled="uiLocked" label="重置" @click="resetInputs" />
       <BaseButton
         :disabled="uiLocked || !isValid"
         variant="primary"
-        label="追加"
+        label="添加"
         @click="saveNewWord"
       />
     </footer>
@@ -340,8 +334,8 @@ const play = async () => {
     window.backend.logError(e);
     nowGenerating.value = false;
     void store.actions.SHOW_ALERT_DIALOG({
-      title: "生成に失敗しました",
-      message: "エンジンの再起動をお試しください。",
+      title: "生成失败",
+      message: "请尝试重启引擎。",
     });
     return;
   }

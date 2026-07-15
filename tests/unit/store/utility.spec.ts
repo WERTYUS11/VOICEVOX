@@ -143,7 +143,7 @@ describe.each([
       );
     });
 
-    it("同时跳过重音词和读法", () => {
+    it("メモと跳过读法", () => {
       const param = {
         enableMemoNotation: true,
         enableRubyNotation: true,
@@ -273,7 +273,7 @@ test("getToolbarButtonName", () => {
   expect(getToolbarButtonName("EXPORT_AUDIO_SELECTED")).toBe("导出选定声音");
   expect(getToolbarButtonName("EXPORT_AUDIO_ALL")).toBe("全部导出");
   expect(getToolbarButtonName("EXPORT_AUDIO_CONNECT_ALL")).toBe(
-    "串联声音并输出",
+    "串联音频并导出",
   );
   expect(getToolbarButtonName("不存在的标签" as ToolbarButtonTagType)).toBe(
     undefined,

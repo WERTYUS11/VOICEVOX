@@ -5,7 +5,7 @@ import { ensureNotNullish } from "@/type/utility";
 
 test.beforeEach(gotoHome);
 
-test("ループ範囲をドラッグして追加できる", async ({ page }) => {
+test("可以在循环范围内拖动添加", async ({ page }) => {
   await navigateToSong(page);
 
   // レーンの親要素を取得

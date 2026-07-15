@@ -3,7 +3,7 @@ managePackageManagerVersions: true
 minimumReleaseAge: 10080
 
 onlyBuiltDependencies:
-  - "@nestjs/core"
-  - "@openapitools/openapi-generator-cli"
+  - '@nestjs/core'
+  - '@openapitools/openapi-generator-cli'
   - esbuild
   - vue-demi

@@ -5,32 +5,32 @@ import { mockShowSaveFileDialog, mockWriteFile } from "./mockUtility";
 
 test.beforeEach(gotoHome);
 
-test("プロジェクトファイル切り替わり案内ダイアログ", async ({ page }) => {
+test("プロジェクト文件切り替わり案内ダイアログ", async ({ page }) => {
   await navigateToMain(page);
 
   const dialog = page.getByRole("dialog").filter({
-    hasText: /編集中のプロジェクトが .* に切り替わりました。/,
+    hasText: /项目 .* 已切换为正在编辑/,
   });
 
-  await test.step("プロジェクトを保存", async () => {
+  await test.step("保存项目", async () => {
     await mockShowSaveFileDialog(page);
     await mockWriteFile(page);
-    await page.getByRole("button", { name: "ファイル" }).click();
-    await getQuasarMenu(page, "プロジェクトを名前を付けて保存").click();
+    await page.getByRole("button", { name: "文件" }).click();
+    await getQuasarMenu(page, "项目另存为").click();
   });
 
-  await test.step("ダイアログが表示されないことを確認", async () => {
+  await test.step("确认对话框未显示", async () => {
     await expect(dialog).not.toBeVisible({ timeout: 1000 });
   });
 
-  await test.step("プロジェクトを別名で保存", async () => {
+  await test.step("另存为项目", async () => {
     await mockShowSaveFileDialog(page);
     await mockWriteFile(page);
-    await page.getByRole("button", { name: "ファイル" }).click();
-    await getQuasarMenu(page, "プロジェクトを名前を付けて保存").click();
+    await page.getByRole("button", { name: "文件" }).click();
+    await getQuasarMenu(page, "项目另存为").click();
   });
 
-  await test.step("ダイアログが表示されることを確認", async () => {
+  await test.step("确认对话框显示", async () => {
     await expect(dialog).toBeVisible();
   });
 });

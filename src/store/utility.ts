@@ -450,7 +450,7 @@ export const getToolbarButtonName = (tag: ToolbarButtonTagType): string => {
     STOP: "停止",
     EXPORT_AUDIO_SELECTED: "导出选定声音",
     EXPORT_AUDIO_ALL: "全部导出",
-    EXPORT_AUDIO_CONNECT_ALL: "串联声音并输出",
+    EXPORT_AUDIO_CONNECT_ALL: "串联音频并导出",
     SAVE_PROJECT: "项目保存",
     UNDO: "撤消",
     REDO: "重做",

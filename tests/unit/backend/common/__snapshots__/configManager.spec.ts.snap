@@ -43,7 +43,7 @@ exports[`0.13.0からマイグレーションできる 1`] = `
       "combination": "E",
     },
     {
-      "action": "串联声音并输出",
+      "action": "串联音频并导出",
       "combination": "",
     },
     {

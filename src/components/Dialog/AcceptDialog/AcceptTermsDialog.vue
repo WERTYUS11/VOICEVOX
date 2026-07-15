@@ -4,7 +4,7 @@
     title="关于使用条款的通知"
     rejectLabel="不同意并退出"
     acceptLabel="同意并开始使用"
-    heading="使用条款"
+    heading="使用条款条约"
     :terms
     @reject="handler(false)"
     @accept="handler(true)"

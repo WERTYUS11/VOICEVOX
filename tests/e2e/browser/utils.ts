@@ -7,45 +7,45 @@ import {
   mockWriteFile,
 } from "./mockUtility";
 
-/** UIのロックが解除されるまで待つ */
+/** 等待UI解锁 */
 export async function waitForUiUnlock(page: Page): Promise<void> {
-  await test.step("UIのロックが解除されるまで待つ", async () => {
-    const addAudioButton = page.getByLabel("テキストを追加");
+  await test.step("等待UI解锁", async () => {
+    const addAudioButton = page.getByLabel("添加文本");
     await expect(addAudioButton).toBeEnabled({ timeout: 10 * 1000 });
   });
 }
 
 /**
- * ページ内でプロジェクトを読み込む。
+ * ページ内で加载项目。
  *
- * @param projectJson 読み込むプロジェクトファイルの内容
+ * @param projectJson 読み込むプロジェクト文件の内容
  */
 export async function loadProject(
   page: Page,
   projectJson: string,
 ): Promise<void> {
-  await test.step("プロジェクトを読み込む", async () => {
+  await test.step("加载项目", async () => {
     const testProjPath = `/tmp/${Date.now()}-testProj.vvproj`;
     await mockReadFile(page, testProjPath, Buffer.from(projectJson, "utf-8"));
     await mockShowOpenFileDialog(page, testProjPath);
-    await page.getByRole("button", { name: "ファイル" }).click();
-    await getQuasarMenu(page, "プロジェクトを読み込む").click();
+    await page.getByRole("button", { name: "文件" }).click();
+    await getQuasarMenu(page, "加载项目").click();
 
     // TODO: 編集中の内容を保存するか問うダイアログに対応する
   });
 }
 
 /**
- * プロジェクトを保存する。
+ * 保存项目。
  *
- * @returns 保存されたプロジェクトファイルの内容
+ * @returns 保存されたプロジェクト文件の内容
  */
 export async function saveProject(page: Page): Promise<string> {
-  return await test.step("プロジェクトを保存する", async () => {
+  return await test.step("保存项目", async () => {
     const writeFileHandle = await mockWriteFile(page);
     const saveFileDialogHandle = await mockShowSaveFileDialog(page);
-    await page.getByRole("button", { name: "ファイル" }).click();
-    await getQuasarMenu(page, "プロジェクトの複製を保存").click();
+    await page.getByRole("button", { name: "文件" }).click();
+    await getQuasarMenu(page, "保存项目副本").click();
     await waitForUiUnlock(page);
     const [fileId] = await saveFileDialogHandle.getFileIds();
     const writtenFiles = await writeFileHandle.getWrittenFileBuffers();
@@ -63,7 +63,7 @@ export async function collectAllAudioCellContents(
   for (let i = 0; i < count; i++) {
     results.push(
       await page
-        .getByRole("textbox", { name: `${i + 1}行目`, exact: true })
+        .getByRole("textbox", { name: `${i + 1}行`, exact: true })
         .inputValue(),
     );
   }

@@ -85,6 +85,7 @@ import { useStore } from "@/store";
 import { useFetchNewUpdateInfos } from "@/composables/useFetchNewUpdateInfos";
 import { createLogger } from "@/helpers/log";
 import { getAppInfos } from "@/domain/appInfo";
+import type { OssLicenseInfo } from "@/domain/staticAssets";
 
 type PageItem = {
   type: "item";
@@ -120,7 +121,7 @@ const newUpdateResult = useFetchNewUpdateInfos(
 );
 
 // エディタのOSSライセンス取得
-const licenses = ref<Record<string, string>[]>();
+const licenses = ref<OssLicenseInfo[]>();
 void store.actions.GET_OSS_LICENSES().then((obj) => (licenses.value = obj));
 
 const policy = ref<string>("");
@@ -144,7 +145,7 @@ const pagedata = computed(() => {
   const data: PageData[] = [
     {
       type: "item",
-      name: "软件使用条款",
+      name: "软件使用协议",
       component: MarkdownView,
       props: {
         markdown: policy.value,
@@ -152,7 +153,7 @@ const pagedata = computed(() => {
     },
     {
       type: "item",
-      name: "音频库使用条款",
+      name: "音频库使用协议",
       component: LibraryPolicy,
     },
     {
@@ -231,7 +232,7 @@ const pagedata = computed(() => {
         },
         {
           type: "item",
-          name: "使用条款",
+          name: "使用条款与NG",
           parent: manifest.name,
           component: MarkdownView,
           props: {

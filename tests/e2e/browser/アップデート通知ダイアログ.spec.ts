@@ -43,28 +43,26 @@ test.beforeEach(async ({ page }) => {
   await page.waitForTimeout(100);
 });
 
-test("アップデートが通知されたりスキップしたりできる", async ({ page }) => {
+test("可以通知或跳过更新", async ({ page }) => {
   await page.waitForTimeout(500);
 
   // 通知されている
   const dialog = getNewestQuasarDialog(page);
-  await expect(dialog.getByText("アップデートのお知らせ")).toBeVisible();
+  await expect(dialog.getByText("更新通知")).toBeVisible();
 
-  // 普通に閉じると消える
-  await dialog.getByRole("button", { name: "閉じる" }).click();
+  // 普通に关闭と消える
+  await dialog.getByRole("button", { name: "关闭" }).click();
   await page.waitForTimeout(500);
   await expect(dialog).not.toBeVisible();
 
   // 再度開くとまた表示される
   await page.reload();
-  await expect(dialog.getByText("アップデートのお知らせ")).toBeVisible({
+  await expect(dialog.getByText("更新通知")).toBeVisible({
     timeout: 10000, // 表示に時間がかかる
   });
 
   // スキップすると消える
-  await dialog
-    .getByRole("button", { name: "このバージョンをスキップ" })
-    .click();
+  await dialog.getByRole("button", { name: "跳过此版本" }).click();
   await page.waitForTimeout(500);
   await expect(dialog).not.toBeVisible();
 

@@ -756,6 +756,7 @@ export const singingStoreState: SingingStoreState = {
   sequencerNoteTool: "EDIT_FIRST",
   sequencerPitchTool: "DRAW",
   sequencerVolumeTool: "DRAW",
+  sequencerPhonemeTimingTool: "MOVE",
   parameterPanelEditTarget: "VOLUME",
   sequencerVolumeVisible: false,
   _selectedNoteIds: new Set(),
@@ -1071,6 +1072,20 @@ export const singingStore = createPartialStore<SingingStoreTypes>({
         notesMap.set(note.id, note);
       }
       const selectedTrack = getOrThrow(state.tracks, trackId);
+
+      const phonemeTimingEditData = selectedTrack.phonemeTimingEditData;
+      for (const existingNote of selectedTrack.notes) {
+        const noteId = existingNote.id;
+        const newNote = notesMap.get(noteId);
+        if (
+          newNote != undefined &&
+          existingNote.lyric !== newNote.lyric &&
+          phonemeTimingEditData.has(noteId)
+        ) {
+          phonemeTimingEditData.delete(noteId);
+        }
+      }
+
       selectedTrack.notes = selectedTrack.notes
         .map((value) => notesMap.get(value.id) ?? value)
         .sort((a, b) => a.position - b.position);
@@ -1093,6 +1108,13 @@ export const singingStore = createPartialStore<SingingStoreTypes>({
       selectedTrack.notes = selectedTrack.notes.filter((value) => {
         return !noteIdsSet.has(value.id);
       });
+
+      const phonemeTimingEditData = selectedTrack.phonemeTimingEditData;
+      for (const noteId of noteIds) {
+        if (phonemeTimingEditData.has(noteId)) {
+          phonemeTimingEditData.delete(noteId);
+        }
+      }
     },
   },
 
@@ -1285,12 +1307,14 @@ export const singingStore = createPartialStore<SingingStoreTypes>({
   },
 
   ERASE_VOLUME_EDIT_DATA: {
-    mutation(state, { startFrame, frameLength, trackId }) {
+    mutation(state, { ranges, trackId }) {
       const track = getOrThrow(state.tracks, trackId);
       const volumeEditData = track.volumeEditData;
       const tempData = [...volumeEditData];
-      const endFrame = Math.min(startFrame + frameLength, tempData.length);
-      tempData.fill(VALUE_INDICATING_NO_DATA, startFrame, endFrame);
+      for (const range of ranges) {
+        const endFrame = Math.min(range.endFrame, tempData.length);
+        tempData.fill(VALUE_INDICATING_NO_DATA, range.startFrame, endFrame);
+      }
       track.volumeEditData = tempData;
     },
   },
@@ -1930,6 +1954,17 @@ export const singingStore = createPartialStore<SingingStoreTypes>({
     },
     async action({ mutations }, { sequencerVolumeTool }) {
       mutations.SET_SEQUENCER_VOLUME_TOOL({ sequencerVolumeTool });
+    },
+  },
+
+  SET_SEQUENCER_PHONEME_TIMING_TOOL: {
+    mutation(state, { sequencerPhonemeTimingTool }) {
+      state.sequencerPhonemeTimingTool = sequencerPhonemeTimingTool;
+    },
+    async action({ mutations }, { sequencerPhonemeTimingTool }) {
+      mutations.SET_SEQUENCER_PHONEME_TIMING_TOOL({
+        sequencerPhonemeTimingTool,
+      });
     },
   },
 
@@ -3806,23 +3841,26 @@ export const singingCommandStore = transformCommandStore(
       },
     },
     COMMAND_ERASE_VOLUME_EDIT_DATA: {
-      mutation(draft, { startFrame, frameLength, trackId }) {
+      mutation(draft, { ranges, trackId }) {
         singingStore.mutations.ERASE_VOLUME_EDIT_DATA(draft, {
-          startFrame,
-          frameLength,
+          ranges,
           trackId,
         });
       },
-      action({ mutations }, { startFrame, frameLength, trackId }) {
-        if (startFrame < 0) {
-          throw new Error("startFrame must be greater than or equal to 0.");
+      action({ mutations }, { ranges, trackId }) {
+        if (ranges.length === 0) {
+          throw new Error("The ranges must not be empty.");
         }
-        if (frameLength < 1) {
-          throw new Error("frameLength must be at least 1.");
+        for (const range of ranges) {
+          if (range.startFrame < 0) {
+            throw new Error("startFrame must be greater than or equal to 0.");
+          }
+          if (range.endFrame <= range.startFrame) {
+            throw new Error("endFrame must be greater than startFrame.");
+          }
         }
         mutations.COMMAND_ERASE_VOLUME_EDIT_DATA({
-          startFrame,
-          frameLength,
+          ranges,
           trackId,
         });
       },

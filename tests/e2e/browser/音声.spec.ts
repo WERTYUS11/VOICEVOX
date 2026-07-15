@@ -4,14 +4,12 @@ import { gotoHome, navigateToMain } from "../navigators";
 
 test.beforeEach(gotoHome);
 
-test("テキストを入力→アクセントを変更→音声合成→再生ができる", async ({
-  page,
-}) => {
+test("输入文本→改变重音→合成语音→播放语音", async ({ page }) => {
   await navigateToMain(page);
 
-  await page.getByRole("textbox", { name: "1行目" }).click();
-  await page.getByRole("textbox", { name: "1行目" }).fill("テストです");
-  await page.getByRole("textbox", { name: "1行目" }).press("Enter");
+  await page.getByRole("textbox", { name: "1行" }).click();
+  await page.getByRole("textbox", { name: "1行" }).fill("テストです");
+  await page.getByRole("textbox", { name: "1行" }).press("Enter");
   await page.waitForTimeout(1000);
 
   await page

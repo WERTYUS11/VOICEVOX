@@ -24,7 +24,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Opened: Story = {
-  name: "开启中",
+  name: "打开状态",
   args: {
     modelValue: true,
   },

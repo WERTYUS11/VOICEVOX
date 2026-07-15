@@ -5,7 +5,7 @@ import { getNewestQuasarDialog } from "../locators";
 test.beforeEach(gotoHome);
 
 /**
- * テスト内で追加する単語名を生成する。
+ * テスト内で添加する单词名を生成する。
  */
 function createUniqueSurfaceCreator(): (label: string) => string {
   let surfaceIndex = 0;
@@ -17,11 +17,11 @@ function createUniqueSurfaceCreator(): (label: string) => string {
 const createSurface = createUniqueSurfaceCreator();
 
 /**
- * 最後のテキスト欄にテキストを入力し、その読みを取得する。
- * 確実に読みを反映させるために、一度空にしてから入力する。
+ * 最後のテキスト欄にテキストを入力し、その读音を取得する。
+ * 確実に读音を反映させるために、一度空にしてから入力する。
  */
 async function getYomi(page: Page, inputText: string): Promise<string> {
-  const audioCellInput = page.getByRole("textbox", { name: "行目" }).last();
+  const audioCellInput = page.getByRole("textbox", { name: "行" }).last();
   const accentPhrase = page.locator(".accent-phrase");
 
   // 空にする
@@ -40,45 +40,45 @@ async function getYomi(page: Page, inputText: string): Promise<string> {
 }
 
 /**
- * 設定メニューから読み方＆アクセント辞書ダイアログを開く。
- * 辞書の読み込みと同期が終わるまで待つ。
+ * 设置メニューから读音方＆アクセント打开词典对话框。
+ * 辞書の读音込みと同期が終わるまで待つ。
  */
 async function openDictDialog(page: Page): Promise<void> {
-  await test.step("辞書ダイアログを開く", async () => {
-    await page.getByRole("button", { name: "設定" }).click();
+  await test.step("打开词典对话框", async () => {
+    await page.getByRole("button", { name: "设置" }).click();
     await page.waitForTimeout(100);
-    await page.getByText("読み方＆アクセント辞書").click();
+    await page.getByText("读法和重音词典").click();
     await expect(
-      getNewestQuasarDialog(page).getByText("単語一覧"),
+      getNewestQuasarDialog(page).getByText("单词列表"),
     ).toBeVisible();
-    await expect(page.getByText("読み込み中・・・")).toBeHidden();
-    await expect(page.getByText("同期中・・・")).toBeHidden();
+    await expect(page.getByText("加载中...")).toBeHidden();
+    await expect(page.getByText("同步中...")).toBeHidden();
   });
 }
 
 /**
- * 読み方＆アクセント辞書ダイアログを閉じる。
+ * 读法和重音词典ダイアログを閉じる。
  */
 async function closeDictDialog(page: Page): Promise<void> {
-  await test.step("辞書ダイアログを閉じる", async () => {
+  await test.step("关闭词典对话框", async () => {
     await getNewestQuasarDialog(page)
-      .getByRole("button", { name: "辞書を閉じる" })
+      .getByRole("button", { name: "关闭词典" })
       .click();
     await expect(
-      getNewestQuasarDialog(page).getByText("単語一覧"),
+      getNewestQuasarDialog(page).getByText("单词列表"),
     ).toBeHidden();
   });
 }
 
 /**
- * 単語編集画面の入力欄を取得する。
+ * 单词編集画面の入力欄を取得する。
  */
-function getWordField(page: Page, label: "単語" | "読み"): Locator {
+function getWordField(page: Page, label: "单词" | "读音"): Locator {
   return page.getByRole("textbox", { name: label });
 }
 
 /**
- * 単語一覧から指定した単語の項目を取得する。
+ * 单词列表から指定した单词の項目を取得する。
  */
 function getWordItem(page: Page, surface: string): Locator {
   return page.getByRole("listitem").filter({ hasText: surface });
@@ -102,20 +102,20 @@ async function fillTextField(
 }
 
 /**
- * 新しい単語の追加画面を開く。
+ * 打开新单词添加画面。
  */
 async function selectNewWord(page: Page): Promise<void> {
-  await test.step("新しい単語の追加画面を開く", async () => {
+  await test.step("打开新单词添加画面", async () => {
     await getNewestQuasarDialog(page)
-      .getByRole("button", { name: "単語を追加" })
+      .getByRole("button", { name: "添加" })
       .click();
-    await expect(page.getByText("新しい単語の追加")).toBeVisible();
+    await expect(page.getByText("添加单词")).toBeVisible();
   });
 }
 
 /**
- * 単語編集画面で単語と読みを入力する。
- * 単語は入力後に全角化される場合があるため、表示上の期待値を別に指定できる。
+ * 单词編集画面で输入单词和读音。
+ * 单词は入力後に全角化される場合があるため、表示上の期待値を別に指定できる。
  */
 async function fillWord(
   page: Page,
@@ -123,15 +123,15 @@ async function fillWord(
   yomi: string,
   expectedSurface = surface,
 ) {
-  await test.step("単語と読みを入力する", async () => {
-    await fillTextField(getWordField(page, "単語"), surface, expectedSurface);
-    await fillTextField(getWordField(page, "読み"), yomi);
+  await test.step("输入单词和读音", async () => {
+    await fillTextField(getWordField(page, "单词"), surface, expectedSurface);
+    await fillTextField(getWordField(page, "读音"), yomi);
     await expect(page.locator(".detail .accent-phrase-table")).toBeVisible();
   });
 }
 
 /**
- * 新しい単語を追加して、追加後の編集画面まで移動する。
+ * 新しい添加して、添加後の編集画面まで移動する。
  */
 async function addWord(
   page: Page,
@@ -142,39 +142,39 @@ async function addWord(
   await selectNewWord(page);
   await fillWord(page, surface, yomi, expectedSurface);
 
-  await test.step("単語を追加する", async () => {
+  await test.step("添加する", async () => {
     await getNewestQuasarDialog(page)
       .locator("footer")
-      .getByRole("button", { name: "追加" })
+      .getByRole("button", { name: "添加" })
       .click();
     await expect(getWordItem(page, expectedSurface)).toBeVisible();
-    await expect(page.getByText("単語の編集")).toBeVisible();
+    await expect(page.getByText("编辑单词")).toBeVisible();
   });
 }
 
 /**
- * 単語一覧から指定した単語を選択する。
+ * 单词列表から指定した单词选择。
  */
 async function selectWord(page: Page, surface: string): Promise<void> {
-  await test.step(`${surface}を選択する`, async () => {
+  await test.step(`${surface}选择`, async () => {
     await getWordItem(page, surface).click();
-    await expect(page.getByText("単語の編集")).toBeVisible();
-    await expect(getWordField(page, "単語")).toHaveText(surface);
+    await expect(page.getByText("编辑单词")).toBeVisible();
+    await expect(getWordField(page, "单词")).toHaveText(surface);
   });
 }
 
 /**
- * 指定した単語の削除確認ダイアログを開く。
+ * 指定した单词の删除確認ダイアログを開く。
  */
 async function openDeleteWordDialog(
   page: Page,
   surface: string,
 ): Promise<Locator> {
-  return await test.step("単語の削除ダイアログを開く", async () => {
+  return await test.step("打开单词删除对话框", async () => {
     const wordItem = getWordItem(page, surface);
     await wordItem.hover();
-    await wordItem.getByRole("button", { name: "削除" }).click();
-    const dialog = page.getByRole("dialog", { name: "単語を削除しますか？" });
+    await wordItem.getByRole("button", { name: "删除" }).click();
+    const dialog = page.getByRole("dialog", { name: "要删除该单词吗？" });
     await expect(dialog).toBeVisible();
     return dialog;
   });
@@ -192,56 +192,54 @@ async function expectWarningDialog(
   return dialog;
 }
 
-test("辞書ダイアログを表示できる", async ({ page }) => {
+test("可以显示词典对话框", async ({ page }) => {
   await navigateToMain(page);
   await openDictDialog(page);
 });
 
-test("単語を追加できる", async ({ page }) => {
-  const surface = createSurface("追加");
+test("添加できる", async ({ page }) => {
+  const surface = createSurface("添加");
 
   await navigateToMain(page);
   await openDictDialog(page);
   await addWord(page, surface, "テスト");
 
-  await test.step("追加した単語が一覧に表示される", async () => {
+  await test.step("添加的单词会显示在列表中", async () => {
     await expect(getWordItem(page, surface)).toBeVisible();
     await expect(getWordItem(page, surface)).toContainText("テスト");
   });
 });
 
-test("単語を削除できる", async ({ page }) => {
-  const surface = createSurface("削除");
+test("可以删除单词", async ({ page }) => {
+  const surface = createSurface("删除");
 
   await navigateToMain(page);
   await openDictDialog(page);
   await addWord(page, surface, "テスト");
   const dialog = await openDeleteWordDialog(page, surface);
 
-  await test.step("削除を確定する", async () => {
-    await dialog.getByRole("button").filter({ hasText: "削除する" }).click();
+  await test.step("确认删除", async () => {
+    await dialog.getByRole("button").filter({ hasText: "删除" }).click();
     await expect(getWordItem(page, surface)).toBeHidden();
   });
 });
 
-test("単語の削除をキャンセルできる", async ({ page }) => {
-  const surface = createSurface("削除キャンセル");
+test("可以取消删除单词", async ({ page }) => {
+  const surface = createSurface("取消删除");
 
   await navigateToMain(page);
   await openDictDialog(page);
   await addWord(page, surface, "テスト");
   const dialog = await openDeleteWordDialog(page, surface);
 
-  await test.step("削除をキャンセルする", async () => {
-    await dialog.getByRole("button").filter({ hasText: "削除しない" }).click();
+  await test.step("取消删除", async () => {
+    await dialog.getByRole("button").filter({ hasText: "保存" }).click();
     await expect(getWordItem(page, surface)).toBeVisible();
   });
 });
 
-test("新しい単語を入力したあと他の単語へ切り替えようとすると破棄の警告が出る", async ({
-  page,
-}) => {
-  const existingSurface = createSurface("既存");
+test("输入新单词后尝试切换到其他单词时会显示放弃警告", async ({ page }) => {
+  const existingSurface = createSurface("已有");
 
   await navigateToMain(page);
   await openDictDialog(page);
@@ -249,22 +247,19 @@ test("新しい単語を入力したあと他の単語へ切り替えようと�
   await selectNewWord(page);
   await fillWord(page, createSurface("未保存"), "ヨミ");
 
-  await test.step("他の単語を選択しようとする", async () => {
+  await test.step("尝试选择其他单词", async () => {
     await getWordItem(page, existingSurface).click();
-    const dialog = await expectWarningDialog(
-      page,
-      "単語の追加を破棄しますか？",
-    );
+    const dialog = await expectWarningDialog(page, "要放弃添加单词吗？");
     await expect(
-      dialog.getByText("変更を破棄すると、単語の追加はリセットされます。"),
+      dialog.getByText("更改を放弃と、单词の添加は重置されます。"),
     ).toBeVisible();
   });
 });
 
-test("単語を編集したあと他の単語を選択すると保存される", async ({ page }) => {
+test("编辑单词后选择其他单词会被保存", async ({ page }) => {
   const firstSurface = createSurface("編集元");
   const secondSurface = createSurface("編集先");
-  const editedSurface = `${firstSurface}変更`;
+  const editedSurface = `${firstSurface}更改`;
 
   await navigateToMain(page);
   await openDictDialog(page);
@@ -272,26 +267,26 @@ test("単語を編集したあと他の単語を選択すると保存される",
   await addWord(page, secondSurface, "サンプル");
   await selectWord(page, firstSurface);
 
-  await test.step("単語を編集して他の単語を選択する", async () => {
-    await fillTextField(getWordField(page, "単語"), editedSurface);
+  await test.step("编辑单词后选择其他单词", async () => {
+    await fillTextField(getWordField(page, "单词"), editedSurface);
     await getWordItem(page, secondSurface).click();
-    await expect(getWordField(page, "単語")).toHaveText(secondSurface);
+    await expect(getWordField(page, "单词")).toHaveText(secondSurface);
   });
 
   await selectWord(page, editedSurface);
 });
 
-test("単語を編集したあとダイアログを閉じると保存される", async ({ page }) => {
+test("编辑单词后关闭对话框会被保存", async ({ page }) => {
   const surface = createSurface("閉じる保存");
-  const editedSurface = `${surface}変更`;
+  const editedSurface = `${surface}更改`;
 
   await navigateToMain(page);
   await openDictDialog(page);
   await addWord(page, surface, "テスト");
   await selectWord(page, surface);
 
-  await test.step("単語を編集してダイアログを閉じる", async () => {
-    await fillTextField(getWordField(page, "単語"), editedSurface);
+  await test.step("编辑单词后关闭对话框", async () => {
+    await fillTextField(getWordField(page, "单词"), editedSurface);
   });
 
   await closeDictDialog(page);
@@ -299,7 +294,7 @@ test("単語を編集したあとダイアログを閉じると保存される",
   await selectWord(page, editedSurface);
 });
 
-test("単語を無効な状態にしたあと他の単語を選択しようとして破棄しないと編集画面に留まる", async ({
+test("单词を無効な状態にしたあと他の单词を選択しようとして坚持更改と編集画面に留まる", async ({
   page,
 }) => {
   const firstSurface = createSurface("無効維持");
@@ -311,26 +306,23 @@ test("単語を無効な状態にしたあと他の単語を選択しようと�
   await addWord(page, secondSurface, "サンプル");
   await selectWord(page, firstSurface);
 
-  await test.step("読みを無効な状態にする", async () => {
-    await fillTextField(getWordField(page, "読み"), "abc");
+  await test.step("使读音变为无效状态", async () => {
+    await fillTextField(getWordField(page, "读音"), "abc");
     await expect(
-      page.getByText("ひらがなとカタカナ以外の文字が入力されています。"),
+      page.getByText("使用了平假名和片假名以外的字符。"),
     ).toBeVisible();
   });
 
-  await test.step("破棄しないと元の単語に留まる", async () => {
+  await test.step("坚持更改と元の单词に留まる", async () => {
     await getWordItem(page, secondSurface).click();
-    const dialog = await expectWarningDialog(
-      page,
-      "単語の変更をキャンセルしますか？",
-    );
-    await dialog.getByRole("button").filter({ hasText: "破棄しない" }).click();
-    await expect(getWordField(page, "単語")).toHaveText(firstSurface);
-    await expect(getWordField(page, "読み")).toHaveText("abc");
+    const dialog = await expectWarningDialog(page, "要取消单词的更改吗？");
+    await dialog.getByRole("button").filter({ hasText: "坚持更改" }).click();
+    await expect(getWordField(page, "单词")).toHaveText(firstSurface);
+    await expect(getWordField(page, "读音")).toHaveText("abc");
   });
 });
 
-test("単語を無効な状態にしたあと他の単語を選択しようとして破棄すると切り替わる", async ({
+test("单词を無効な状態にしたあと他の单词を選択しようとして放弃と切り替わる", async ({
   page,
 }) => {
   const firstSurface = createSurface("無効破棄");
@@ -342,114 +334,103 @@ test("単語を無効な状態にしたあと他の単語を選択しようと�
   await addWord(page, secondSurface, "サンプル");
   await selectWord(page, firstSurface);
 
-  await test.step("読みを無効な状態にする", async () => {
-    await fillTextField(getWordField(page, "読み"), "abc");
+  await test.step("使读音变为无效状态", async () => {
+    await fillTextField(getWordField(page, "读音"), "abc");
     await expect(
-      page.getByText("ひらがなとカタカナ以外の文字が入力されています。"),
+      page.getByText("使用了平假名和片假名以外的字符。"),
     ).toBeVisible();
   });
 
-  await test.step("破棄すると他の単語に切り替わる", async () => {
+  await test.step("放弃と他の单词に切り替わる", async () => {
     await getWordItem(page, secondSurface).click();
-    const dialog = await expectWarningDialog(
-      page,
-      "単語の変更をキャンセルしますか？",
-    );
-    await dialog.getByRole("button").filter({ hasText: "破棄する" }).click();
-    await expect(getWordField(page, "単語")).toHaveText(secondSurface);
+    const dialog = await expectWarningDialog(page, "要取消单词的更改吗？");
+    await dialog.getByRole("button").filter({ hasText: "放弃" }).click();
+    await expect(getWordField(page, "单词")).toHaveText(secondSurface);
   });
 });
 
-test("単語を無効な状態にしたあと同じ単語を選択して破棄すると編集内容が戻る", async ({
+test("单词を無効な状態にしたあと同じ单词を選択して放弃と編集内容が戻る", async ({
   page,
 }) => {
-  const surface = createSurface("同じ単語破棄");
+  const surface = createSurface("同じ单词破棄");
 
   await navigateToMain(page);
   await openDictDialog(page);
   await addWord(page, surface, "テスト");
   await selectWord(page, surface);
 
-  await test.step("読みを無効な状態にする", async () => {
-    await fillTextField(getWordField(page, "読み"), "abc");
+  await test.step("使读音变为无效状态", async () => {
+    await fillTextField(getWordField(page, "读音"), "abc");
     await expect(
-      page.getByText("ひらがなとカタカナ以外の文字が入力されています。"),
+      page.getByText("使用了平假名和片假名以外的字符。"),
     ).toBeVisible();
   });
 
-  await test.step("同じ単語を選択して破棄すると編集内容が戻る", async () => {
+  await test.step("同じ单词を選択して放弃と編集内容が戻る", async () => {
     await getWordItem(page, surface).click();
-    const dialog = await expectWarningDialog(
-      page,
-      "単語の変更をキャンセルしますか？",
-    );
-    await dialog.getByRole("button").filter({ hasText: "破棄する" }).click();
-    await expect(getWordField(page, "単語")).toHaveText(surface);
-    await expect(getWordField(page, "読み")).toHaveText("テスト");
+    const dialog = await expectWarningDialog(page, "要取消单词的更改吗？");
+    await dialog.getByRole("button").filter({ hasText: "放弃" }).click();
+    await expect(getWordField(page, "单词")).toHaveText(surface);
+    await expect(getWordField(page, "读音")).toHaveText("テスト");
     await expect(
-      page.getByText("ひらがなとカタカナ以外の文字が入力されています。"),
+      page.getByText("使用了平假名和片假名以外的字符。"),
     ).toBeHidden();
   });
 });
 
-test("新しい単語の入力をリセットできる", async ({ page }) => {
+test("新しい单词の入力を重置できる", async ({ page }) => {
   await navigateToMain(page);
   await openDictDialog(page);
   await selectNewWord(page);
-  await fillWord(page, createSurface("リセット"), "テスト");
+  await fillWord(page, createSurface("重置"), "テスト");
 
-  await test.step("入力をリセットする", async () => {
+  await test.step("重置输入", async () => {
     await getNewestQuasarDialog(page)
       .locator("footer")
-      .getByRole("button", { name: "リセット" })
+      .getByRole("button", { name: "重置" })
       .click();
-    await expect(getWordField(page, "単語")).toHaveText("");
-    await expect(getWordField(page, "読み")).toHaveText("");
+    await expect(getWordField(page, "单词")).toHaveText("");
+    await expect(getWordField(page, "读音")).toHaveText("");
     await expect(page.locator(".detail .accent-phrase-table")).toBeHidden();
     await expect(
       getNewestQuasarDialog(page)
         .locator("footer")
-        .getByRole("button", { name: "追加" }),
+        .getByRole("button", { name: "添加" }),
     ).toBeDisabled();
   });
 });
 
-test("新しい単語の入力後に追加を選択して破棄すると入力内容が戻る", async ({
-  page,
-}) => {
+test("输入新单词后选择添加再放弃，输入内容会恢复", async ({ page }) => {
   await navigateToMain(page);
   await openDictDialog(page);
   await selectNewWord(page);
-  await fillWord(page, createSurface("追加再選択"), "テスト");
+  await fillWord(page, createSurface("重新选择添加"), "テスト");
 
-  await test.step("追加を選択して破棄すると入力内容が戻る", async () => {
+  await test.step("选择添加后放弃，输入内容会恢复", async () => {
     await getNewestQuasarDialog(page)
-      .getByRole("button", { name: "単語を追加" })
+      .getByRole("button", { name: "添加" })
       .click();
-    const dialog = await expectWarningDialog(
-      page,
-      "単語の追加を破棄しますか？",
-    );
-    await dialog.getByRole("button").filter({ hasText: "破棄する" }).click();
-    await expect(getWordField(page, "単語")).toHaveText("");
-    await expect(getWordField(page, "読み")).toHaveText("");
+    const dialog = await expectWarningDialog(page, "要放弃添加单词吗？");
+    await dialog.getByRole("button").filter({ hasText: "放弃" }).click();
+    await expect(getWordField(page, "单词")).toHaveText("");
+    await expect(getWordField(page, "读音")).toHaveText("");
     await expect(page.locator(".detail .accent-phrase-table")).toBeHidden();
   });
 });
 
-test("読みをひらがなで入力するとカタカナで保存される", async ({ page }) => {
+test("用平假名输入读音时会以片假名保存", async ({ page }) => {
   const surface = createSurface("ひらがな");
 
   await navigateToMain(page);
   await openDictDialog(page);
   await addWord(page, surface, "てすと");
 
-  await test.step("読みがカタカナで表示される", async () => {
+  await test.step("读音以片假名显示", async () => {
     await expect(getWordItem(page, surface)).toContainText("テスト");
   });
 });
 
-test("単語を半角で入力すると全角で保存される", async ({ page }) => {
+test("用半角输入单词时会以全角保存", async ({ page }) => {
   const surface = "abc123";
   const convertedSurface = "ａｂｃ１２３";
 
@@ -457,20 +438,20 @@ test("単語を半角で入力すると全角で保存される", async ({ page 
   await openDictDialog(page);
   await addWord(page, surface, "テスト", convertedSurface);
 
-  await test.step("単語が全角で表示される", async () => {
+  await test.step("单词以全角显示", async () => {
     await expect(getWordItem(page, convertedSurface)).toBeVisible();
   });
 });
 
-test("追加した単語がテキストの読みに反映され、削除すると反映されなくなる", async ({
+test("添加した单词がテキストの读音に反映され、删除と反映されなくなる", async ({
   page,
 }) => {
   const targetString = createSurface("反映");
 
   await navigateToMain(page);
 
-  // 文字列を入力して読み方を記憶する
-  const yomi = await test.step("登録前の読みを取得する", async () => {
+  // 文字列を入力して读音方を記憶する
+  const yomi = await test.step("获取注册前的读音", async () => {
     return await getYomi(page, targetString);
   });
 
@@ -478,7 +459,7 @@ test("追加した単語がテキストの読みに反映され、削除する�
   await addWord(page, targetString, "テスト");
   await closeDictDialog(page);
 
-  await test.step("追加した単語が読みに反映される", async () => {
+  await test.step("添加的单词会反映到读音中", async () => {
     await page.getByRole("button").filter({ hasText: "add" }).click();
     expect(await getYomi(page, targetString)).toBe("テスト");
   });
@@ -486,15 +467,15 @@ test("追加した単語がテキストの読みに反映され、削除する�
   await openDictDialog(page);
   const dialog = await openDeleteWordDialog(page, targetString);
 
-  await test.step("単語を削除してダイアログを閉じる", async () => {
-    await dialog.getByRole("button").filter({ hasText: "削除する" }).click();
+  await test.step("删除单词后关闭对话框", async () => {
+    await dialog.getByRole("button").filter({ hasText: "删除" }).click();
   });
 
   await closeDictDialog(page);
 
-  // 辞書から削除されていることを確認
-  // （＝最初の読み方と同じになっていることを確認）
-  await test.step("削除した単語が読みに反映されない", async () => {
+  // 辞書から删除されていることを確認
+  // （＝最初の读音方と同じになっていることを確認）
+  await test.step("删除的单词不会反映在读音中", async () => {
     await page.getByRole("button").filter({ hasText: "add" }).click();
     expect(await getYomi(page, targetString)).toBe(yomi);
   });

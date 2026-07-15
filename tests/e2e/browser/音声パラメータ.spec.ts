@@ -9,7 +9,7 @@ async function validateValue(locator: Locator, expectedValue: string) {
   expect(value).toBe(expectedValue);
 }
 
-test("音声パラメータ引き継ぎの設定", async ({ page }) => {
+test("参数继承设置", async ({ page }) => {
   await navigateToMain(page);
   await page.waitForTimeout(100);
   await page.locator(".audio-cell input").first().press("Enter");
@@ -29,7 +29,7 @@ test("音声パラメータ引き継ぎの設定", async ({ page }) => {
   await page.getByRole("button").filter({ hasText: "add" }).click();
   await validateValue(inputTag, "0.50");
 
-  await toggleSetting(page, "パラメータの引き継ぎ");
+  await toggleSetting(page, "参数继承");
 
   // パラメータを引き継がないことの確認
   await page.locator(".audio-cell input").first().click();

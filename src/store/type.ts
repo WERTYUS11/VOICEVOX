@@ -64,6 +64,7 @@ import type {
   WarningDialogOptions,
 } from "@/components/Dialog/Dialog";
 import type { HotkeySettingType } from "@/domain/hotkeyAction";
+import type { OssLicenseInfo } from "@/domain/staticAssets";
 import type {
   MultiFileProjectFormat,
   SingleFileProjectFormat,
@@ -849,6 +850,8 @@ export type NoteEditTool = "SELECT_FIRST" | "EDIT_FIRST";
 export type PitchEditTool = "DRAW" | "ERASE";
 // ボリューム編集ツール（VolumeEditor 専用）
 export type VolumeEditTool = "DRAW" | "ERASE";
+// 音素タイミング編集ツール
+export type PhonemeTimingEditTool = "MOVE" | "ERASE";
 // パラメータパネル内の編集対象
 // NOTE: 音素タイミング編集などを追加する際に拡張
 export type ParameterPanelEditTarget = "PHONEME_TIMING" | "VOLUME";
@@ -899,6 +902,7 @@ export type SingingStoreState = {
   sequencerNoteTool: NoteEditTool;
   sequencerPitchTool: PitchEditTool;
   sequencerVolumeTool: VolumeEditTool;
+  sequencerPhonemeTimingTool: PhonemeTimingEditTool;
   parameterPanelEditTarget: ParameterPanelEditTarget;
   sequencerVolumeVisible: boolean;
   _selectedNoteIds: Set<NoteId>;
@@ -1066,7 +1070,10 @@ export type SingingStoreTypes = {
   };
 
   ERASE_VOLUME_EDIT_DATA: {
-    mutation: { startFrame: number; frameLength: number; trackId: TrackId };
+    mutation: {
+      ranges: Array<{ startFrame: number; endFrame: number }>;
+      trackId: TrackId;
+    };
   };
 
   CLEAR_PITCH_EDIT_DATA: {
@@ -1218,6 +1225,13 @@ export type SingingStoreTypes = {
   SET_SEQUENCER_VOLUME_TOOL: {
     mutation: { sequencerVolumeTool: VolumeEditTool };
     action(payload: { sequencerVolumeTool: VolumeEditTool }): void;
+  };
+
+  SET_SEQUENCER_PHONEME_TIMING_TOOL: {
+    mutation: { sequencerPhonemeTimingTool: PhonemeTimingEditTool };
+    action(payload: {
+      sequencerPhonemeTimingTool: PhonemeTimingEditTool;
+    }): void;
   };
 
   SET_PARAMETER_PANEL_EDIT_TARGET: {
@@ -1631,10 +1645,12 @@ export type SingingCommandStoreTypes = {
   };
 
   COMMAND_ERASE_VOLUME_EDIT_DATA: {
-    mutation: { startFrame: number; frameLength: number; trackId: TrackId };
+    mutation: {
+      ranges: Array<{ startFrame: number; endFrame: number }>;
+      trackId: TrackId;
+    };
     action(payload: {
-      startFrame: number;
-      frameLength: number;
+      ranges: Array<{ startFrame: number; endFrame: number }>;
       trackId: TrackId;
     }): void;
   };
@@ -1942,7 +1958,7 @@ export type IndexStoreTypes = {
   };
 
   GET_OSS_LICENSES: {
-    action(): Promise<Record<string, string>[]>;
+    action(): Promise<OssLicenseInfo[]>;
   };
 
   GET_UPDATE_INFOS: {

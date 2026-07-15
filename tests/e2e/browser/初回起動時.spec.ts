@@ -3,25 +3,23 @@ import { gotoHome } from "../navigators";
 
 test.beforeEach(gotoHome);
 
-test("起動したら利用規約ダイアログと利用規約内容が表示される", async ({
-  page,
-}) => {
-  await expect(page.getByText("利用規約に関するお知らせ")).toBeVisible({
+test("启动后将显示使用条款对话框和使用条款内容", async ({ page }) => {
+  await expect(page.getByText("关于使用条款的通知")).toBeVisible({
     timeout: 90 * 1000,
   });
 
-  await test.step("利用規約の内容が表示されていることを確認", async () => {
-    await expect(page.getByText("ダミー利用規約")).toBeVisible();
+  await test.step("确认使用条款内容是否显示", async () => {
+    await expect(page.getByText("使用条款条约")).toBeVisible();
   });
 });
 
-test("利用規約同意前に各種UIが無効になっている", async ({ page }) => {
-  await expect(page.getByText("利用規約に関するお知らせ")).toBeVisible({
+test("同意使用条款前各种UI将禁用", async ({ page }) => {
+  await expect(page.getByText("关于使用条款的通知")).toBeVisible({
     timeout: 90 * 1000,
   });
 
-  // ソングボタン
-  const songButton = page.getByRole("toolbar").getByText("ソング");
+  // 歌曲ボタン
+  const songButton = page.getByRole("toolbar").getByText("歌曲");
   await expect(songButton).toBeVisible();
   await expect(songButton).toBeDisabled();
 });

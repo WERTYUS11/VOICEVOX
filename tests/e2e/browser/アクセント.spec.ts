@@ -4,7 +4,7 @@ import { gotoHome, navigateToMain } from "../navigators";
 
 test.beforeEach(gotoHome);
 
-test("アクセント分割したらアクセント区間が増える", async ({ page }) => {
+test("重音分割后会增加重音区间", async ({ page }) => {
   await navigateToMain(page);
   await expect(page.locator(".audio-cell").first()).toBeVisible();
   await page.locator(".audio-cell input").first().fill("こんにちは");
@@ -16,20 +16,18 @@ test("アクセント分割したらアクセント区間が増える", async ({
   expect(await page.locator(".accent-phrase").count()).toBe(2);
 });
 
-test("アクセントの読み部分をクリックすると読みを変更できる", async ({
-  page,
-}) => {
+test("点击重音读音部分可以改变重音读音", async ({ page }) => {
   await navigateToMain(page);
 
-  await page.getByRole("textbox", { name: "1行目" }).click();
-  await page.getByRole("textbox", { name: "1行目" }).fill("テストです");
-  await page.getByRole("textbox", { name: "1行目" }).press("Enter");
+  await page.getByRole("textbox", { name: "1行" }).click();
+  await page.getByRole("textbox", { name: "1行" }).fill("テストです");
+  await page.getByRole("textbox", { name: "1行" }).press("Enter");
   const accentPhrase = page.locator(".accent-phrase");
   await expect(accentPhrase).toHaveText("テストデス");
 
   await expect(page.locator(".text-cell").first()).toBeVisible();
   await page.locator(".text-cell").first().click();
-  const input = page.getByLabel("1番目のアクセント区間の読み");
+  const input = page.getByLabel("第1个重音短语的读音");
   expect(await input.inputValue()).toBe("テストデス");
   await input.fill("テストテスト");
   await input.press("Enter");

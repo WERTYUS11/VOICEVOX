@@ -197,7 +197,7 @@ registerHotkeyWithCleanup({
 });
 registerHotkeyWithCleanup({
   editor: "talk",
-  name: "串联声音并输出",
+  name: "串联音频并导出",
   callback: () => {
     if (!uiLocked.value) {
       void store.actions.SHOW_GENERATE_AND_CONNECT_ALL_AUDIO_DIALOG();

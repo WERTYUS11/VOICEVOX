@@ -7,5 +7,6 @@
   "global": false,
   "simulateCommands": false,
   "simulateSubagents": false,
-  "modularMcp": false,
+  "modularMcp": false
 }
+

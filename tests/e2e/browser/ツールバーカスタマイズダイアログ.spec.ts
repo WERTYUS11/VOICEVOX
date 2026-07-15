@@ -5,81 +5,79 @@ import { getNewestQuasarDialog, getQuasarMenu } from "../locators";
 
 test.beforeEach(gotoHome);
 
-test("ツールバーのカスタマイズでボタンを追加でき、デフォルトに戻すこともできる", async ({
-  page,
-}) => {
+test("可以在自定义工具栏中添加按钮，也可以恢复默认", async ({ page }) => {
   await navigateToMain(page);
-  // 全部書き出しボタンはデフォルトでないことを確認
+  // 全部导出ボタンはデフォルトでないことを確認
   expect(
     await page
       .locator("header")
       .getByRole("toolbar")
-      .getByText("全部書き出し")
+      .getByText("全部导出")
       .count(),
   ).toBe(0);
 
-  // ツールバーのカスタマイズページに移動
-  await page.getByText("設定").click();
+  // 自定义工具栏ページに移動
+  await page.getByText("设置").click();
   await page.waitForTimeout(100);
-  await getQuasarMenu(page, "ツールバーのカスタマイズ").click();
+  await getQuasarMenu(page, "自定义工具栏").click();
   await expect(
-    getNewestQuasarDialog(page).getByText("ツールバーのカスタマイズ"),
+    getNewestQuasarDialog(page).getByText("自定义工具栏"),
   ).toBeVisible();
 
-  // 全部書き出しボタンを追加する
+  // 全部导出ボタンを追加する
   expect(
-    await page.getByRole("button").filter({ hasText: "全部書き出し" }).count(),
+    await page.getByRole("button").filter({ hasText: "全部导出" }).count(),
   ).toBe(0);
-  await page.getByRole("listitem").filter({ hasText: "全部書き出し" }).click();
+  await page.getByRole("listitem").filter({ hasText: "全部导出" }).click();
   expect(
-    await page.getByRole("button").filter({ hasText: "全部書き出し" }).count(),
+    await page.getByRole("button").filter({ hasText: "全部导出" }).count(),
   ).toBe(1);
   await page.getByText("保存", { exact: true }).click();
   await getNewestQuasarDialog(page)
-    .getByRole("button", { name: "ツールバーのカスタマイズを閉じる" })
+    .getByRole("button", { name: "关闭自定义工具栏" })
     .click();
 
-  // 閉じたあとに全部書き出しボタンが追加されてることを確認
+  // 閉じたあとに全部导出ボタンが追加されてることを確認
   await page.waitForTimeout(100);
   expect(
     await page
       .locator("header")
       .getByRole("toolbar")
-      .getByText("全部書き出し")
+      .getByText("全部导出")
       .count(),
   ).toBe(1);
 
-  // 再度ツールバーのカスタマイズページに移動し、デフォルトに戻すボタンを押す
-  await page.getByText("設定").click();
+  // 再度自定义工具栏ページに移動し、恢复默认ボタンを押す
+  await page.getByText("设置").click();
   await page.waitForTimeout(100);
-  await getQuasarMenu(page, "ツールバーのカスタマイズ").click();
+  await getQuasarMenu(page, "自定义工具栏").click();
   await page.waitForTimeout(100);
   expect(
     await page
       .locator("main")
       .getByRole("button")
-      .filter({ hasText: "全部書き出し" })
+      .filter({ hasText: "全部导出" })
       .count(),
   ).toBe(1);
-  await page.getByText("デフォルトに戻す").click();
+  await page.getByText("恢复默认").click();
   await page
     .locator(".DialogContent")
     .last()
     .getByRole("button")
-    .filter({ hasText: "デフォルトに戻す" })
+    .filter({ hasText: "恢复默认" })
     .click();
   await page.getByText("保存", { exact: true }).click();
   expect(
     await page
       .locator("main")
       .getByRole("button")
-      .filter({ hasText: "全部書き出し" })
+      .filter({ hasText: "全部导出" })
       .count(),
   ).toBe(0);
 
-  // 閉じるボタンを再度押し、全部書き出しボタンが消えてることを確認
+  // 閉じるボタンを再度押し、全部导出ボタンが消えてることを確認
   await getNewestQuasarDialog(page)
-    .getByRole("button", { name: "ツールバーのカスタマイズを閉じる" })
+    .getByRole("button", { name: "关闭自定义工具栏" })
     .click();
 
   await page.waitForTimeout(100);
@@ -87,7 +85,7 @@ test("ツールバーのカスタマイズでボタンを追加でき、デフ�
     await page
       .locator("header")
       .getByRole("toolbar")
-      .getByText("全部書き出し")
+      .getByText("全部导出")
       .count(),
   ).toBe(0);
 });

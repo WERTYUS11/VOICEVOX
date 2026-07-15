@@ -16,7 +16,7 @@ async function getSliderValues(page: Page) {
         sliders.map(async (slider) => {
           const value = await slider.getAttribute("aria-valuenow");
           if (value == null) {
-            throw new Error("aria-valuenowが取得できません");
+            throw new Error("无法获取aria-valuenow");
           }
           return parseFloat(value);
         }),
@@ -25,10 +25,10 @@ async function getSliderValues(page: Page) {
   );
 }
 
-test("実験的機能：調整結果の保持", async ({ page }) => {
+test("[仅开发时功能] 保持调整结果", async ({ page }) => {
   await navigateToMain(page);
 
-  await toggleSetting(page, "調整結果の保持");
+  await toggleSetting(page, "保持调整结果");
   await page.waitForTimeout(100);
 
   const audioCell = page.locator(".audio-cell:nth-child(1)");
@@ -36,7 +36,7 @@ test("実験的機能：調整結果の保持", async ({ page }) => {
   await page.keyboard.press("Enter");
   await page.waitForTimeout(100);
 
-  await page.locator(".detail-selector").getByText("ｲﾝﾄﾈｰｼｮﾝ").click();
+  await page.locator(".detail-selector").getByText("语调").click();
   await page.waitForTimeout(100);
 
   const sliders = await page

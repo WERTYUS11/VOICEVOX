@@ -4,15 +4,13 @@ import { gotoHome, navigateToMain } from "../navigators";
 
 test.beforeEach(gotoHome);
 
-test("「設定」→「キャラクター＆スタイルの管理」で「設定 / キャラクター＆スタイルの管理」ページが表示される", async ({
+test("「设置」→「管理角色和风格」で「设置 / 管理角色和风格」ページが表示される", async ({
   page,
 }) => {
   await navigateToMain(page);
-  await page.getByText("設定").click();
+  await page.getByText("设置").click();
   await page.waitForTimeout(100);
-  await page.getByText("キャラクター＆スタイルの管理").click();
+  await page.getByText("管理角色和风格").click();
   await page.waitForTimeout(100);
-  await expect(
-    page.getByText("設定 / キャラクター＆スタイルの管理"),
-  ).toBeVisible();
+  await expect(page.getByText("设置 / 管理角色和风格")).toBeVisible();
 });
