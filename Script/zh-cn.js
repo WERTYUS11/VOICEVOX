@@ -1989,6 +1989,12 @@ replaceInFile(".env", {
     "https://voicevox.hiroshiba.jp/updateInfos.json",
 });
 
+replaceInFile(".env.test", {
+  "https://voicevox.hiroshiba.jp/": "https://vv.nashdush.xyz/",
+  "https://vv.nashdush.xyz/updateInfos.json":
+    "https://voicevox.hiroshiba.jp/updateInfos.json",
+});
+
 replaceInFile("build/installer.nsh", {
   "ファイル検証に必要なデータが見つからなかったため処理を中断しました。":
     "未找到文件验证所需数据，已中止处理。",
