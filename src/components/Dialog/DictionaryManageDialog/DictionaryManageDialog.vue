@@ -11,7 +11,9 @@
       <QPageContainer>
         <QHeader class="q-pa-sm">
           <QToolbar>
-            <QToolbarTitle class="text-display">读法与重音字典</QToolbarTitle>
+            <QToolbarTitle class="text-display"
+              >读法与重音字典</QToolbarTitle
+            >
             <QSpace />
             <!-- close button -->
             <QBtn
@@ -28,7 +30,9 @@
           <div>
             <QSpinner color="primary" size="2.5rem" />
             <div class="q-mt-xs">
-              <template v-if="loadingDictState === 'loading'">读取中…</template>
+              <template v-if="loadingDictState === 'loading'"
+                >读取中…</template
+              >
               <template v-if="loadingDictState === 'synchronizing'"
                 >同步中…</template
               >
@@ -41,7 +45,7 @@
               <div class="list-title">单词列表</div>
               <BaseButton
                 label="添加"
-                aria-label="単語を添加"
+                aria-label="添加单词"
                 icon="add"
                 :disabled="uiLocked"
                 @click="selectNewWord"
@@ -235,8 +239,8 @@ const beforeMove = async (proceed: () => void) => {
   // 単語の変更時は、変更内容が有効でない場合は破棄されるので警告を表示する。
   if (currentWord.value.type === "new") {
     const result = await store.actions.SHOW_WARNING_DIALOG({
-      title: "単語の添加を破棄しますか？",
-      message: "変更を丢弃と、単語の添加はリセットされます。",
+      title: "要放弃添加单词吗？",
+      message: "若丢弃更改，将重置单词的添加。",
       actionName: "丢弃",
       cancel: "不丢弃",
       isWarningColorButton: true,
@@ -248,7 +252,7 @@ const beforeMove = async (proceed: () => void) => {
   } else if (wordEditor.value.editState.type === "invalid") {
     const result = await store.actions.SHOW_WARNING_DIALOG({
       title: "要取消单词的修改吗？",
-      message: "変更を丢弃と、現在の编辑内容はリセットされます。",
+      message: "若丢弃更改，当前编辑内容将被重置。",
       actionName: "丢弃",
       cancel: "不丢弃",
       isWarningColorButton: true,

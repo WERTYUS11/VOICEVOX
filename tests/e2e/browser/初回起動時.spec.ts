@@ -3,7 +3,9 @@ import { gotoHome } from "../navigators";
 
 test.beforeEach(gotoHome);
 
-test("启动后将显示使用条款对话框和使用条款内容", async ({ page }) => {
+test("启动后将显示使用条款对话框和使用条款内容", async ({
+  page,
+}) => {
   await expect(page.getByText("关于使用条款的通知")).toBeVisible({
     timeout: 90 * 1000,
   });

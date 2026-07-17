@@ -2,11 +2,11 @@
   <div class="detail">
     <BaseScrollArea>
       <div class="inner">
-        <h2 v-if="props.isNew" class="title">新しい单词の添加</h2>
-        <h2 v-else class="title">单词の編集</h2>
+        <h2 v-if="props.isNew" class="title">添加单词</h2>
+        <h2 v-else class="title">编辑单词</h2>
         <div class="form-row">
           <h3 class="headline">单词</h3>
-          <div>单词は全角と半角は区別しません。</div>
+          <div>单词全角和半角不区分。</div>
           <BaseTextField
             ref="surfaceInput"
             v-model="surface"
@@ -16,7 +16,7 @@
             @change="surface = convertHankakuToZenkaku(surface)"
             @enterkeydown="yomiInput?.focus()"
           >
-            <template #error>单词は必須です。</template>
+            <template #error>单词不能为空</template>
           </BaseTextField>
         </div>
         <div class="form-row">
@@ -33,7 +33,7 @@
             @change="setYomi(temporaryYomi)"
           >
             <template v-if="temporaryYomi.length === 0" #error>
-              读音は必須です。
+              读音不能为空
             </template>
             <template v-else-if="!isOnlyHiraOrKana(temporaryYomi)" #error>
               使用了平假名和片假名以外的字符。
@@ -42,7 +42,9 @@
         </div>
         <div class="form-row">
           <h3 class="headline">重音调整</h3>
-          <div>为了考虑尾音的重音，会自动插入“が”。</div>
+          <div>
+            为了考虑尾音的重音，会自动插入“が”。
+          </div>
           <div>
             <BaseButton
               :label="nowPlaying ? '停止' : '再生'"
@@ -91,8 +93,12 @@
         <div class="form-row">
           <h3 class="headline">单词优先级</h3>
           <div>
-            <div>如果注册单词后未生效，请提高优先级。</div>
-            <div>如果设置的优先级过高，可能会在其他单词中也生效。</div>
+            <div>
+              如果注册单词后未生效，请提高优先级。
+            </div>
+            <div>
+              如果设置的优先级过高，可能会在其他单词中也生效。
+            </div>
           </div>
           <div>
             <BaseSlider

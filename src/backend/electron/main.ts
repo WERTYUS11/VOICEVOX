@@ -422,8 +422,12 @@ void app.whenReady().then(async () => {
         .showMessageBox({
           type: "error",
           title: "配置文件读取错误（开发信息）",
-          message: `加载配置文件失败。请更改配置文件的名称或重置设置。`,
-          buttons: ["不做操作并退出", "打开配置目录并退出", "重置设置并继续"],
+          message: `加载配置文件失败。`,
+          buttons: [
+            "不做操作并退出",
+            "打开配置目录并退出",
+            "重置设置并继续",
+          ],
           noLink: true,
           cancelId: 0,
         })

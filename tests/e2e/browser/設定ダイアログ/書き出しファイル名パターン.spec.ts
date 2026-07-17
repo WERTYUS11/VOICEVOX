@@ -16,7 +16,9 @@ const moveToFilenameDialog = async (page: Page, settingDialog: Locator) => {
   await page.waitForTimeout(500);
 
   const filenameDialog = getNewestQuasarDialog(page);
-  await expect(filenameDialog.getByText("导出文件名模式")).toBeVisible();
+  await expect(
+    filenameDialog.getByText("导出文件名模式"),
+  ).toBeVisible();
 
   const doneButton = filenameDialog.getByRole("button", { name: "确定" });
   const textbox = filenameDialog.getByRole("textbox", {
@@ -61,7 +63,9 @@ test("「オプション」から「导出文件名模式」を変更したり�
   await textbox.fill("$連番$\\");
   await textbox.press("Enter");
   await expect(doneButton).toBeDisabled();
-  await expect(settingDialog.getByText("包含不可用字符：「\\」")).toBeVisible();
+  await expect(
+    settingDialog.getByText("包含不可用字符：「\\」"),
+  ).toBeVisible();
 
   // $連番$ を含めると确定ボタンが押せる
   await textbox.click();

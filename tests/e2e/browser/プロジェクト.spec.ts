@@ -62,7 +62,9 @@ test("保存项目后可以直接加载", async ({ page }) => {
   });
 });
 
-test("加载新版本时会显示警告", async ({ page }) => {
+test("加载新版本时会显示警告", async ({
+  page,
+}) => {
   await navigateToMain(page);
   const content = await fs.readFile(
     `${import.meta.dirname}/vvproj/future.vvproj`,
@@ -70,6 +72,8 @@ test("加载新版本时会显示警告", async ({ page }) => {
   );
   await loadProject(page, content);
   await expect(
-    page.getByText("项目文件由新版本的 VOICEVOX 创建"),
+    page.getByText(
+      "项目文件由新版本的 VOICEVOX 创建",
+    ),
   ).toBeVisible();
 });

@@ -62,7 +62,9 @@ test("可以通知或跳过更新", async ({ page }) => {
   });
 
   // スキップすると消える
-  await dialog.getByRole("button", { name: "跳过此版本" }).click();
+  await dialog
+    .getByRole("button", { name: "跳过此版本" })
+    .click();
   await page.waitForTimeout(500);
   await expect(dialog).not.toBeVisible();
 

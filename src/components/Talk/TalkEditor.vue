@@ -663,7 +663,8 @@ const loadDroppedFile = async (event: {
     default:
       void store.actions.SHOW_ALERT_DIALOG({
         title: "不支持的文件",
-        message: "支持文本文件 (.txt) 和VOICEVOX项目文件 (.vvproj)。",
+        message:
+          "支持文本文件 (.txt) 和VOICEVOX项目文件 (.vvproj)。",
       });
   }
 };

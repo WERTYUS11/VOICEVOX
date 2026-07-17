@@ -30,7 +30,10 @@
         >
           <QToggle v-model="isMono" />
         </BaseCell>
-        <BaseCell title="音频采样率" description="音频采样率を変更できます。">
+        <BaseCell
+          title="音频采样率"
+          description="可更改音频采样率。"
+        >
           <QSelect
             v-model="samplingRate"
             dense

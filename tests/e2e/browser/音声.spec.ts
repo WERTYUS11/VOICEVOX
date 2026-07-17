@@ -4,7 +4,9 @@ import { gotoHome, navigateToMain } from "../navigators";
 
 test.beforeEach(gotoHome);
 
-test("输入文本→改变重音→合成语音→播放语音", async ({ page }) => {
+test("输入文本→改变重音→合成语音→播放语音", async ({
+  page,
+}) => {
   await navigateToMain(page);
 
   await page.getByRole("textbox", { name: "1行" }).click();

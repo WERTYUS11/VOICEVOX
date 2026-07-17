@@ -60,7 +60,9 @@
           </template>
           <template #no-option>
             <QItem>
-              <QItemSection class="text-grey"> 没有预设 </QItemSection>
+              <QItemSection class="text-grey">
+                没有预设
+              </QItemSection>
             </QItem>
           </template>
         </QSelect>
@@ -102,7 +104,12 @@
             </QCardSection>
 
             <QCardActions align="right">
-              <QBtn v-close-popup flat label="取消" @click="closeAllDialog" />
+              <QBtn
+                v-close-popup
+                flat
+                label="取消"
+                @click="closeAllDialog"
+              />
               <QBtn flat type="submit" label="确定" />
             </QCardActions>
           </QForm>

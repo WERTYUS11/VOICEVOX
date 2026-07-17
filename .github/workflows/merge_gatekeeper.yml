@@ -4,10 +4,6 @@ name: "Merge Gatekeeper"
 # Approve数が足りているか、すべてのテストが通っているかを確認します。
 # 詳細： https://github.com/VOICEVOX/merge-gatekeeper
 
-permissions:
-  contents: read
-  pull-requests: read
-
 on:
   pull_request_target:
     types: [auto_merge_enabled]

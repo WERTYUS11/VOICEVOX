@@ -5,7 +5,7 @@ import { mockShowSaveFileDialog, mockWriteFile } from "./mockUtility";
 
 test.beforeEach(gotoHome);
 
-test("プロジェクト文件切り替わり案内ダイアログ", async ({ page }) => {
+test("项目文件切换确认对话框", async ({ page }) => {
   await navigateToMain(page);
 
   const dialog = page.getByRole("dialog").filter({

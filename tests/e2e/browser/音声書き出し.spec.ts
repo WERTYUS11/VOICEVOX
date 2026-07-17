@@ -21,7 +21,9 @@ async function exportSelectedAudioAndSnapshot(page: Page, name: string) {
   });
 
   await test.step("确认导出完成通知并关闭", async () => {
-    const notify = page.getByRole("alert").filter({ hasText: "音频已导出" });
+    const notify = page
+      .getByRole("alert")
+      .filter({ hasText: "音频已导出" });
     await expect(notify).toBeVisible();
     await notify.getByRole("button", { name: "关闭" }).click();
     await expect(notify).toBeHidden();
@@ -101,7 +103,9 @@ test.describe("语音导出", () => {
     });
   });
 
-  test("导出所有声音时显示错误对话框", async ({ page }) => {
+  test("导出所有声音时显示错误对话框", async ({
+    page,
+  }) => {
     await test.step("设置导出错误的模拟", async () => {
       await mockShowSaveDirectoryDialog(page);
       await mockWriteFileError(page);
@@ -115,13 +119,17 @@ test.describe("语音导出", () => {
     await test.step("确认结果对话框并关闭", async () => {
       const dialog = getNewestQuasarDialog(page);
       await expect(dialog.getByText("音频导出结果")).toBeVisible();
-      await expect(dialog.getByText("1个因写入错误导致的失败")).toBeVisible();
+      await expect(
+        dialog.getByText("1个因写入错误导致的失败"),
+      ).toBeVisible();
       await dialog.getByRole("button", { name: "关闭" }).click();
       await expect(dialog).not.toBeVisible();
     });
   });
 
-  test("串联音频时显示错误对话框", async ({ page }) => {
+  test("串联音频时显示错误对话框", async ({
+    page,
+  }) => {
     await test.step("设置导出错误的模拟", async () => {
       await mockShowSaveFileDialog(page);
       await mockWriteFileError(page);

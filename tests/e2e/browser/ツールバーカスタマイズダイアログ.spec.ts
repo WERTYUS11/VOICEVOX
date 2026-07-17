@@ -5,7 +5,9 @@ import { getNewestQuasarDialog, getQuasarMenu } from "../locators";
 
 test.beforeEach(gotoHome);
 
-test("可以在自定义工具栏中添加按钮，也可以恢复默认", async ({ page }) => {
+test("可以在自定义工具栏中添加按钮，也可以恢复默认", async ({
+  page,
+}) => {
   await navigateToMain(page);
   // 全部导出ボタンはデフォルトでないことを確認
   expect(

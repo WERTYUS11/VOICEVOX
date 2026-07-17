@@ -11,7 +11,9 @@
       <QPageContainer class="root">
         <QHeader class="q-pa-sm">
           <QToolbar>
-            <QToolbarTitle class="text-display">设置 / 选项</QToolbarTitle>
+            <QToolbarTitle class="text-display"
+              >设置 / 选项</QToolbarTitle
+            >
             <QSpace />
             <!-- close button -->
             <QBtn
@@ -120,7 +122,8 @@
                     {
                       label: '翻页',
                       value: 'PAGE',
-                      description: '当当前播放位置超出显示范围时滚动。',
+                      description:
+                        '当当前播放位置超出显示范围时滚动。',
                     },
                     {
                       label: '关闭',
@@ -808,7 +811,8 @@ const acceptRetrieveTelemetryComputed = computed({
 
     void store.actions.SHOW_ALERT_DIALOG({
       title: "禁用软件使用情况数据收集",
-      message: "要完全禁用软件使用情况数据收集，需要重新启动 VOICEVOX",
+      message:
+        "要完全禁用软件使用情况数据收集，需要重新启动 VOICEVOX",
       ok: "OK",
     });
   },

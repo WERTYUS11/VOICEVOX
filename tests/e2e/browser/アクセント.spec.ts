@@ -16,7 +16,9 @@ test("重音分割后会增加重音区间", async ({ page }) => {
   expect(await page.locator(".accent-phrase").count()).toBe(2);
 });
 
-test("点击重音读音部分可以改变重音读音", async ({ page }) => {
+test("点击重音读音部分可以改变重音读音", async ({
+  page,
+}) => {
   await navigateToMain(page);
 
   await page.getByRole("textbox", { name: "1行" }).click();

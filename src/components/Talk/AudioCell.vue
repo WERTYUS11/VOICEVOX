@@ -80,7 +80,8 @@
       @keydown.prevent.enter.exact="pushAudioTextIfNeeded"
     >
       <template #error>
-        文章过长可能无法正常运行。 请在标点符号处分割文章。
+        文章过长可能无法正常运行。
+        请在标点符号处分割文章。
       </template>
       <template #after>
         <div
@@ -494,7 +495,9 @@ const removeCell = async () => {
         }
       }
       if (willNextFocusIndex === -1) {
-        throw new Error("没有找到下一个要选择的audioKey（不可访问）");
+        throw new Error(
+          "没有找到下一个要选择的audioKey（不可访问）",
+        );
       }
       emit("focusCell", {
         audioKey: audioKeys.value[willNextFocusIndex],
@@ -630,7 +633,8 @@ const startContextMenuOperation = () => {
 const readyForContextMenu = () => {
   const getMenuItemButton = (label: string) => {
     const item = contextMenudata.value.find((item) => item.label === label);
-    if (item?.type !== "button") throw new Error("获取上下文菜单项失败。");
+    if (item?.type !== "button")
+      throw new Error("获取上下文菜单项失败。");
     return item;
   };
 

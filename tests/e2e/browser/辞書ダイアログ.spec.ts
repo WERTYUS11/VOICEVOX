@@ -238,7 +238,9 @@ test("可以取消删除单词", async ({ page }) => {
   });
 });
 
-test("输入新单词后尝试切换到其他单词时会显示放弃警告", async ({ page }) => {
+test("输入新单词后尝试切换到其他单词时会显示放弃警告", async ({
+  page,
+}) => {
   const existingSurface = createSurface("已有");
 
   await navigateToMain(page);
@@ -249,9 +251,12 @@ test("输入新单词后尝试切换到其他单词时会显示放弃警告", as
 
   await test.step("尝试选择其他单词", async () => {
     await getWordItem(page, existingSurface).click();
-    const dialog = await expectWarningDialog(page, "要放弃添加单词吗？");
+    const dialog = await expectWarningDialog(
+      page,
+      "要放弃添加单词吗？",
+    );
     await expect(
-      dialog.getByText("更改を放弃と、单词の添加は重置されます。"),
+      dialog.getByText("若丢弃更改，则将会重置单词的添加。"),
     ).toBeVisible();
   });
 });
@@ -294,7 +299,7 @@ test("编辑单词后关闭对话框会被保存", async ({ page }) => {
   await selectWord(page, editedSurface);
 });
 
-test("单词を無効な状態にしたあと他の单词を選択しようとして坚持更改と編集画面に留まる", async ({
+test("选择其他单词后坚持更改，编辑画面会保持不变", async ({
   page,
 }) => {
   const firstSurface = createSurface("無効維持");
@@ -313,16 +318,19 @@ test("单词を無効な状態にしたあと他の单词を選択しようと�
     ).toBeVisible();
   });
 
-  await test.step("坚持更改と元の单词に留まる", async () => {
+  await test.step("坚持更改后，单词会保持不变", async () => {
     await getWordItem(page, secondSurface).click();
-    const dialog = await expectWarningDialog(page, "要取消单词的更改吗？");
+    const dialog = await expectWarningDialog(
+      page,
+      "要取消单词的更改吗？",
+    );
     await dialog.getByRole("button").filter({ hasText: "坚持更改" }).click();
     await expect(getWordField(page, "单词")).toHaveText(firstSurface);
     await expect(getWordField(page, "读音")).toHaveText("abc");
   });
 });
 
-test("单词を無効な状態にしたあと他の单词を選択しようとして放弃と切り替わる", async ({
+test("使单词变为无效状态后尝试选择其他单词，如果放弃则切换", async ({
   page,
 }) => {
   const firstSurface = createSurface("無効破棄");
@@ -341,15 +349,18 @@ test("单词を無効な状態にしたあと他の单词を選択しようと�
     ).toBeVisible();
   });
 
-  await test.step("放弃と他の单词に切り替わる", async () => {
+  await test.step("放弃则会切换到其他单词", async () => {
     await getWordItem(page, secondSurface).click();
-    const dialog = await expectWarningDialog(page, "要取消单词的更改吗？");
+    const dialog = await expectWarningDialog(
+      page,
+      "要取消单词的更改吗？",
+    );
     await dialog.getByRole("button").filter({ hasText: "放弃" }).click();
     await expect(getWordField(page, "单词")).toHaveText(secondSurface);
   });
 });
 
-test("单词を無効な状態にしたあと同じ单词を選択して放弃と編集内容が戻る", async ({
+test("单词を無効な状態にしたあと选择相同单词后放弃，编辑内容会恢复", async ({
   page,
 }) => {
   const surface = createSurface("同じ单词破棄");
@@ -366,9 +377,12 @@ test("单词を無効な状態にしたあと同じ单词を選択して放弃�
     ).toBeVisible();
   });
 
-  await test.step("同じ单词を選択して放弃と編集内容が戻る", async () => {
+  await test.step("选择相同单词后放弃，编辑内容会恢复", async () => {
     await getWordItem(page, surface).click();
-    const dialog = await expectWarningDialog(page, "要取消单词的更改吗？");
+    const dialog = await expectWarningDialog(
+      page,
+      "要取消单词的更改吗？",
+    );
     await dialog.getByRole("button").filter({ hasText: "放弃" }).click();
     await expect(getWordField(page, "单词")).toHaveText(surface);
     await expect(getWordField(page, "读音")).toHaveText("テスト");
@@ -378,7 +392,7 @@ test("单词を無効な状態にしたあと同じ单词を選択して放弃�
   });
 });
 
-test("新しい单词の入力を重置できる", async ({ page }) => {
+test("可以重置新单词的输入", async ({ page }) => {
   await navigateToMain(page);
   await openDictDialog(page);
   await selectNewWord(page);
@@ -400,7 +414,9 @@ test("新しい单词の入力を重置できる", async ({ page }) => {
   });
 });
 
-test("输入新单词后选择添加再放弃，输入内容会恢复", async ({ page }) => {
+test("输入新单词后选择添加再放弃，输入内容会恢复", async ({
+  page,
+}) => {
   await navigateToMain(page);
   await openDictDialog(page);
   await selectNewWord(page);
@@ -410,7 +426,10 @@ test("输入新单词后选择添加再放弃，输入内容会恢复", async ({
     await getNewestQuasarDialog(page)
       .getByRole("button", { name: "添加" })
       .click();
-    const dialog = await expectWarningDialog(page, "要放弃添加单词吗？");
+    const dialog = await expectWarningDialog(
+      page,
+      "要放弃添加单词吗？",
+    );
     await dialog.getByRole("button").filter({ hasText: "放弃" }).click();
     await expect(getWordField(page, "单词")).toHaveText("");
     await expect(getWordField(page, "读音")).toHaveText("");

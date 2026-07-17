@@ -18,7 +18,9 @@
         <QToolbar>
           <div class="column">
             <QToolbarTitle class="text-display">{{
-              hasNewCharacter ? "追加角色介绍" : "设置 / 角色与风格管理"
+              hasNewCharacter
+                ? "追加角色介绍"
+                : "设置 / 角色与风格管理"
             }}</QToolbarTitle>
           </div>
 
@@ -150,7 +152,8 @@ const selectCharacter = (speakerUuid: SpeakerId) => {
   const characterInfo = props.characterInfos.find(
     (characterInfo) => characterInfo.metas.speakerUuid == speakerUuid,
   );
-  if (characterInfo == undefined) throw new Error(`未找到角色: ${speakerUuid}`);
+  if (characterInfo == undefined)
+    throw new Error(`未找到角色: ${speakerUuid}`);
   styleSelectDialogState.value = { isOpen: true, characterInfo };
 };
 

@@ -270,7 +270,9 @@ test("buildAudioFileNameFromRawData", () => {
 test("getToolbarButtonName", () => {
   expect(getToolbarButtonName("PLAY_CONTINUOUSLY")).toBe("连续播放");
   expect(getToolbarButtonName("STOP")).toBe("停止");
-  expect(getToolbarButtonName("EXPORT_AUDIO_SELECTED")).toBe("导出选定声音");
+  expect(getToolbarButtonName("EXPORT_AUDIO_SELECTED")).toBe(
+    "导出选定声音",
+  );
   expect(getToolbarButtonName("EXPORT_AUDIO_ALL")).toBe("全部导出");
   expect(getToolbarButtonName("EXPORT_AUDIO_CONNECT_ALL")).toBe(
     "串联音频并导出",

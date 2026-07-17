@@ -3062,7 +3062,8 @@ export const singingStore = createPartialStore<SingingStoreTypes>({
           result: "UNKNOWN_ERROR",
           path: filePath,
           errorMessage:
-            (e instanceof Error ? e.message : String(e)) || "发生未知错误。",
+            (e instanceof Error ? e.message : String(e)) ||
+            "发生未知错误。",
         };
       }
 
