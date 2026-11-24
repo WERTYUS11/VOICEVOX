@@ -13,11 +13,11 @@
 
 这里是开发用页面。关于使用方法，请查看 [VOICEVOX 官方网站](https://voicevox.hiroshiba.jp/)。
 
-## Linux Arm
+## 分卷文件
 
 请下载分卷文件（part-000，part-001）并使用
 ```bash
-cat voicevox-linux-cpu-arm64-0.26.3.tar.gz.part-* | tar xzf -
+cat voicevox-linux-cpu-arm64(或x64)-0.26.3.tar.gz.part-* | tar xzf -
 ```
 解压使用
 
