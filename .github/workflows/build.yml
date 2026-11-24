@@ -1,9 +1,6 @@
 name: Build
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
     inputs:
       version:
@@ -380,6 +377,40 @@ jobs:
           mv prepackage VOICEVOX
           tar czf ${name}.tar.gz VOICEVOX
           mv VOICEVOX prepackage
+
+          # GitHub Release の1アセット上限は2GiBなので、超える場合は分割する
+          # 1900MiB/巻にしておく（2GiBちょうどを避ける）
+          if [ "$(stat -c%s "${name}.tar.gz")" -gt 2000000000 ]; then
+            echo "Archive is larger than 2GiB, splitting..."
+            split -b 1900M -d -a 3 "${name}.tar.gz" "${name}.tar.gz.part-"
+            sha256sum ${name}.tar.gz.part-* > "${name}.tar.gz.sha256"
+            rm "${name}.tar.gz"
+          fi
+
+          ls -lh ${name}.tar.gz* || true
+
+      - name: Upload Linux tar.gz (without nvidia) to Artifacts
+        if: startsWith(matrix.artifact_name, 'linux-') && !contains(matrix.artifact_name, 'nvidia') && github.event.inputs.upload_artifact == 'true'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: ${{ matrix.artifact_name }}-targz
+          path: |-
+            ${{ matrix.compressed_artifact_name }}-${{ env.VOICEVOX_EDITOR_VERSION }}.tar.gz*
+
+      - name: Upload Linux tar.gz (without nvidia) to Release Assets
+        if: startsWith(matrix.artifact_name, 'linux-') && !contains(matrix.artifact_name, 'nvidia') && github.event.inputs.version != ''
+        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
+        with:
+          prerelease: ${{ github.event.inputs.prerelease }}
+          tag_name: ${{ env.VOICEVOX_EDITOR_VERSION }}
+          files: |-
+            ${{ matrix.compressed_artifact_name }}-${{ env.VOICEVOX_EDITOR_VERSION }}.tar.gz*
+          target_commitish: ${{ github.sha }}
+
+      - name: Delete Linux tar.gz (without nvidia)
+        if: startsWith(matrix.artifact_name, 'linux-') && !contains(matrix.artifact_name, 'nvidia')
+        run: |
+          rm -f ${{ matrix.compressed_artifact_name }}-${{ env.VOICEVOX_EDITOR_VERSION }}.tar.gz*
 
       - name: Upload Linux tar.gz (without nvidia) to Artifacts
         if: startsWith(matrix.artifact_name, 'linux-') && !contains(matrix.artifact_name, 'nvidia') && github.event.inputs.upload_artifact == 'true'
