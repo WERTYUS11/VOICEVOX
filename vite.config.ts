@@ -2,19 +2,18 @@
 import { execFileSync } from "node:child_process";
 import path from "node:path";
 import { rm } from "node:fs/promises";
-import electronPlugin from "vite-plugin-electron/simple";
-import tsconfigPaths from "vite-tsconfig-paths";
+import electronPlugin, { type ElectronOptions } from "vite-plugin-electron";
 import vue from "@vitejs/plugin-vue";
 import electronDefaultImport from "electron";
-import checker from "vite-plugin-checker";
-import { BuildOptions, defineConfig, loadEnv, Plugin } from "vite";
+import { type BuildOptions, defineConfig, loadEnv, type Plugin } from "vite";
 import { quasar } from "@quasar/vite-plugin";
+import { playwright as playwrightProvider } from "@vitest/browser-playwright";
 import { z } from "zod";
 import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
 import {
   checkSuspiciousImports,
-  CheckSuspiciousImportsOptions,
-  SourceFile,
+  type CheckSuspiciousImportsOptions,
+  type SourceFile,
 } from "./tools/checkSuspiciousImports.js";
 
 // @ts-expect-error electronをelectron環境外からimportするとelectronのファイルパスが得られる。
@@ -31,10 +30,11 @@ const isProduction = process.env.NODE_ENV === "production";
 
 const ignorePaths = (paths: string[]) => paths.map((path) => `!${path}`);
 
-function getElectronTargetVersion(): {
+type ElectronTargetVersion = {
   node: string;
   chrome: string;
-} {
+};
+function getElectronTargetVersion(): ElectronTargetVersion {
   const result = execFileSync(
     electronPath,
     [path.join(import.meta.dirname, "build/getElectronVersion.mjs")],
@@ -89,95 +89,77 @@ export default defineConfig((options) => {
     mode === "test" || process.env.SKIP_LAUNCH_ELECTRON === "1";
 
   return {
-    root: path.resolve(import.meta.dirname, "src"),
+    root: path.join(import.meta.dirname, "src"),
     envDir: import.meta.dirname,
     build: {
       target: electronTargetVersion?.chrome,
-      outDir: path.resolve(import.meta.dirname, "dist"),
+      outDir: path.join(import.meta.dirname, "dist"),
       chunkSizeWarningLimit: 10000,
       sourcemap,
+      rollupOptions: {
+        input: {
+          main: path.join(import.meta.dirname, "src/index.html"),
+          welcome: path.join(import.meta.dirname, "src/welcome/index.html"),
+        },
+      },
     },
-    publicDir: path.resolve(import.meta.dirname, "public"),
+    publicDir: path.join(import.meta.dirname, "public"),
     css: {
       preprocessorOptions: {
         scss: {
-          api: "modern",
-          includePaths: [path.resolve(import.meta.dirname, "node_modules")],
+          loadPaths: [path.join(import.meta.dirname, "node_modules")],
         },
       },
     },
     resolve: {
       alias: {
-        "@": path.resolve(import.meta.dirname, "src/"),
+        "@": path.join(import.meta.dirname, "src/"),
       },
     },
     plugins: [
       vue(),
       quasar({ autoImportComponentCase: "pascal" }),
-      mode !== "test" &&
-        checker({
-          overlay: false,
-          vueTsc: true,
-        }),
       isElectron && [
         cleanDistPlugin(),
         // TODO: 関数で切り出して共通化できる部分はまとめる
-        electronPlugin({
-          main: {
+        electronPlugin([
+          {
             entry: "./backend/electron/main.ts",
 
             // ref: https://github.com/electron-vite/vite-plugin-electron/pull/122
             onstart: ({ startup }) => {
               console.log("main process build is complete.");
               if (!skipLaunchElectron) {
-                // ここのprocess.argvは以下のような形で渡ってくる：
-                // ["node", ".../vite.js", (...vite用の引数...), "--", その他引数...]
-                const args: string[] = [".", "--no-sandbox"];
-                const doubleDashIndex = process.argv.indexOf("--");
-                if (doubleDashIndex !== -1) {
-                  args.push("--", ...process.argv.slice(doubleDashIndex + 1));
-                }
-                void startup(args);
+                launchElectron(startup);
               }
             },
             vite: {
-              plugins: [
-                tsconfigPaths({ root: import.meta.dirname }),
-                isProduction &&
-                  checkSuspiciousImportsPlugin({
-                    allowedInTryCatchModules: [
-                      // systeminformationのoptionalな依存。try-catch内なので許可。
-                      "osx-temperature-sensor",
-                    ],
-                  }),
-              ],
+              plugins: [isProduction && checkSuspiciousImportsPlugin({})],
+              resolve: {
+                tsconfigPaths: true,
+              },
               build: {
                 target: electronTargetVersion?.node,
-                outDir: path.resolve(import.meta.dirname, "dist"),
+                rolldownOptions: {
+                  platform: "node",
+                },
+                outDir: path.join(import.meta.dirname, "dist"),
                 sourcemap,
               },
             },
           },
-          preload: {
-            input: "./src/backend/electron/renderer/preload.ts",
-            onstart({ reload }) {
-              if (!skipLaunchElectron) {
-                reload();
-              }
+          ...electronPreloadOptions(
+            {
+              skipLaunchElectron,
+              sourcemap,
+              electronTargetVersion,
             },
-            vite: {
-              plugins: [
-                tsconfigPaths({ root: import.meta.dirname }),
-                isProduction && checkSuspiciousImportsPlugin({}),
-              ],
-              build: {
-                target: electronTargetVersion?.chrome,
-                outDir: path.resolve(import.meta.dirname, "dist"),
-                sourcemap,
-              },
+            {
+              preload: "./src/backend/electron/renderer/preload.ts",
+              welcomePreload: "./src/welcome/preload.ts",
             },
-          },
-        }),
+          ),
+        ]),
       ],
       isElectron &&
         injectLoaderScriptPlugin(
@@ -223,12 +205,12 @@ export default defineConfig((options) => {
             include: browserTestPaths,
             globals: true,
             name: "browser",
+            api: 7158,
             browser: {
               enabled: true,
               instances: [{ browser: "chromium" }],
-              provider: "playwright",
+              provider: playwrightProvider(),
               headless: true,
-              api: 7158,
               ui: false,
             },
           },
@@ -249,19 +231,23 @@ export default defineConfig((options) => {
               vue: "vue/dist/vue.esm-bundler.js",
             },
           },
+          optimizeDeps: {
+            entries: [path.join(import.meta.dirname, "src/index.html")],
+          },
           test: {
             globals: true,
             name: "storybook",
+            api: 7159,
             browser: {
               enabled: true,
               instances: [{ browser: "chromium" }],
-              provider: "playwright",
+              provider: playwrightProvider(),
               headless: true,
-              api: 7159,
               ui: false,
             },
             isolate: false,
             setupFiles: ["./.storybook/vitest.setup.ts"],
+            dir: path.join(import.meta.dirname, "src"),
           },
         },
       ],
@@ -274,13 +260,77 @@ const cleanDistPlugin = (): Plugin => {
     apply: "build",
     enforce: "pre",
     async buildStart() {
-      await rm(path.resolve(import.meta.dirname, "dist"), {
+      await rm(path.join(import.meta.dirname, "dist"), {
         recursive: true,
         force: true,
       });
     },
   };
 };
+
+// onstartに渡されるstartup関数の型（vite-plugin-electronは単体でexportしていない）
+type ElectronStartup = Parameters<
+  NonNullable<ElectronOptions["onstart"]>
+>[0]["startup"];
+
+// Electronをリポジトリルートから起動する。main・preloadどちらのonstartからも呼ばれる
+const launchElectron = (startup: ElectronStartup) => {
+  // ここのprocess.argvは以下のような形で渡ってくる：
+  // ["node", ".../vite.js", (...vite用の引数...), "--", その他引数...]
+  const args: string[] = [".", "--no-sandbox"];
+  const doubleDashIndex = process.argv.indexOf("--");
+  if (doubleDashIndex !== -1) {
+    args.push("--", ...process.argv.slice(doubleDashIndex + 1));
+  }
+  // 省略するとvite-plugin-electronがViteのroot（src/）をcwdにするため、リポジトリルートを明示する
+  void startup(args, { cwd: import.meta.dirname });
+};
+
+const electronPreloadOptions = (
+  options: {
+    skipLaunchElectron: boolean;
+    sourcemap: BuildOptions["sourcemap"];
+    electronTargetVersion: ElectronTargetVersion | undefined;
+  },
+  entries: Record<string, string>,
+): ElectronOptions[] =>
+  Object.entries(entries).map(([name, entry]): ElectronOptions => ({
+    onstart({ reload, startup }) {
+      if (options.skipLaunchElectron) {
+        return;
+      }
+      // preloadのビルドがmainより後に終わると未起動のままここに来るが、その場合のreload()はcwdがsrcになるため使わない
+      // process.electronAppにはvite-plugin-electronのstartup()が起動したElectronの子プロセスが入る（未起動時はundefined）
+      if ("electronApp" in process && process.electronApp != undefined) {
+        reload();
+      } else {
+        launchElectron(startup);
+      }
+    },
+    vite: {
+      plugins: [isProduction && checkSuspiciousImportsPlugin({})],
+      resolve: {
+        tsconfigPaths: true,
+      },
+      build: {
+        outDir: path.join(import.meta.dirname, "dist"),
+        sourcemap: options.sourcemap,
+        target: options.electronTargetVersion?.node,
+        rollupOptions: {
+          input: {
+            [name]: path.join(import.meta.dirname, entry),
+          },
+          output: {
+            format: "cjs",
+            codeSplitting: false,
+            entryFileNames: `[name].cjs`,
+            chunkFileNames: `[name].cjs`,
+            assetFileNames: `[name].[ext]`,
+          },
+        },
+      },
+    },
+  }));
 
 /** バックエンドAPIをフロントエンドから実行するコードを注入する */
 const injectLoaderScriptPlugin = (scriptPath: string): Plugin => {

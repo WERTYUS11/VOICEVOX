@@ -3,14 +3,14 @@
  * 参考実装: https://github.com/VOICEVOX/voicevox/pull/1374/files#diff-444f263f72d4db11fe82c672d5c232eb4c29d29dbc1ffd20e279d586b1b2c180
  */
 
-import { QInput } from "quasar";
-import { ref, Ref, nextTick } from "vue";
-import { MenuItemButton, MenuItemSeparator } from "@/components/Menu/type";
-import ContextMenu from "@/components/Menu/ContextMenu/Container.vue";
+import type { QInput } from "quasar";
+import { ref, type Ref, nextTick } from "vue";
+import type { MenuItemButton, MenuItemSeparator } from "@/components/Menu/type";
+import type ContextMenu from "@/components/Menu/ContextMenu/Container.vue";
 import { SelectionHelperForQInput } from "@/helpers/SelectionHelperForQInput";
 
 /**
- * <QInput> に対して切り取りやコピー、貼り付けの処理を行う
+ * <QInput> に対して剪切や复制、粘贴の処理を行う
  */
 export function useRightClickContextMenu(
   // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
@@ -36,7 +36,7 @@ export function useRightClickContextMenu(
     const getMenuItemButton = (label: string) => {
       const item = contextMenudata.value.find((item) => item.label === label);
       if (item?.type !== "button")
-        throw new Error("コンテキストメニューアイテムの取得に失敗しました。");
+        throw new Error("获取上下文菜单项失败。");
       return item;
     };
 
@@ -57,11 +57,11 @@ export function useRightClickContextMenu(
     }
 
     if (inputSelection.isEmpty) {
-      getMenuItemButton("切り取り").disabled = true;
-      getMenuItemButton("コピー").disabled = true;
+      getMenuItemButton("剪切").disabled = true;
+      getMenuItemButton("复制").disabled = true;
     } else {
-      getMenuItemButton("切り取り").disabled = false;
-      getMenuItemButton("コピー").disabled = false;
+      getMenuItemButton("剪切").disabled = false;
+      getMenuItemButton("复制").disabled = false;
     }
   };
 
@@ -76,7 +76,7 @@ export function useRightClickContextMenu(
   >([
     {
       type: "button",
-      label: "切り取り",
+      label: "剪切",
       onClick: async () => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
         contextMenuRef.value?.hide();
@@ -86,7 +86,7 @@ export function useRightClickContextMenu(
     },
     {
       type: "button",
-      label: "コピー",
+      label: "复制",
       onClick: async () => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
         contextMenuRef.value?.hide();
@@ -96,7 +96,7 @@ export function useRightClickContextMenu(
     },
     {
       type: "button",
-      label: "貼り付け",
+      label: "粘贴",
       onClick: async () => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
         contextMenuRef.value?.hide();

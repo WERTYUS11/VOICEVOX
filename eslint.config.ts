@@ -1,14 +1,12 @@
 import js from "@eslint/js";
 import globals from "globals";
-import importPlugin from "eslint-plugin-import";
+import importPlugin from "eslint-plugin-import-x";
+import nPlugin from "eslint-plugin-n";
 import storybookPlugin from "eslint-plugin-storybook";
 import vueParser from "vue-eslint-parser";
 import vuePlugin from "eslint-plugin-vue";
 import vuePrettierConfig from "@vue/eslint-config-prettier";
-import {
-  defineConfigWithVueTs,
-  vueTsConfigs,
-} from "@vue/eslint-config-typescript";
+import { withVueTs, vueTsConfigs } from "@vue/eslint-config-typescript";
 import { configs as tsConfigs, parser as tsParser } from "typescript-eslint";
 import type { FlatConfig } from "@typescript-eslint/utils/ts-eslint";
 import progressPlugin from "eslint-plugin-file-progress";
@@ -51,7 +49,7 @@ const vueParserOptions: ParserOptions = {
 };
 
 const typeCheckedParserOptions: ParserOptions = {
-  project: ["./tsconfig.json"],
+  projectService: true,
   tsconfigRootDir: import.meta.dirname,
 };
 
@@ -64,6 +62,7 @@ const typeCheckedRules: Rules = {
   "@typescript-eslint/require-array-sort-compare": "error",
 
   "@typescript-eslint/no-non-null-assertion": "error",
+  "@typescript-eslint/no-deprecated": "error",
 
   "@typescript-eslint/no-misused-promises": [
     "error",
@@ -75,13 +74,15 @@ const typeCheckedRules: Rules = {
       checksVoidReturn: false,
     },
   ],
+  "@typescript-eslint/no-import-type-side-effects": "error",
 };
 
-export default defineConfigWithVueTs(
+export default withVueTs(
   {
     name: "voicevox/defaults/plugins",
     plugins: {
       import: importPlugin,
+      n: nPlugin,
       progress: progressPlugin,
     },
   },
@@ -112,7 +113,7 @@ export default defineConfigWithVueTs(
   ...pluginConfig(vuePlugin.configs["flat/recommended"]),
   ...pluginConfig("eslint:recommended", js.configs.recommended),
   ...pluginConfig("@vue/prettier", vuePrettierConfig),
-  ...pluginConfig(vueTsConfigs.recommended.toConfigArray()),
+  ...pluginConfig(vueTsConfigs.recommended),
   ...pluginConfig(voicevoxPlugin.configs.all),
   ...pluginConfig(storybookPlugin.configs["flat/recommended"]),
   ...pluginConfig(vitestPlugin.configs.recommended),
@@ -120,7 +121,10 @@ export default defineConfigWithVueTs(
   {
     name: "voicevox/type-checked/typescript",
     files: ["**/*.ts", "**/*.mts"],
-    extends: [...tsConfigs.recommendedTypeChecked],
+    extends: [
+      ...tsConfigs.recommendedTypeChecked,
+      ...pluginConfig(voicevoxPlugin.configs.allTyped),
+    ],
     languageOptions: {
       parser: tsParser,
       parserOptions: {
@@ -135,7 +139,10 @@ export default defineConfigWithVueTs(
   {
     name: "voicevox/type-checked/vue",
     files: ["**/*.vue"],
-    extends: [...tsConfigs.recommendedTypeChecked],
+    extends: [
+      ...tsConfigs.recommendedTypeChecked,
+      ...pluginConfig(voicevoxPlugin.configs.allTyped),
+    ],
     languageOptions: {
       parser: vueParser,
       parserOptions: {
@@ -165,13 +172,14 @@ export default defineConfigWithVueTs(
     name: "voicevox/defaults/rules",
     rules: {
       "@typescript-eslint/no-unused-vars": [
-        process.env.NODE_ENV !== "production" ? "warn" : "error", // 開発時のみwarn
+        "error",
         {
           ignoreRestSiblings: true,
+          ignoreUsingDeclarations: true,
         },
       ],
       "import/order": "error",
-      "import/enforce-node-protocol-usage": ["error", "always"],
+      "n/prefer-node-protocol": "error",
       "no-console": process.env.NODE_ENV === "production" ? "warn" : "off",
       "no-constant-condition": ["error", { checkLoops: false }], // while(true) などを許可
       "no-debugger": process.env.NODE_ENV === "production" ? "warn" : "off",

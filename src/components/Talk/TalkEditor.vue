@@ -4,7 +4,8 @@
 
     <QPageContainer>
       <QPage class="main-row-panes">
-        <ProgressView />
+        <ProgressView :progress="store.getters.PROGRESS" />
+        <ProgressView :progress="playbackProgress" />
         <EngineStartupOverlay :isCompletedInitialStartup />
 
         <QSplitter
@@ -18,6 +19,7 @@
           beforeClass="overflow-hidden"
           :disable="!shouldShowPanes"
           :modelValue="audioDetailPaneHeight"
+          data-testid="audio-detail-pane-splitter"
           @update:modelValue="updateAudioDetailPane"
         >
           <template #before>
@@ -62,6 +64,7 @@
                         class="audio-cells"
                         :modelValue="audioKeys"
                         :itemKey
+                        :disabled="uiLocked"
                         ghostClass="ghost"
                         filter="input"
                         :preventOnFilter="false"
@@ -127,7 +130,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUpdate, ref, toRaw, VNodeRef, watch } from "vue";
+import {
+  computed,
+  onBeforeUpdate,
+  ref,
+  toRaw,
+  type VNodeRef,
+  watch,
+} from "vue";
 import Draggable from "vuedraggable";
 import { QResizeObserver } from "quasar";
 import AudioCell from "./AudioCell.vue";
@@ -138,8 +148,8 @@ import ToolBar from "./ToolBar.vue";
 import { useStore } from "@/store";
 import ProgressView from "@/components/ProgressView.vue";
 import EngineStartupOverlay from "@/components/EngineStartupOverlay.vue";
-import { AudioItem } from "@/store/type";
-import {
+import type { AudioItem } from "@/store/type";
+import type {
   AudioKey,
   PresetKey,
   SplitterPositionType,
@@ -150,7 +160,7 @@ import onetimeWatch from "@/helpers/onetimeWatch";
 import path from "@/helpers/path";
 import {
   actionPostfixSelectNthCharacter,
-  HotkeyActionNameType,
+  type HotkeyActionNameType,
 } from "@/domain/hotkeyAction";
 import { isElectron } from "@/helpers/platform";
 import { dragAndDropReorder } from "@/helpers/reorderHelper";
@@ -162,11 +172,13 @@ const props = defineProps<{
 
 const store = useStore();
 
+const playbackProgress = computed(() =>
+  store.state.currentPlayState.type === "preparing" ? 0 : -1,
+);
+
 const audioKeys = computed(() => store.state.audioKeys);
 const selectedAudioKeys = computed(() => store.getters.SELECTED_AUDIO_KEYS);
 const uiLocked = computed(() => store.getters.UI_LOCKED);
-
-const isMultiSelectEnabled = computed(() => store.state.enableMultiSelect);
 
 const { registerHotkeyWithCleanup } = useHotkeyManager();
 
@@ -175,7 +187,7 @@ registerHotkeyWithCleanup({
   name: "语音导出",
   callback: () => {
     if (!uiLocked.value) {
-      void store.actions.SHOW_GENERATE_AND_SAVE_ALL_AUDIO_DIALOG();
+      void store.actions.SHOW_GENERATE_AND_SAVE_ALL_AUDIO_FILE_DIALOG();
     }
   },
 });
@@ -184,7 +196,7 @@ registerHotkeyWithCleanup({
   name: "导出选定声音",
   callback: () => {
     if (!uiLocked.value) {
-      void store.actions.SHOW_GENERATE_AND_SAVE_SELECTED_AUDIO_DIALOG();
+      void store.actions.SHOW_GENERATE_AND_SAVE_SELECTED_AUDIO_FILE_DIALOG();
     }
   },
 });
@@ -193,7 +205,16 @@ registerHotkeyWithCleanup({
   name: "串联声音并输出",
   callback: () => {
     if (!uiLocked.value) {
-      void store.actions.SHOW_GENERATE_AND_CONNECT_ALL_AUDIO_DIALOG();
+      void store.actions.SHOW_GENERATE_AND_CONNECT_ALL_AUDIO_FILE_DIALOG();
+    }
+  },
+});
+registerHotkeyWithCleanup({
+  editor: "talk",
+  name: "串联文本并导出",
+  callback: () => {
+    if (!uiLocked.value) {
+      void store.actions.SHOW_CONNECT_AND_EXPORT_TEXT_DIALOG();
     }
   },
 });
@@ -202,7 +223,7 @@ registerHotkeyWithCleanup({
   name: "加载文本",
   callback: () => {
     if (!uiLocked.value) {
-      void store.actions.SHOW_CONNECT_AND_EXPORT_TEXT_DIALOG();
+      void store.actions.COMMAND_IMPORT_FROM_FILE({ type: "dialog" });
     }
   },
 });
@@ -263,7 +284,7 @@ registerHotkeyWithCleanup({
   enableInTextbox: false,
   name: "全选",
   callback: () => {
-    if (!uiLocked.value && isMultiSelectEnabled.value) {
+    if (!uiLocked.value) {
       void store.actions.SET_SELECTED_AUDIO_KEYS({
         audioKeys: audioKeys.value,
       });
@@ -380,8 +401,7 @@ type DraggableEvent = CustomEvent & {
 };
 
 type ReorderingState =
-  | { isReordering: false }
-  | { isReordering: true; holdingAudioKey: AudioKey };
+  { isReordering: false } | { isReordering: true; holdingAudioKey: AudioKey };
 
 const reorderingState = ref<ReorderingState>({ isReordering: false });
 
@@ -681,7 +701,7 @@ const showAddAudioItemButton = computed(() => {
 
 // 台本欄の空きスペースがクリックされたら選択解除
 const onAudioCellPaneClick = () => {
-  if (store.state.enableMultiSelect && activeAudioKey.value) {
+  if (activeAudioKey.value) {
     void store.actions.SET_SELECTED_AUDIO_KEYS({
       audioKeys: [activeAudioKey.value],
     });

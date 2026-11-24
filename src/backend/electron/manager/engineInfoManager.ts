@@ -1,20 +1,20 @@
 import path from "node:path";
 import fs from "node:fs";
-import shlex from "shlex";
+import * as shlex from "shlex";
 
 import { dialog } from "electron"; // FIXME: ここでelectronをimportするのは良くない
 
 import { getConfigManager } from "../electronConfig";
 import {
-  EngineInfo,
-  EngineDirValidationResult,
-  MinimumEngineManifestType,
-  EngineId,
+  type EngineInfo,
+  type EngineDirValidationResult,
+  type MinimumEngineManifestType,
+  type EngineId,
   minimumEngineManifestSchema,
 } from "@/type/preload";
-import { AltPortInfos } from "@/store/type";
+import type { AltPortInfos } from "@/store/type";
 import { loadEnvEngineInfos } from "@/domain/defaultEngine/envEngineInfo";
-import { failure, Result, success } from "@/type/result";
+import { failure, type Result, success } from "@/type/result";
 import { createLogger } from "@/helpers/log";
 
 const log = createLogger("EngineInfoManager");
@@ -92,7 +92,7 @@ export class EngineInfoManager {
   private fetchEnvEngineInfos(): EngineInfo[] {
     // TODO: envから直接ではなく、envに書いたengine_manifest.jsonから情報を得るようにする
     return this.envEngineInfos
-      .filter((engineInfo) => engineInfo.type != "downloadVvpp")
+      .filter((engineInfo) => engineInfo.type !== "downloadVvpp")
       .map((engineInfo) => {
         const { protocol, hostname, port, pathname } = new URL(engineInfo.host);
         return {
@@ -103,7 +103,9 @@ export class EngineInfoManager {
           pathname: pathname === "/" ? "" : pathname,
           isDefault: this.isDefaultEngine(engineInfo.uuid),
           type: engineInfo.type,
+          // .envで指定された相対パスをカレントディレクトリ基準の絶対パスにするため、path.resolveを使う。
           executionFilePath: path.resolve(engineInfo.executionFilePath),
+          // .envのpathには絶対パスを指定してdefaultEngineDirの外を指すこともできるようにしたいため、path.resolveを使う。
           path:
             engineInfo.path == undefined
               ? undefined
@@ -132,6 +134,7 @@ export class EngineInfoManager {
         log.info(`Failed to load engine: ${result.code}, ${engineDir}`);
         continue;
       }
+      log.info(`Loaded VVPP engine: ${result.value.uuid}`);
       engineInfos.push(result.value);
     }
     return engineInfos;
@@ -151,8 +154,8 @@ export class EngineInfoManager {
         // 動かないエンジンは追加できないので削除
         // FIXME: エンジン管理UIで削除可能にする
         dialog.showErrorBox(
-          "エンジンの読み込みに失敗しました。",
-          `${engineDir}を読み込めませんでした。このエンジンは削除されます。`,
+          "引擎加载失败。",
+          `无法加载 ${engineDir}。该引擎将被删除。`,
         );
         configManager.set(
           "registeredEngineDirs",

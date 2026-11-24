@@ -28,10 +28,11 @@ const envEngineInfoSchema = z
       z.object({
         type: z.literal("downloadVvpp"),
         latestUrl: z.string(),
+        latestUpdateInfosUrl: z.string(),
       }),
     ]),
   );
-type EnvEngineInfoType = z.infer<typeof envEngineInfoSchema>;
+type EnvEngineInfo = z.infer<typeof envEngineInfoSchema>;
 
 /**
  * デフォルトエンジン情報の環境変数を取得する
@@ -53,7 +54,7 @@ function getDefaultEngineInfosEnv(): string {
 }
 
 /** .envからデフォルトエンジン情報を読み込む */
-export function loadEnvEngineInfos(): EnvEngineInfoType[] {
+export function loadEnvEngineInfos(): EnvEngineInfo[] {
   const defaultEngineInfosEnv = getDefaultEngineInfosEnv();
 
   // FIXME: 「.envを書き換えてください」というログを出したい

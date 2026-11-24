@@ -23,27 +23,30 @@
 
 <details><summary>点击展开</summary>
 
-首次启动时，可能会出现来自 Apple 的警告对话框，提示该应用未被验证。
+首次启动时，可能会弹出是否打开从互联网下载的应用的对话框。此时请确认应用名为「VOICEVOX」后，选择「打开」。
 
-<img src="res/gatekeeper.png" style="max-height: 16rem" alt="“无法打开 VOICEVOX，因为无法验证开发者”的对话框"/>
+#### 使用 Apple Silicon 的 Mac 时
 
-此时，请在 Finder 中按住 `Ctrl` 键并点击 VOICEVOX 应用图标，从快捷菜单中选择“打开”，再点击“打开”按钮。
-
-或者，从苹果菜单中选择“系统设置”，点击“隐私与安全性”，然后在页面底部的安全性部分选择“仍要打开”。
-
-<img src="res/macos-system-settings-security.png" style="max-height: 16rem" alt="打开 Mac 系统设置中“隐私与安全性”的画面"/>
-
-如果您使用的是 macOS Ventura 之前的版本，请从苹果菜单选择“系统偏好设置”，点击“安全性与隐私”，并在“通用”标签页中选择“仍要打开”。
-
-<img src="res/macos-system-preferences-security.png" style="max-height: 16rem" alt="打开 macOS 系统偏好设置中“安全性与隐私”的画面"/>
-
-#### 使用 Apple Silicon（M 系列芯片）的 Mac 时
-
-首次启动 VOICEVOX 时，可能会提示安装 Rosetta，请按照指引进行安装。
+首次启动 VOICEVOX 时，如果提示安装 Rosetta，请按照指引进行安装。
 
 <img src="res/macos-big-sur-software-update-rosetta-alert.jpg" style="max-height: 12rem" alt="确认安装 Rosetta 的对话框"/>
 
 </details>
+
+## 下载语音合成引擎
+
+如果下载的是安装版，首次启动时会下载语音合成引擎。
+在这里可以选择下载 CPU 版还是 GPU 版。
+下载完成后，可以点击右上角的「启动编辑器」按钮启动编辑器。
+
+如果下载的是 ZIP 版、tar.gz 版，则无需下载语音合成引擎。
+
+### 更新语音合成引擎
+
+如果下载的是安装版，可以通过「引擎」菜单中的「引擎管理」更新语音合成引擎。
+此外，也可以切换 CPU 版和 GPU 版。
+
+ZIP 版、tar.gz 版无法在软件内更新。请从官方网站重新下载软件进行更新。
 
 ## 启动语音合成引擎
 
@@ -187,6 +190,12 @@
 点击重音区间可从该区间开始播放；再点击一次即可取消。
 
 <img src="res/image23.png" style="max-height: 8rem" alt="点击重音区间后该区间变为蓝色的画面"/>
+
+## 复数选择文本栏
+
+可以选择多个文本栏。
+按住 `Shift` 键点击，可以选中从最后选中的文本栏到所点击文本栏之间的所有文本栏。
+按住 `Ctrl` 键点击，可以分别选中多个文本栏。
 
 ## 导出音声文件
 
@@ -452,12 +461,23 @@ Linux 仅支持 Nvidia GPU。
 
 ### “高级设置”类别
 
+#### 流式播放
+
+在支持的引擎中，可以使用一边生成语音一边同步播放的流式朗读（Streaming Talk）功能。
+可以从以下选项中选择使用。
+
+- 「低延迟」：能以最低延迟播放语音，但根据 PC 性能，语音可能会中断。
+- 「平衡」：比低延迟模式稍有延迟，但语音更不易中断。
+- 「稳定」：禁用此功能。语音越长延迟越大，但语音不会中断。
+
+如果 PC 性能不高，建议选择「稳定」；如果性能较高，建议选择「平衡」或「低延迟」。
+
 #### 多引擎功能
 
 可在 VOICEVOX 中使用符合 VOICEVOX API 的引擎。  
-启用后，可从菜单“引擎”→“管理引擎”进行以下操作：
+启用后，可从菜单“引擎”→“多引擎管理”进行以下操作：
 
-- 安装 VVPP 格式的 API 兼容引擎  
+- 安装 VOICEVOX API 兼容引擎的 VVPP 文件  
 - 指定 VOICEVOX 系软件中的引擎路径  
 
 #### 立体声化音声
@@ -470,6 +490,8 @@ Linux 仅支持 Nvidia GPU。
 
 ### “实验性功能”类别
 
+可以使用开发中的便利功能。
+
 #### 疑问句自动调整
 
 在疑问句时自动提升句尾音调，使语气自然。
@@ -478,12 +500,6 @@ Linux 仅支持 Nvidia GPU。
 
 混合两个音声并合成新音声。  
 通过生成两段音声后分析并再合成实现。
-
-#### 多选文本栏
-
-可选择多个文本栏。  
-`Shift` 点击可选择区间，  
-`Ctrl` 点击可逐个选择。
 
 ### “数据收集”类别
 
@@ -527,4 +543,3 @@ ZIP 版则删除 ZIP 文件与解压的文件夹即可。
 若遇到问题或发现错误，可在 X 上添加 `#VOICEVOX` 标签发布，或联系 VOICEVOX 官方（[@voicevox_pj](https://x.com/voicevox_pj)）。
 
 其他未包含在 Q&A 中的问题，也欢迎询问官方账号（[@voicevox_pj](https://x.com/voicevox_pj)）。
-

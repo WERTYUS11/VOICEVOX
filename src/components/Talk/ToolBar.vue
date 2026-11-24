@@ -1,8 +1,8 @@
 <template>
   <QHeader class="q-py-sm">
     <QToolbar>
-      <template v-for="button in buttons" :key="button.text">
-        <QSpace v-if="button.text === null" />
+      <template v-for="(button, index) in buttons" :key="index">
+        <QSpace v-if="button.text == null" />
         <QBtn
           v-else
           unelevated
@@ -19,9 +19,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ComputedRef } from "vue";
+import { computed, type ComputedRef } from "vue";
 import { useStore } from "@/store";
-import { ToolbarButtonTagType } from "@/type/preload";
+import type { ToolbarButtonTagType } from "@/type/preload";
 import { getToolbarButtonName } from "@/store/utility";
 import { useHotkeyManager } from "@/plugins/hotkeyPlugin";
 import { handlePossiblyNotMorphableError } from "@/store/audioGenerate";
@@ -89,7 +89,7 @@ const redo = () => {
 };
 const playContinuously = async () => {
   try {
-    await store.actions.PLAY_CONTINUOUSLY_AUDIO();
+    await store.actions.START_CONTINUOUS_PLAYBACK();
   } catch (e) {
     const msg = handlePossiblyNotMorphableError(e);
     void store.actions.SHOW_ALERT_DIALOG({
@@ -99,16 +99,16 @@ const playContinuously = async () => {
   }
 };
 const stop = () => {
-  void store.actions.STOP_AUDIO();
+  void store.actions.STOP_PLAYBACK();
 };
 const generateAndSaveSelectedAudio = async () => {
-  await store.actions.SHOW_GENERATE_AND_SAVE_SELECTED_AUDIO_DIALOG();
+  await store.actions.SHOW_GENERATE_AND_SAVE_SELECTED_AUDIO_FILE_DIALOG();
 };
 const generateAndSaveAllAudio = async () => {
-  await store.actions.SHOW_GENERATE_AND_SAVE_ALL_AUDIO_DIALOG();
+  await store.actions.SHOW_GENERATE_AND_SAVE_ALL_AUDIO_FILE_DIALOG();
 };
 const generateAndConnectAndSaveAudio = async () => {
-  await store.actions.SHOW_GENERATE_AND_CONNECT_ALL_AUDIO_DIALOG();
+  await store.actions.SHOW_GENERATE_AND_CONNECT_ALL_AUDIO_FILE_DIALOG();
 };
 const saveProject = async () => {
   await store.actions.SAVE_PROJECT_FILE_OVERWRITE();

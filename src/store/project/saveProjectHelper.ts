@@ -1,7 +1,7 @@
-import { ActionContext } from "../type";
+import type { ActionContext } from "../type";
 import { showErrorDialog } from "@/components/Dialog/Dialog";
 import { getAppInfos } from "@/domain/appInfo";
-import { LatestProjectType } from "@/infrastructures/projectFile/type";
+import type { LatestProjectType } from "@/infrastructures/projectFile/type";
 import { DisplayableError } from "@/helpers/errorHelper";
 import { ResultError } from "@/type/result";
 import { toProjectFileTrack } from "@/infrastructures/projectFile/conversion";
@@ -62,7 +62,7 @@ export async function writeProjectFile(
     buffer: new Uint8Array(buf),
   });
   if (!result.ok) {
-    throw new DisplayableError("ファイルの保存に失敗しました。", {
+    throw new DisplayableError("文件保存失败。", {
       cause: new ResultError(result),
     });
   }

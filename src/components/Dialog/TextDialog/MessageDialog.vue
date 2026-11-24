@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import { useDialogPluginComponent } from "quasar";
 import { computed } from "vue";
-import { DialogType, getColor, getIcon } from "./common";
+import { type DialogType, getColor, getIcon } from "./common";
 import BaseDialog from "@/components/Base/BaseDialog.vue";
 import BaseButton from "@/components/Base/BaseButton.vue";
 
@@ -45,9 +45,9 @@ const props = withDefaults(
   },
 );
 
-defineEmits({
-  ...useDialogPluginComponent.emitsObject,
-});
+// NOTE: Vueのバグにより型エラーが発生するため`useDialogPluginComponent`を使わずに直接定義する
+// ref: https://github.com/vuejs/language-tools/issues/6324
+defineEmits<{ ok: []; hide: [] }>();
 
 const iconName = computed(() => getIcon(props.type));
 const color = computed(() => getColor(props.type));

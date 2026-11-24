@@ -1,19 +1,41 @@
 import * as diff from "fast-array-diff";
-import {
+import type {
   CharacterInfo,
   PresetSliderKey,
+  StyleId,
   StyleInfo,
   StyleType,
   ToolbarButtonTagType,
 } from "@/type/preload";
-import { AccentPhrase, FramePhoneme, Mora } from "@/openapi";
+import type { SingingTeacher } from "@/domain/project/type";
+import type { AccentPhrase, Mora } from "@/openapi";
 import { cloneWithUnwrapProxy } from "@/helpers/cloneWithUnwrapProxy";
-import { DEFAULT_TRACK_NAME, isVowel } from "@/sing/domain";
+import { DEFAULT_TRACK_NAME, isVowel } from "@/song/domain";
 import { isMac } from "@/helpers/platform";
 import { generateTextFileData } from "@/helpers/fileDataGenerator";
+import path from "@/helpers/path";
 
 export const DEFAULT_STYLE_NAME = "ノーマル";
 export const DEFAULT_PROJECT_NAME = "Untitled";
+
+/**
+ * 指定されたファイルパスに対応するファイルが既に存在する場合、
+ * ファイル名に連番のサフィックスを追加してユニークなファイルパスを生成する。
+ */
+export async function generateUniqueFilePath(filePath: string) {
+  const extension = path.extname(filePath);
+  const filePathWithoutExtension = filePath.slice(
+    0,
+    filePath.length - extension.length,
+  );
+  let uniqueFilePath = filePath;
+  let tail = 1;
+  while (await window.backend.checkFileExists(uniqueFilePath)) {
+    uniqueFilePath = `${filePathWithoutExtension}[${tail}]${extension}`;
+    tail += 1;
+  }
+  return uniqueFilePath;
+}
 
 export const formatCharacterStyleName = (
   characterName: string,
@@ -181,17 +203,46 @@ export function currentDateString(): string {
   return `${year}${month}${date}`;
 }
 
+/** 文字数指定がないときに切り詰めるタグと、その文字数 */
+const DEFAULT_TAG_MAX_LENGTHS: Record<string, number> = {
+  text: 10,
+  trackName: 10,
+};
+
+/** 文字数を超えていたら末尾を「…」にして切り詰める */
+function truncateWithEllipsis(text: string, maxLength: number): string {
+  if (text.length <= maxLength) {
+    return text;
+  }
+  return text.substring(0, maxLength - 1) + "…";
+}
+
+/**
+ * テンプレート内のタグを置換する。
+ * 「$テキスト[20]$」のようにタグ名の後ろに[文字数]を付けると、その文字数で切り詰める。
+ * 文字数は1〜99で指定できる。
+ */
 function replaceTag(
   template: string,
   replacer: Record<string, string>,
 ): string {
-  const result = template.replace(/\$(.+?)\$/g, (match, p1: string) => {
-    const replaceTagId = replaceTagStringToTagId[p1];
-    if (replaceTagId == undefined) {
-      return match;
-    }
-    return replacer[replaceTagId] ?? "";
-  });
+  const result = template.replace(
+    /\$([^$[\]]+?)(?:\[([1-9][0-9]?)\])?\$/g,
+    (match, tagString: string, maxLengthString: string | undefined) => {
+      const replaceTagId = replaceTagStringToTagId[tagString];
+      if (replaceTagId == undefined) {
+        return match;
+      }
+      const value = replacer[replaceTagId] ?? "";
+      const maxLength =
+        maxLengthString != undefined
+          ? Number(maxLengthString)
+          : DEFAULT_TAG_MAX_LENGTHS[replaceTagId];
+      return maxLength != undefined
+        ? truncateWithEllipsis(value, maxLength)
+        : value;
+    },
+  );
 
   return result;
 }
@@ -396,10 +447,7 @@ export function buildAudioFileNameFromRawData(
     pattern = DEFAULT_AUDIO_FILE_NAME_TEMPLATE;
   }
 
-  let text = sanitizeFileName(vars.text);
-  if (text.length > 10) {
-    text = text.substring(0, 9) + "…";
-  }
+  const text = sanitizeFileName(vars.text);
 
   const commonVars = formatCommonFileNameFromRawData(vars);
 
@@ -419,10 +467,7 @@ export function buildSongTrackAudioFileNameFromRawData(
     pattern = DEFAULT_SONG_AUDIO_FILE_NAME_TEMPLATE;
   }
 
-  let trackName = sanitizeFileName(vars.trackName);
-  if (trackName.length > 10) {
-    trackName = trackName.substring(0, 9) + "…";
-  }
+  const trackName = sanitizeFileName(vars.trackName);
 
   const commonVars = formatCommonFileNameFromRawData(vars);
 
@@ -472,14 +517,61 @@ export const isOnCommandOrCtrlKeyDown = (event: {
 }) => (isMac && event.metaKey) || (!isMac && event.ctrlKey);
 
 /**
- * スタイルがシングエディタで利用可能なスタイルかどうかを判定します。
+ * スタイルが歌い方の生成に利用可能かどうかを判定します。
  */
-export const isSingingStyle = (styleInfo: StyleInfo) => {
+export const isSingingTeacherStyle = (styleInfo: StyleInfo) => {
   return (
-    styleInfo.styleType === "frame_decode" ||
-    styleInfo.styleType === "sing" ||
-    styleInfo.styleType === "singing_teacher"
+    styleInfo.styleType === "singing_teacher" || styleInfo.styleType === "sing"
   );
+};
+
+/**
+ * 歌手に対して初期値として設定する歌い方を返します。無ければundefinedを返します。
+ */
+export const findInitialSingingTeacher = (
+  singerStyleId: StyleId,
+  engineCharacterInfos: CharacterInfo[],
+): SingingTeacher | undefined => {
+  const singerCharacterStyles =
+    engineCharacterInfos.find((characterInfo) =>
+      characterInfo.metas.styles.some(
+        (styleInfo) => styleInfo.styleId === singerStyleId,
+      ),
+    )?.metas.styles ?? [];
+  const engineStyles = engineCharacterInfos.flatMap(
+    (characterInfo) => characterInfo.metas.styles,
+  );
+
+  // 優先順: 歌手自身のスタイル → 同じキャラクターのスタイル → 同じエンジンの他キャラクターのスタイル
+  const teacherStyle = [
+    ...singerCharacterStyles.filter(
+      (styleInfo) => styleInfo.styleId === singerStyleId,
+    ),
+    ...singerCharacterStyles,
+    ...engineStyles,
+  ].find(isSingingTeacherStyle);
+
+  return teacherStyle == undefined
+    ? undefined
+    : { styleId: teacherStyle.styleId };
+};
+
+/**
+ * CharacterInfo内のスタイルを条件で絞り込み、該当スタイルがないキャラクターを除外します。
+ */
+export const filterCharacterInfosByStyle = (
+  characterInfos: CharacterInfo[],
+  predicate: (styleInfo: StyleInfo) => boolean,
+): CharacterInfo[] => {
+  return characterInfos
+    .map((characterInfo) => ({
+      ...characterInfo,
+      metas: {
+        ...characterInfo.metas,
+        styles: characterInfo.metas.styles.filter(predicate),
+      },
+    }))
+    .filter((characterInfo) => characterInfo.metas.styles.length > 0);
 };
 
 /**
@@ -492,49 +584,46 @@ export const filterCharacterInfosByStyleType = (
   characterInfos: CharacterInfo[],
   styleType: StyleType | "singerLike",
 ): CharacterInfo[] => {
-  const withStylesFiltered: CharacterInfo[] = characterInfos.map(
-    (characterInfo) => {
-      const styles = characterInfo.metas.styles.filter((styleInfo) => {
-        if (styleType === "singerLike") {
-          return isSingingStyle(styleInfo);
-        }
-        // 過去のエンジンにはstyleTypeが存在しないので、「singerLike以外」をtalkとして扱っている。
-        if (styleType === "talk") {
-          return !isSingingStyle(styleInfo);
-        }
-        return styleInfo.styleType === styleType;
-      });
-      return { ...characterInfo, metas: { ...characterInfo.metas, styles } };
-    },
-  );
-
-  const withoutEmptyStyles = withStylesFiltered.filter(
-    (characterInfo) => characterInfo.metas.styles.length > 0,
-  );
-
-  return withoutEmptyStyles;
+  return filterCharacterInfosByStyle(characterInfos, (styleInfo) => {
+    if (styleType === "singerLike") {
+      return (
+        styleInfo.styleType === "frame_decode" || styleInfo.styleType === "sing"
+      );
+    }
+    // 過去のエンジンにはstyleTypeが存在しないので、「singerLike以外」をtalkとして扱っている。
+    if (styleType === "talk") {
+      return (
+        styleInfo.styleType !== "frame_decode" &&
+        styleInfo.styleType !== "singing_teacher" &&
+        styleInfo.styleType !== "sing"
+      );
+    }
+    return styleInfo.styleType === styleType;
+  });
 };
 
-export async function generateLabelFileDataFromFramePhonemes(
-  phonemes: FramePhoneme[],
-  frameRate: number,
-) {
+export type PhonemeTimingLabel = {
+  startTime: number;
+  endTime: number;
+  phoneme: string;
+};
+
+export async function generateLabelFileData(labels: PhonemeTimingLabel[]) {
   let labString = "";
-  let timestamp = 0;
 
-  const writeLine = (phonemeLengthSeconds: number, phoneme: string) => {
-    labString += timestamp.toFixed() + " ";
-    timestamp += phonemeLengthSeconds * 1e7; // 100ns単位に変換
-    labString += timestamp.toFixed() + " ";
-    labString += phoneme + "\n";
-  };
+  for (const label of labels) {
+    // NOTE: 時刻は100ns単位に変換する
+    const startTime = label.startTime * 1e7;
+    const endTime = label.endTime * 1e7;
 
-  for (const phoneme of phonemes) {
-    if (isVowel(phoneme.phoneme) && phoneme.phoneme !== "N") {
-      writeLine(phoneme.frameLength / frameRate, phoneme.phoneme.toLowerCase());
-    } else {
-      writeLine(phoneme.frameLength / frameRate, phoneme.phoneme);
+    let phoneme = label.phoneme;
+    if (isVowel(label.phoneme) && label.phoneme !== "N") {
+      phoneme = phoneme.toLowerCase();
     }
+
+    labString += startTime.toFixed() + " ";
+    labString += endTime.toFixed() + " ";
+    labString += phoneme + "\n";
   }
 
   return await generateTextFileData({ text: labString });

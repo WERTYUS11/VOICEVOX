@@ -165,7 +165,7 @@ import BaseTextField from "@/components/Base/BaseTextField.vue";
 import CharacterButton from "@/components/CharacterButton.vue";
 import ParameterSlider from "@/components/Talk/v2/ParameterSlider.vue";
 import { useDefaultPreset } from "@/composables/useDefaultPreset";
-import {
+import type {
   CharacterInfo,
   Preset,
   PresetKey,
@@ -281,7 +281,7 @@ const deletePreset = async (key: PresetKey) => {
   const result = await store.actions.SHOW_WARNING_DIALOG({
     title: "要删除预设吗？",
     message: `预设 "${presetItems.value[key].name}" 将被删除。`,
-    actionName: "删除する",
+    actionName: "删除",
     isWarningColorButton: true,
   });
   if (result === "OK") {

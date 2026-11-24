@@ -1,12 +1,15 @@
 import { userEvent, within, expect, fn } from "storybook/test";
 
-import { Meta, StoryObj } from "@storybook/vue3-vite";
+import type { Meta, StoryObj } from "@storybook/vue3-vite";
 import Presentation from "./Presentation.vue";
 
 const meta: Meta<typeof Presentation> = {
   component: Presentation,
   args: {
     dialogOpened: false,
+    title: "アップデートのお知らせ",
+    description: "公式サイトから最新バージョンをダウンロードできます。",
+    updateButtonLabel: "打开官网",
     latestVersion: "1.0.0",
     newUpdateInfos: [
       {
@@ -22,6 +25,7 @@ const meta: Meta<typeof Presentation> = {
     ],
     "onUpdate:dialogOpened": fn(),
     onSkipThisVersionClick: fn(),
+    onUpdateClick: fn(),
   },
   tags: ["!autodocs"], // ダイアログ系はautodocsのプレビューが正しく表示されないので無効化
 };
@@ -74,8 +78,6 @@ export const OpenOfficialSite: Story = {
   name: "按下打开官网按钮",
   args: { ...Opened.args },
   play: async ({ args }) => {
-    window.open = fn();
-
     const canvas = within(document.body); // ダイアログなので例外的にdocument.bodyを使う
 
     const button = canvas.getByRole("button", {
@@ -83,17 +85,14 @@ export const OpenOfficialSite: Story = {
     });
     await userEvent.click(button);
 
-    // 公式サイトが開かれる
-    await expect(window.open).toBeCalledWith(
-      "https://vv.nashdush.xyz/",
-      "_blank",
-    );
+    // アップデートイベントが呼ばれる
+    await expect(args["onUpdateClick"]).toBeCalled();
     // ダイアログを关闭イベントが呼ばれる
     await expect(args["onUpdate:dialogOpened"]).toBeCalledWith(false);
   },
 };
 
 export const Closed: Story = {
-  name: "已关闭",
+  name: "閉じている",
   tags: ["skip-screenshot"],
 };

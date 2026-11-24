@@ -89,8 +89,8 @@
               <div class="inner">
                 <div class="title">添加引擎</div>
                 <BaseToggleGroup v-model="engineLoaderType" type="single">
-                  <BaseToggleGroupItem label="VVPPファイル" value="vvpp" />
-                  <BaseToggleGroupItem label="既存エンジン" value="dir" />
+                  <BaseToggleGroupItem label="VVPP 文件" value="vvpp" />
+                  <BaseToggleGroupItem label="现有引擎" value="dir" />
                 </BaseToggleGroup>
                 <section v-if="engineLoaderType === 'vvpp'" class="section">
                   <div>通过 VVPP 文件安装引擎。</div>
@@ -276,7 +276,7 @@ import BaseNavigationView from "@/components/Base/BaseNavigationView.vue";
 import BaseTextField from "@/components/Base/BaseTextField.vue";
 import BaseScrollArea from "@/components/Base/BaseScrollArea.vue";
 import { useStore } from "@/store";
-import { EngineDirValidationResult, EngineId } from "@/type/preload";
+import { type EngineDirValidationResult, EngineId } from "@/type/preload";
 import type { SupportedFeatures } from "@/openapi/models/SupportedFeatures";
 import { useEngineIcons } from "@/composables/useEngineIcons";
 import { errorToMessage } from "@/helpers/errorHelper";
@@ -378,12 +378,13 @@ const getFeatureName = (name: keyof SupportedFeatures) => {
       adjustIntonationScale: "调整整体语调",
       adjustVolumeScale: "调整整体音量",
       adjustPauseLength: "调节标点等的静音时间",
-      interrogativeUpspeak: "疑問文の自動調整",
+      interrogativeUpspeak: "自动调整疑问句",
       synthesisMorphing: "使用两种风格进行变声合成",
       sing: "歌唱音声合成",
       manageLibrary: "语音库的安装与卸载",
       returnResourceUrl: "通过 URL 返回角色信息资源",
       applyKatakanaEnglish: "将未知英文单词转换为片假名读音",
+      streamingSynthesis: "生成音频的同时播放",
     };
   return featureNameMap[name];
 };
@@ -454,8 +455,8 @@ const deleteEngine = async () => {
 
   const result = await store.actions.SHOW_WARNING_DIALOG({
     title: "要删除引擎吗？",
-    message: "選択中のエンジンを删除します。",
-    actionName: "删除する",
+    message: "将删除所选引擎。",
+    actionName: "删除",
     isWarningColorButton: true,
   });
   if (result === "OK") {
@@ -526,7 +527,7 @@ const requireReload = async (message: string) => {
   toInitialState();
   if (result === "OK") {
     void store.actions.CHECK_EDITED_AND_NOT_SAVE({
-      closeOrReload: "reload",
+      nextAction: "reload",
     });
   }
 };

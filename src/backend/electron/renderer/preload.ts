@@ -3,9 +3,12 @@ import {
   wrapToTransferableResult,
   getOrThrowTransferableResult,
 } from "../transferableResultHelper";
-import { type IpcRendererInvoke } from "./ipc";
-import { BridgeKey, SandboxWithTransferableResult } from "./backendApiLoader";
-import { ConfigType, EngineId, Sandbox, TextAsset } from "@/type/preload";
+import type { IpcRendererInvoke } from "./ipc";
+import {
+  BridgeKey,
+  type SandboxWithTransferableResult,
+} from "./backendApiLoader";
+import type { ConfigType, EngineId, Sandbox } from "@/type/preload";
 
 const ipcRendererInvokeProxy = new Proxy(
   {},
@@ -22,12 +25,6 @@ const ipcRendererInvokeProxy = new Proxy(
 ) as IpcRendererInvoke;
 
 const api: Sandbox = {
-  getTextAsset: (textType) => {
-    return ipcRendererInvokeProxy.GET_TEXT_ASSET(textType) as Promise<
-      TextAsset[typeof textType]
-    >;
-  },
-
   getAltPortInfos: async () => {
     return await ipcRendererInvokeProxy.GET_ALT_PORT_INFOS();
   },
@@ -78,14 +75,50 @@ const api: Sandbox = {
     return ipcRendererInvokeProxy.IS_MAXIMIZED_WINDOW();
   },
 
-  onReceivedIPCMsg: (listeners) => {
-    Object.entries(listeners).forEach(([channel, listener]) => {
-      ipcRenderer.on(channel, listener);
+  registerIpcHandler: (listeners) => {
+    ipcRenderer.on("LOAD_PROJECT_FILE", (_, args) => {
+      listeners.loadProjectFile(args as { filePath: string });
+    });
+    ipcRenderer.on("DETECT_MAXIMIZED", () => {
+      listeners.detectMaximized();
+    });
+    ipcRenderer.on("DETECT_UNMAXIMIZED", () => {
+      listeners.detectUnmaximized();
+    });
+    ipcRenderer.on("DETECTED_ENGINE_ERROR", (_, args) => {
+      listeners.detectedEngineError(args as { engineId: EngineId });
+    });
+    ipcRenderer.on("DETECT_PINNED", () => {
+      void listeners.detectPinned();
+    });
+    ipcRenderer.on("DETECT_UNPINNED", () => {
+      void listeners.detectUnpinned();
+    });
+    ipcRenderer.on("DETECT_ENTER_FULLSCREEN", () => {
+      listeners.detectEnterFullscreen();
+    });
+    ipcRenderer.on("DETECT_LEAVE_FULLSCREEN", () => {
+      listeners.detectLeaveFullscreen();
+    });
+    ipcRenderer.on("CHECK_EDITED_AND_NOT_SAVE", (_, args) => {
+      listeners.checkEditedAndNotSave(
+        args as {
+          nextAction: "close" | "reload" | "switchToWelcome";
+          isMultiEngineOffMode?: boolean;
+        },
+      );
+    });
+    ipcRenderer.on("DETECT_RESIZED", (_, args) => {
+      listeners.detectResized(args as { width: number; height: number });
     });
   },
 
   closeWindow: () => {
     void ipcRendererInvokeProxy.CLOSE_WINDOW();
+  },
+
+  launchWelcomeWindow: () => {
+    void ipcRendererInvokeProxy.SWITCH_TO_WELCOME_WINDOW();
   },
 
   minimizeWindow: () => {
@@ -221,6 +254,16 @@ const api: Sandbox = {
   /** webUtils.getPathForFileを呼ぶ */
   getPathForFile: async (file) => {
     return webUtils.getPathForFile(file);
+  },
+
+  getDownloadableDefaultEnginePackageIds: async () => {
+    return ipcRendererInvokeProxy.GET_DOWNLOADABLE_DEFAULT_ENGINE_PACKAGE_IDS();
+  },
+
+  getEnginePackageUpdateInfosUrl: async (engineId) => {
+    return ipcRendererInvokeProxy.GET_ENGINE_PACKAGE_UPDATE_INFOS_URL({
+      engineId,
+    });
   },
 };
 

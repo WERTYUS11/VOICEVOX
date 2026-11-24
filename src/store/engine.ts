@@ -1,9 +1,10 @@
-import { EngineState, EngineStoreState, EngineStoreTypes } from "./type";
+import type { EngineState, EngineStoreState, EngineStoreTypes } from "./type";
 import { createUILockAction } from "./ui";
 import { createPartialStore } from "./vuex";
 import { createLogger } from "@/helpers/log";
 import type { EngineManifest } from "@/openapi";
 import type { EngineId, EngineInfo } from "@/type/preload";
+import { UnreachableError } from "@/type/utility";
 
 export const engineStoreState: EngineStoreState = {
   engineStates: {},
@@ -31,6 +32,23 @@ export const engineStore = createPartialStore<EngineStoreTypes>({
         engineIds,
         engineInfos,
       });
+
+      const downloadableDefaultEnginePackageIds =
+        await window.backend.getDownloadableDefaultEnginePackageIds();
+      if (downloadableDefaultEnginePackageIds.length > 1) {
+        throw new UnreachableError(
+          `Multiple downloadable default engines are not supported: ${downloadableDefaultEnginePackageIds.join(", ")}`,
+        );
+      }
+      mutations.SET_DOWNLOADABLE_DEFAULT_ENGINE_ID({
+        downloadableDefaultEngineId: downloadableDefaultEnginePackageIds.at(0),
+      });
+    },
+  },
+
+  SET_DOWNLOADABLE_DEFAULT_ENGINE_ID: {
+    mutation(state, { downloadableDefaultEngineId }) {
+      state.downloadableDefaultEngineId = downloadableDefaultEngineId;
     },
   },
 

@@ -13,11 +13,11 @@
     "allowImportingTsExtensions": true,
     "noEmit": true,
     "isolatedModules": true,
+    "verbatimModuleSyntax": true,
     "resolveJsonModule": true,
     "sourceMap": true,
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"]
     },
     "lib": ["esnext", "dom", "dom.iterable"]
   },
@@ -28,5 +28,14 @@
     "**/*.cjs",
     "**/*.vue"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "dist_electron",
+    "dist_preview",
+    "storybook-static",
+    "playwright-report",
+    "test-results",
+    "vendored"
+  ]
 }

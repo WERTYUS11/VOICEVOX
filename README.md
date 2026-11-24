@@ -1,66 +1,53 @@
-# 关于此项目
+# VOICEVOX
 
-## 特点
+[![releases](https://img.shields.io/github/v/release/VOICEVOX/voicevox?label=Release)](https://github.com/VOICEVOX/voicevox/releases)
+[![build](https://github.com/VOICEVOX/voicevox/actions/workflows/build.yml/badge.svg)](https://github.com/VOICEVOX/voicevox/actions/workflows/build.yml)
+[![test](https://github.com/VOICEVOX/voicevox/actions/workflows/test.yml/badge.svg)](https://github.com/VOICEVOX/voicevox/actions/workflows/test.yml)
+[![Discord](https://img.shields.io/discord/879570910208733277?color=5865f2&label=&logo=discord&logoColor=ffffff)](https://discord.gg/WMwWetrzuh)
 
-本项目基于[VOICEVOX原版](https://github.com/VOICEVOX/VOICEVOX "VOICEVOX")进行翻译，主要翻译版本为已经发布到Releases的正式版
+这是 [VOICEVOX](https://voicevox.hiroshiba.jp/) 的编辑器。
 
-## 快速开始
+（引擎详见 [VOICEVOX ENGINE](https://github.com/VOICEVOX/voicevox_engine/) ，核心详见 [VOICEVOX CORE](https://github.com/VOICEVOX/voicevox_core/) ，整体架构详见[这里](./docs/全体構成.md)。）
 
-1. 查看[VOICEVOX汉化版Releases](https://github.com/WERTYUS11/VOICEVOX/releases "VOICEVOX汉化版")
-2. 找到标题旁的**Latest**
-3. 下载适合你的版本
+## 致用户
 
-> 请确认你的电脑版本后在执行步骤3！
+这里是开发用页面。关于使用方法，请查看 [VOICEVOX 官方网站](https://voicevox.hiroshiba.jp/)。
 
-## 参与开发
-> 本汉化仓库不支持任何除了汉化以外的PR/ISSUE（汉化改动引起的问题除外），想要提交PR/ISSUES可以前往[官方仓库](https://github.com/VOICEVOX/VOICEVOX "官方仓库")进行提交
+## 致想为项目做贡献的人
 
-VOICEVOX 项目欢迎任何感兴趣的人参与。  
-我们准备了 **[贡献过程指南](./CONTRIBUTING.md)** 作为贡献指南。
+VOICEVOX 项目欢迎感兴趣的人参与。我们准备了[说明贡献流程的指南](./CONTRIBUTING.md)。
 
-贡献不仅限于写代码，还包括：
+提到贡献，人们往往容易想到编写程序，但其实有编写文档、生成测试、参与改进提案讨论等多种参与方式。也有新手欢迎任务，期待大家的参与。
 
-- 编写文档  
-- 制作测试  
-- 参与功能讨论  
-- 提出改进建议  
+VOICEVOX 编辑器使用了 Electron、TypeScript、Vue、Vuex 等技术，整体架构较难理解。[代码导览](./docs/コードの歩き方.md)介绍了其结构，希望能对开发有所帮助。
 
-同时也有**初学者欢迎任务**，非常适合新手入门。
+创建解决 Issue 的拉取请求时，为避免与他人处理同一 Issue，请在 Issue 侧说明已开始处理，或先创建 Draft 拉取请求。
 
-VOICEVOX 编辑器使用了 **Electron、TypeScript、Vue、Vuex** 等技术，整体结构比较复杂。  
-可以参考 **[项目结构](./docs/コードの歩き方.md)** 来理解项目结构。
-
-如果你打算为某个 Issue 提交 PR，请**先在 Issue 中声明你已开始处理**，或者先提交 Draft PR，以避免重复工作。
-
-开发讨论与交流主要在 **[VOICEVOX非官方Discord服务器](https://discord.gg/WMwWetrzuh)**，欢迎加入。
+在 [VOICEVOX 非官方 Discord 服务器](https://discord.gg/WMwWetrzuh)上进行开发讨论和闲聊。欢迎随时加入。
 
 ### 设计指南
 
-请参考 **[UX / UI设计方针](./docs/UX・UIデザインの方針.md)**。
+请参考[UX・UI 设计方针](./docs/UX・UIデザインの方針.md)。
 
----
+## 环境搭建
 
-## 创建环境
+请安装 [.node-version](.node-version) 中记载版本的 Node.js。
+使用 Node.js 的管理工具（[nvs](https://github.com/jasongin/nvs)、[nvm](https://github.com/nvm-sh/nvm) 等）可以轻松安装，还能自动切换 Node.js。
 
-请安装与 **[.node-version](.node-version)** 一致的 Node.js 版本。  
-推荐使用 nvs 或 Volta 进行版本管理。
+安装 Node.js 后，请 Fork [此仓库](https://github.com/VOICEVOX/voicevox.git) 并执行 `git clone`。
 
-安装 Node.js 后，Fork 本仓库并执行 `git clone`：
+### 安装依赖库
 
-https://github.com/VOICEVOX/voicevox.git
-
-### 安装依赖
+执行以下命令会安装、更新依赖库。
 
 ```bash
-npm i -g pnpm   # 仅首次
+npm i -g pnpm # 仅首次
 pnpm i
 ```
 
----
+### AI 代理的设置（可选）
 
-### 设置AI Agent
-
-执行后将会给类似于Codex CLI和Claude Code的AI Agent生成必要文件
+执行以下命令，会设置 Codex CLI、Claude Code 等 AI 代理用的文件。
 
 ```bash
 pnpm run setup-agents
@@ -68,73 +55,57 @@ pnpm run setup-agents
 
 ## 运行
 
-### 准备vv-engine引擎
+### 准备引擎
 
-> 请在电脑上安装好VOICEVOX或单独下载[引擎](https://github.com/VOICEVOX/voicevox_engine/releases "引擎")
+复制 `.env.example` 并创建 `.env`，在 `VITE_DEFAULT_ENGINE_INFOS` 内的 `executionFilePath` 中指定[产品版 VOICEVOX](https://voicevox.hiroshiba.jp/) 内的 `vv-engine/run.exe` 即可运行。
 
-复制 `.env.production` 为 `.env`，并在 `VITE_DEFAULT_ENGINE_INFOS` 中设置：
+在 Windows 上如果未更改安装位置，请指定 `%LOCALAPPDATA%/Programs/VOICEVOX/vv-engine/run.exe`。请注意路径分隔符是 `/` 而不是 `\`。
 
-- Windows（默认路径）  
-  ```
-  %LOCALAPPDATA%/Programs/VOICEVOX/vv-engine/run.exe
-  ```
-  ⚠️ **路径分隔符请使用 `/`，不要用 `\`**
+如果使用面向 macOS 的 `VOICEVOX.app`，请指定 `/path/to/VOICEVOX.app/Contents/Resources/vv-engine/run`。
 
-- macOS  
-  ```
-  /path/to/VOICEVOX.app/Contents/Resources/vv-engine/run
-  ```
+在 Linux 上，请指定从 [Releases](https://github.com/VOICEVOX/voicevox/releases/) 获取的 tar.gz 版中包含的 `vv-engine/run` 命令。如果是 AppImage 版，可以用 `$ /path/to/VOICEVOX.AppImage --appimage-mount` 挂载文件系统。
 
-- Linux  
-  使用 Releases 中的 tar.gz 版里的 `vv-engine/run`。
+如果除了运行 VOICEVOX 编辑器之外，还单独启动了引擎 API 服务器，则无需指定 `executionFilePath`，但需要将 `executionEnabled` 改为 `false`。启动产品版 VOICEVOX 时也是如此。
 
-如果你已经**单独启动了引擎 API 服务器**，请将：
-
-```json
-"executionEnabled": false
-```
-的值修改为true并修改 `host` 指向你的 API 地址。
-
----
+如果要更改引擎 API 的目标端点，请更改 `VITE_DEFAULT_ENGINE_INFOS` 内的 `host`。
 
 ### 运行 Electron
 
 ```bash
+# 在易于开发的环境下运行
 pnpm run electron:serve
+
+# 在接近构建时的环境下运行
 pnpm run electron:serve --mode production
+
+# 指定参数运行
 pnpm run electron:serve -- ...
 ```
 
-语音合成引擎的信息⬇️
-<https://github.com/VOICEVOX/voicevox_engine>
-
----
+语音合成引擎的仓库在这里 <https://github.com/VOICEVOX/voicevox_engine>
 
 ### 运行 Storybook
+
+可以使用 Storybook 开发组件。
 
 ```bash
 pnpm run storybook
 ```
 
-main 分支的预览：  
-https://voicevox.github.io/preview-pages/preview/editor/branch-main/storybook/index.html
-
----
+main 分支的 Storybook 可以从 [VOICEVOX/preview-pages](https://github.com/VOICEVOX/preview-pages) 查看。
+<https://voicevox.github.io/preview-pages/preview/editor/branch-main/storybook/index.html>
 
 ### 运行浏览器版（开发中）
 
-先启动引擎，然后执行：
+另外启动语音合成引擎，执行以下命令并访问显示的 localhost。
 
 ```bash
 pnpm run browser:serve
 ```
 
-线上预览：  
-https://voicevox.github.io/preview-pages/preview/editor/branch-main/editor/index.html
-
-（目前仍需要本地运行引擎）
-
----
+另外，main 分支的构建结果已部署到 [VOICEVOX/preview-pages](https://github.com/VOICEVOX/preview-pages)。
+<https://voicevox.github.io/preview-pages/preview/editor/branch-main/editor/index.html>
+目前需要在本地 PC 上启动语音合成引擎。
 
 ## 构建
 
@@ -142,162 +113,229 @@ https://voicevox.github.io/preview-pages/preview/editor/branch-main/editor/index
 pnpm run electron:build
 ```
 
-### 使用 GitHub Actions 构建
+### 使用 Github Actions 构建
 
-在 fork 仓库中开启 Actions，手动运行 `build.yml` 即可，产物会上传到 Release。
-
----
+在 fork 的仓库中开启 Actions，并通过 workflow_dispatch 启动 `build.yml` 即可构建。构建产物会上传到 Release。
 
 ## 测试
 
 ### 单元测试
 
+执行 `./tests/unit/` 下的测试以及 Storybook 的测试。
+
 ```bash
 pnpm run test:unit
-pnpm run test-watch:unit
-pnpm run test-ui:unit
-pnpm run test:unit --update
+pnpm run test-watch:unit # 监视模式
+pnpm run test-ui:unit # 显示 Vitest 的 UI
+pnpm run test:unit --update # 更新快照
 ```
 
-> 文件后缀规则：
-> - `.node.spec.ts` → Node 环境  
-> - `.browser.spec.ts` → Chromium  
-> - `.spec.ts` → happy-dom
+> [!NOTE]
+> `./tests/unit` 下的测试，会根据文件名改变执行测试的环境。
+>
+> - `.node.spec.ts`：Node.js 环境
+> - `.browser.spec.ts`：浏览器环境（Chromium）
+> - `.spec.ts`：浏览器环境（通过 happy-dom 模拟）
 
----
+### 浏览器端到端测试
 
-### 浏览器 E2E
+执行不需要 Electron 功能的、UI 和语音合成等的端到端测试。
+
+> [!NOTE]
+> 部分重写引擎设置的测试，仅在 CI（Github Actions）上执行。
 
 ```bash
 pnpm run test:browser-e2e
-pnpm run test-watch:browser-e2e
-pnpm run test-watch:browser-e2e --headed
-pnpm run test-ui:browser-e2e
+pnpm run test-watch:browser-e2e # 监视模式
+pnpm run test-watch:browser-e2e --headed # 显示测试中的 UI
+pnpm run test-ui:browser-e2e # 显示 Playwright 的 UI
 ```
 
-生成测试用例（需先启动浏览器版）：
+由于使用了 Playwright，也可以生成测试模式。请在**已启动浏览器版的状态下**执行以下命令。
 
 ```bash
 pnpm exec playwright codegen http://localhost:5173/ --viewport-size=1024,630
 ```
 
----
+详情请参考 [Playwright 文档的 Test generator](https://playwright.dev/docs/codegen-intro)。
 
-### Storybook VRT（视觉回归测试）
+### Storybook 的视觉回归测试
 
-> 仅支持 Windows
+比较 Storybook 组件的截图，如果有变更则显示差异。
+
+> [!NOTE]
+> 此测试只能在 Windows 上执行。
 
 ```bash
 pnpm run test:storybook-vrt
-pnpm run test-watch:storybook-vrt
-pnpm run test-ui:storybook-vrt
+pnpm run test-watch:storybook-vrt # 监视模式
+pnpm run test-ui:storybook-vrt # 显示 Playwright 的 UI
 ```
 
-#### 在 GitHub Actions 更新截图
+#### 更新截图
 
-（步骤保持原文逻辑，此处略）
+浏览器端到端测试和 Storybook 会进行视觉回归测试。目前 VRT 测试仅在 Windows 上进行。可以按以下步骤更新截图：
 
----
+##### 使用 Github Actions 更新时
 
-### Electron E2E
+1. 在 fork 的仓库设置中启用 GitHub Actions。
+2. 在仓库设置的 Actions > General > Workflow permissions 中选择 Read and write permissions。
+3. 从 GitHub 的 Actions 选项卡选择「Test」工作流，点击「Run workflow」。
+4. 选择要更新的分支，勾选「更新快照」并执行。
+
+   也可以使用 gh 命令执行。
+
+   ```bash
+   gh workflow run test.yml -R (用户名)/voicevox --ref (分支名) -f update_snapshots=true
+   ```
+
+5. Github Workflow 完成后，更新后的截图会被提交。
+6. 拉取后，推送空提交以重新执行测试。
+
+   ```bash
+   git commit --allow-empty -m "（重新执行测试）"
+   git push
+   ```
+
+> [!NOTE]
+> 通过创建令牌并添加到 Secrets，可以自动重新执行测试。
+>
+> 1. 访问 [Fine-granted Tokens](https://github.com/settings/personal-access-tokens/new)。
+> 2. 输入合适的名称，授予对 `用户名/voicevox` 的访问权限，并在 Repository permissions 的 Contents 中选择 Read and write。
+>    <details>
+>    <summary>设置示例</summary>
+>    <img src="./docs/res/Fine-granted_Tokensの作成.png" width="320" alt="">
+>    </details>
+> 3. 创建令牌并复制字符串。
+> 4. 打开 `用户名/voicevox` 仓库的 Settings > Secrets and variables > Actions > New repository secret。
+> 5. 在名称中输入 `PUSH_TOKEN`，粘贴之前的字符串以添加 Secrets。
+
+##### 本地更新时
+
+只更新与本地 PC 操作系统对应的内容。
+
+```bash
+pnpm run test:browser-e2e --update-snapshots
+```
+
+### Electron 端到端测试
+
+执行需要 Electron 功能的、包括引擎启动、停止等的端到端测试。
 
 ```bash
 pnpm run test:electron-e2e
-pnpm run test-watch:electron-e2e
+pnpm run test-watch:electron-e2e # 监视模式
 ```
 
----
+## 生成依赖库的许可证信息
 
-## 生成依赖许可证
+依赖库的许可证信息会在 Github Workflow 构建时自动生成。可以使用以下命令生成。
 
 ```bash
+# 从 voicevox_engine 获取 licenses.json 作为 engine_licenses.json
+
 pnpm run license:generate -o voicevox_licenses.json
 pnpm run license:merge -o public/licenses.json -i engine_licenses.json -i voicevox_licenses.json
 ```
 
----
-
 ## 代码格式化
+
+整理代码格式。请在发送拉取请求前执行。
 
 ```bash
 pnpm run fmt
 ```
 
-## Lint
+## Lint（静态分析）
+
+对代码进行静态分析，防患于未然。请在发送拉取请求前执行。
 
 ```bash
 pnpm run lint
 ```
 
-> 会生成 `.eslintcache`，必要时可删除重跑。
-
----
+执行 lint 后，仓库根目录会生成缓存文件 `.eslintcache`。当 ESLint 升级、设置变更或缓存损坏时，请删除此文件。
 
 ## 拼写检查
+
+使用 [typos](https://github.com/crate-ci/typos) 进行拼写检查。
 
 ```bash
 pnpm run typos
 ```
 
----
+可以执行拼写检查。如果有误判或应该从检查中排除的文件，请按照[配置文件的说明](https://github.com/crate-ci/typos#false-positives) 编辑 `_typos.toml`。
 
-## TypeScript 类型检查
+## 类型检查
+
+进行 TypeScript 的类型检查。
 
 ```bash
 pnpm run typecheck
 ```
 
----
+## Markdownlint
 
-## Markdown 检查
+进行 Markdown 的语法检查。
 
 ```bash
 pnpm run markdownlint
 ```
 
----
-
 ## Shellcheck
+
+进行 ShellScript 的语法检查。安装方法请参考[这里](https://github.com/koalaman/shellcheck#installing)。
 
 ```bash
 shellcheck ./build/*.sh
 shellcheck ./tools/*.bash
 ```
 
----
+## GitHub Actions 的 lint
+
+使用 [jactionlint](https://github.com/jdx/jactionlint) 检查 GitHub Actions 的工作流和 composite action。
+
+```bash
+pnpm run jactionlint
+```
+
+如果安装了 [ShellCheck](https://github.com/koalaman/shellcheck)，`run:` 中的 shell 脚本也会被检查。检查内容在 `.github/jactionlint.yaml` 中设置。
+
+## 固定 GitHub Actions 的版本
+
+使用 [pinact](https://github.com/suzuki-shunsuke/pinact) 将 GitHub Actions 的版本固定为 full-length commit SHA。
+
+```bash
+# 固定版本
+pinact run
+
+# 更新并固定版本
+pinact run --update --min-age 7
+```
 
 ## OpenAPI generator
 
-（需先启动开发版 ENGINE）
+请在[开发版 VOICEVOX ENGINE](https://github.com/voicevox/voicevox_engine) 已启动的状态下执行以下命令。
 
 ```bash
 pnpm run generate-openapi
 ```
 
-查看版本：
+### OpenAPI generator 的版本升级
+
+确认、安装新版本可以使用以下命令。
 
 ```bash
 pnpm exec openapi-generator-cli version-manager list
 ```
 
----
+## 在 VS Code 中调试运行
 
-## VS Code 调试
+在 npm scripts 的 `serve` 或 `electron:serve` 等开发构建下，构建使用的 vite 会输出 sourcemap，因此源代码与输出代码会建立对应关系。
 
-复制以下文件：
-
-- `.vscode/launch.template.json` → `.vscode/launch.json`
-- `.vscode/tasks.template.json` → `.vscode/tasks.json`
-
-即可在 VS Code 中调试 `electron:serve`。
-
----
+通过复制 `.vscode/launch.template.json` 为 `.vscode/launch.json`，复制 `.vscode/tasks.template.json` 为 `.vscode/tasks.json`，即可启用从 VS Code 运行开发构建并进行调试的任务。
 
 ## 许可证
 
-**LGPL v3 + 商用可选许可（双许可）**  
-如需商业许可，请联系：  
-X：[@hiho_karuta](https://x.com/hiho_karuta)
----
-**必读**
-本项目基于原本的VOICEVOX项目进行汉化，原仓库在[这里](https://github.com/VOICEVOX/VOICEVOX "这里")，使用脚本 "Script/zh-cn.js" 批量汉化，修改的文件均可在此脚本与src目录查看。本项目使用LGPLv3许可证, 请在使用前确认许可证内容，否则可能会导致法律问题。
+采用 LGPL v3 与无需公开源代码的另一许可证的双许可证。如需获取另一许可证，请向ヒホ（Hiroshiba）申请。
+X 账号：[@hiho_karuta](https://x.com/hiho_karuta)

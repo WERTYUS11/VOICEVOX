@@ -1,6 +1,6 @@
 import { vi, it, expect } from "vitest";
-import { Ref } from "vue";
-import { UpdateInfo, UrlString } from "@/type/preload";
+import type { Ref } from "vue";
+import { type UpdateInfo, UrlString } from "@/type/preload";
 import { useFetchNewUpdateInfos } from "@/composables/useFetchNewUpdateInfos";
 
 // 最新バージョンの情報をfetchするモックを作成する
@@ -32,7 +32,7 @@ it("新バージョンがある場合、latestVersionに最新バージョンが
 
   const result = useFetchNewUpdateInfos(
     async () => currentVersion,
-    UrlString("http://example.com"),
+    async () => UrlString("http://example.com"),
   );
 
   await waitFinished(result);
@@ -49,7 +49,7 @@ it("新バージョンがない場合は状態が変わるだけ", async () => {
 
   const result = useFetchNewUpdateInfos(
     async () => currentVersion,
-    UrlString("http://example.com"),
+    async () => UrlString("http://example.com"),
   );
 
   await waitFinished(result);

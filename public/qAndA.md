@@ -9,8 +9,8 @@
 支持搭载 Windows／Mac／Linux 的电脑。
 
 ※Windows：Windows 10、Windows 11  
-※Mac：macOS 13（Ventura）及以上  
-※Linux：Ubuntu 20.04、Ubuntu 22.04
+※Mac：macOS 15（Sequoia）及以上  
+※Linux：Ubuntu 22.04、Ubuntu 24.04
 
 #### GPU 版
 

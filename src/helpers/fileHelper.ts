@@ -1,4 +1,4 @@
-import { ResultError } from "@/type/result";
+import type { ResultError } from "@/type/result";
 
 /** ファイル書き込み時のエラーメッセージを生成する */
 // instanceof ResultErrorで生まれるResultError<any>を受け取れるようにするため、anyを許容する
@@ -8,21 +8,21 @@ export function generateWriteErrorMessage(writeFileResult: ResultError<any>) {
     const code = writeFileResult.code?.toUpperCase();
 
     if (code?.startsWith("ENOSPC")) {
-      return "空き容量が足りません。";
+      return "磁盘空间不足。";
     }
 
     if (code?.startsWith("EACCES")) {
-      return "ファイルにアクセスする許可がありません。";
+      return "没有访问文件的权限。";
     }
 
     if (code?.startsWith("EBUSY")) {
-      return "ファイルが開かれています。";
+      return "文件已被打开。";
     }
 
     if (code?.startsWith("ENOENT")) {
-      return "指定されたファイルまたはフォルダが見つかりません。";
+      return "找不到指定的文件或文件夹。";
     }
   }
 
-  return `何らかの理由で失敗しました。${writeFileResult.message}`;
+  return `因某些原因失败。${writeFileResult.message}`;
 }

@@ -2,9 +2,9 @@
   <QDialog v-model="dialogOpened">
     <QCard class="q-py-sm q-px-md dialog-card">
       <QCardSection>
-        <div class="text-h5">更新通知</div>
+        <div class="text-h5">{{ props.title }}</div>
         <div class="text-body2 text-grey-8">
-          可从官方网站下载最新版本
+          {{ props.description }}
         </div>
       </QCardSection>
 
@@ -54,13 +54,13 @@
         />
         <QBtn
           padding="xs md"
-          label="打开官网"
+          :label="props.updateButtonLabel"
           unelevated
           color="primary"
           textColor="display-on-primary"
           class="q-mt-sm"
           @click="
-            openOfficialWebsite();
+            emit('updateClick');
             closeUpdateNotificationDialog();
           "
         />
@@ -70,10 +70,16 @@
 </template>
 
 <script setup lang="ts">
-import { UpdateInfo } from "@/type/preload";
+import type { UpdateInfo } from "@/type/preload";
 
 const dialogOpened = defineModel<boolean>("dialogOpened", { default: false });
 const props = defineProps<{
+  /** ダイアログのタイトル */
+  title: string;
+  /** ダイアログの説明 */
+  description: string;
+  /** アップデートボタンのラベル */
+  updateButtonLabel: string;
   /** 公開されている最新の版本 */
   latestVersion: string;
   /** 表示するアップデート情報 */
@@ -82,14 +88,12 @@ const props = defineProps<{
 const emit = defineEmits<{
   /** スキップするときに呼ばれる */
   (e: "skipThisVersionClick", version: string): void;
+  /** アップデートするときに呼ばれる */
+  (e: "updateClick"): void;
 }>();
 
 const closeUpdateNotificationDialog = () => {
   dialogOpened.value = false;
-};
-
-const openOfficialWebsite = () => {
-  window.open(import.meta.env.VITE_OFFICIAL_WEBSITE_URL, "_blank");
 };
 </script>
 

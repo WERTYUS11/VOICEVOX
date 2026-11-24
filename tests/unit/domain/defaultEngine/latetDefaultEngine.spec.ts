@@ -1,6 +1,6 @@
 import { vi, expect, test } from "vitest";
 import latestDefaultEngineInfos from "./latestDefaultEngineInfos.json";
-import { fetchLatestDefaultEngineInfo } from "@/domain/defaultEngine/latetDefaultEngine";
+import { fetchLatestDefaultEngineInfo } from "@/domain/defaultEngine/latestDefaultEngine";
 
 test("fetchLatestDefaultEngineInfo", async () => {
   // テスト用のjsonファイルでfetchをモックする
@@ -10,7 +10,10 @@ test("fetchLatestDefaultEngineInfo", async () => {
     .mockResolvedValue(new Response(JSON.stringify(latestDefaultEngineInfos)));
 
   // 読み込めることを確認
-  const infos = await fetchLatestDefaultEngineInfo("https://example.com/");
+  const infos = await fetchLatestDefaultEngineInfo(
+    "https://example.com/",
+    fetch,
+  );
   expect(infos.formatVersion).toBe(1);
 
   spy.mockRestore();

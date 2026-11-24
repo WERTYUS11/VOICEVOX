@@ -1,0 +1,137 @@
+<template>
+  <Presentation
+    :viewportInfo="props.viewportInfo"
+    :effectiveFramewise
+    :notes
+    :previewEraseRanges
+    :tempos
+    :tpqn
+    :editorFrameRate
+    :previewMode
+    :editableFrameRanges
+    :tool
+    :isDark
+    :uiLocked
+    :volumeEditMode
+    @pointerEvent="processPointerEvent"
+    @update:tool="setTool"
+    @panTimeline="(deltaX) => emit('panTimeline', deltaX)"
+    @zoomTimeline="(anchorX, deltaY) => emit('zoomTimeline', anchorX, deltaY)"
+  >
+    <template #grid>
+      <SequencerParameterGrid :viewportInfo="props.viewportInfo" />
+    </template>
+  </Presentation>
+</template>
+
+<script setup lang="ts">
+import { computed, onBeforeUnmount, toRaw, watch } from "vue";
+import Presentation from "./Presentation.vue";
+import type { VolumeEditorPointerEvent } from "./useVolumeEditorPointerInput";
+import SequencerParameterGrid from "@/components/Song/SequencerParameterGrid.vue";
+import { useStore } from "@/store";
+import type { VolumeEditTool } from "@/store/type";
+import { useVolumeEditorStateMachine } from "@/composables/useVolumeEditorStateMachine";
+import { relativeVolumeEditMode } from "@/song/volumeEditMode";
+import { getDefaultLyric } from "@/song/domain";
+import { buildVolumeEditDisplayData } from "@/song/volumeEditDisplay";
+import {
+  deriveVolumeEditableFrameRanges,
+  type VolumeEditableFrameRange,
+} from "@/song/volumeEditRanges";
+import type { ViewportInfo } from "@/song/viewHelper";
+
+defineOptions({
+  name: "SequencerVolumeEditor",
+});
+
+const props = defineProps<{
+  viewportInfo: ViewportInfo;
+}>();
+
+const emit = defineEmits<{
+  "update:needsAutoScroll": [value: boolean];
+  panTimeline: [deltaX: number];
+  zoomTimeline: [anchorX: number, deltaY: number];
+}>();
+
+const store = useStore();
+const volumeEditMode = relativeVolumeEditMode;
+
+const tool = computed<VolumeEditTool>(() => store.state.sequencerVolumeTool);
+const selectedTrackId = computed(() => store.getters.SELECTED_TRACK_ID);
+const selectedTrack = computed(() => store.getters.SELECTED_TRACK);
+const notes = computed(() =>
+  selectedTrack.value.notes.map((note) => ({
+    ...note,
+    lyric:
+      note.lyric ??
+      getDefaultLyric(note.noteNumber, store.state.defaultLyricMode),
+  })),
+);
+const tempos = computed(() => store.state.tempos);
+const tpqn = computed(() => store.state.tpqn);
+const editorFrameRate = computed(() => store.state.editorFrameRate);
+const isDark = computed(() => store.state.currentTheme === "Dark");
+const uiLocked = computed(() => store.getters.UI_LOCKED);
+
+const editableFrameRanges = computed<readonly VolumeEditableFrameRange[]>(() =>
+  deriveVolumeEditableFrameRanges({
+    phrases: store.state.phrases.values(),
+    phraseQueries: store.state.phraseQueries,
+    phraseSingingVolumes: store.state.phraseSingingVolumes,
+    trackId: selectedTrackId.value,
+    frameRate: editorFrameRate.value,
+  }),
+);
+
+const { volumePreviewEdit, stateMachineProcess, previewMode } =
+  useVolumeEditorStateMachine(store, {
+    getEditableFrameRanges: () => editableFrameRanges.value,
+    volumeEditMode,
+  });
+
+const volumeEditDisplayData = computed(() =>
+  buildVolumeEditDisplayData({
+    // Store側では、volumeEditDataは要素を書き換えず配列ごと差し替えるようになっているので、要素単位の変更を追う必要がない。
+    // 要素まで追うと依存がフレーム数に比例して増えるため、toRawで要素を追跡の対象から外す。
+    volumeEditData: toRaw(selectedTrack.value.volumeEditData),
+    previewEdit: volumePreviewEdit.value,
+    editableRanges: editableFrameRanges.value,
+  }),
+);
+const effectiveFramewise = computed(
+  () => volumeEditDisplayData.value.effectiveFramewise,
+);
+const previewEraseRanges = computed(
+  () => volumeEditDisplayData.value.previewEraseRanges,
+);
+
+watch(previewMode, (mode) => {
+  emit("update:needsAutoScroll", mode !== "IDLE");
+});
+
+onBeforeUnmount(() => {
+  if (previewMode.value !== "IDLE") {
+    emit("update:needsAutoScroll", false);
+  }
+});
+
+const setTool = (value: VolumeEditTool) => {
+  if (value === tool.value) {
+    return;
+  }
+  void store.actions.SET_SEQUENCER_VOLUME_TOOL({
+    sequencerVolumeTool: value,
+  });
+};
+
+const processPointerEvent = (event: VolumeEditorPointerEvent) => {
+  stateMachineProcess({
+    type: "pointerEvent",
+    targetArea: event.targetArea,
+    pointerEvent: event.pointerEvent,
+    pointerInfo: event.pointerInfo,
+  });
+};
+</script>

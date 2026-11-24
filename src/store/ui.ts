@@ -1,10 +1,10 @@
-import {
+import type {
   ActionsBase,
   DotNotationAction,
   DotNotationActionContext,
   DotNotationDispatch,
 } from "./vuex";
-import {
+import type {
   AllActions,
   AllGetters,
   AllMutations,
@@ -12,12 +12,12 @@ import {
   UiStoreTypes,
 } from "./type";
 import { createPartialStore } from "./vuex";
-import { ActivePointScrollMode } from "@/type/preload";
+import type { ActivePointScrollMode } from "@/type/preload";
 import {
-  MessageDialogOptions,
-  ConfirmDialogOptions,
-  WarningDialogOptions,
-  NotifyAndNotShowAgainButtonOption,
+  type MessageDialogOptions,
+  type ConfirmDialogOptions,
+  type WarningDialogOptions,
+  type NotifyAndNotShowAgainButtonOption,
   connectAndExportTextWithDialog,
   generateAndConnectAndSaveAudioWithDialog,
   generateAndSaveOneAudioWithDialog,
@@ -77,6 +77,7 @@ export const uiStoreState: UiStoreState = {
   isDictionaryManageDialogOpen: false,
   isEngineManageDialogOpen: false,
   isUpdateNotificationDialogOpen: false,
+  isEngineUpdateNotificationDialogOpen: false,
   isExportSongAudioDialogOpen: false,
   isImportSongProjectDialogOpen: false,
   isPresetManageDialogOpen: false,
@@ -425,12 +426,14 @@ export const uiStore = createPartialStore<UiStoreTypes>({
 
       await actions.STOP_RENDERING(); // FIXME: FINISH_VUEXなどを作成して移動すべき
 
-      if (obj.closeOrReload == "close") {
+      if (obj.nextAction == "close") {
         window.backend.closeWindow();
-      } else if (obj.closeOrReload == "reload") {
+      } else if (obj.nextAction == "reload") {
         await actions.RELOAD_APP({
           isMultiEngineOffMode: obj.isMultiEngineOffMode,
         });
+      } else if (obj.nextAction == "switchToWelcome") {
+        window.backend.launchWelcomeWindow();
       }
     },
   },
@@ -479,7 +482,7 @@ export const uiStore = createPartialStore<UiStoreTypes>({
   },
 
   // TODO: この4つのアクションをVue側に移動したい
-  SHOW_GENERATE_AND_SAVE_ALL_AUDIO_DIALOG: {
+  SHOW_GENERATE_AND_SAVE_ALL_AUDIO_FILE_DIALOG: {
     async action({ state, actions }) {
       await multiGenerateAndSaveAudioWithDialog({
         audioKeys: state.audioKeys,
@@ -489,7 +492,7 @@ export const uiStore = createPartialStore<UiStoreTypes>({
     },
   },
 
-  SHOW_GENERATE_AND_CONNECT_ALL_AUDIO_DIALOG: {
+  SHOW_GENERATE_AND_CONNECT_ALL_AUDIO_FILE_DIALOG: {
     async action({ actions, state }) {
       await generateAndConnectAndSaveAudioWithDialog({
         actions,
@@ -498,7 +501,7 @@ export const uiStore = createPartialStore<UiStoreTypes>({
     },
   },
 
-  SHOW_GENERATE_AND_SAVE_SELECTED_AUDIO_DIALOG: {
+  SHOW_GENERATE_AND_SAVE_SELECTED_AUDIO_FILE_DIALOG: {
     async action({ getters, actions, state }) {
       const activeAudioKey = getters.ACTIVE_AUDIO_KEY;
       if (activeAudioKey == undefined) {
@@ -510,7 +513,7 @@ export const uiStore = createPartialStore<UiStoreTypes>({
       }
 
       const selectedAudioKeys = getters.SELECTED_AUDIO_KEYS;
-      if (state.enableMultiSelect && selectedAudioKeys.length > 1) {
+      if (selectedAudioKeys.length > 1) {
         await multiGenerateAndSaveAudioWithDialog({
           audioKeys: selectedAudioKeys,
           actions: actions,

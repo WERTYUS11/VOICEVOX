@@ -5,27 +5,34 @@ import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { retryFetch } from "./helper.js";
+import { retryFetch, verifySha256 } from "./helper.js";
 
 const distPath = path.join(import.meta.dirname, "..", "vendored", "7z");
 const versionFilePath = path.join(distPath, "version.txt");
-const sevenZipVersion = "26.00";
+const sevenZipVersion = "26.05";
 const sevenZipAssetVersion = sevenZipVersion.replace(".", "");
 const sevenZipReleaseBaseUrl =
   "https://github.com/ip7z/7zip/releases/download/" + sevenZipVersion;
 
 function getPlatformDownloadInfo(): {
   url: string;
+  sha256: string;
   filesToExtract: string[];
-  bootstrapUrl?: string;
+  bootstrap?: { url: string; sha256: string };
 } {
   switch (process.platform) {
     case "win32": {
       return {
         // 7za.exeは7z形式で圧縮されているので、展開用に7zr.exeも取得する。
-        bootstrapUrl: `${sevenZipReleaseBaseUrl}/7zr.exe`,
+        bootstrap: {
+          url: `${sevenZipReleaseBaseUrl}/7zr.exe`,
+          sha256:
+            "9bf582b894dfa665f852d7e9112b02290a1c303c2d95a21fcdc41ffcb03143b7",
+        },
         url: `${sevenZipReleaseBaseUrl}/7z${sevenZipAssetVersion}-extra.7z`,
         // 7za.dll、7zxa.dllはなくても動くので、除外する
+        sha256:
+          "f27a8f103c84785026edcba1f67faf1357225df9d19ddb0b7760d55947141bc7",
         filesToExtract: ["7za.exe", "License.txt"],
       };
     }
@@ -34,12 +41,16 @@ function getPlatformDownloadInfo(): {
         case "arm64": {
           return {
             url: `${sevenZipReleaseBaseUrl}/7z${sevenZipAssetVersion}-linux-arm64.tar.xz`,
+            sha256:
+              "0b71f6cfc34669b3bf69f2347efd3429f77020665003a13b9cdc53b784270421",
             filesToExtract: ["7zzs", "License.txt"],
           };
         }
         case "x64": {
           return {
             url: `${sevenZipReleaseBaseUrl}/7z${sevenZipAssetVersion}-linux-x64.tar.xz`,
+            sha256:
+              "22cf82fcc6eb7474f1d5bb4f02c0f8ebd573a718089d6833dc30f8350a3b232e",
             filesToExtract: ["7zzs", "License.txt"],
           };
         }
@@ -51,6 +62,8 @@ function getPlatformDownloadInfo(): {
     case "darwin": {
       return {
         url: `${sevenZipReleaseBaseUrl}/7z${sevenZipAssetVersion}-mac.tar.xz`,
+        sha256:
+          "12ef6830317743cfd3f0ab1724bde43fcc270d8b6d8564f8c12c2a2b7f993570",
         filesToExtract: ["7zz", "License.txt"],
       };
     }
@@ -74,30 +87,35 @@ async function shouldDownload(filesToExtract: string[]) {
   return filesToExtract.some((file) => !existingFiles.includes(file));
 }
 
-async function downloadBinary(url: string, outputPath: string) {
+async function downloadBinary(
+  url: string,
+  outputPath: string,
+  expectedSha256: string,
+) {
   const res = await retryFetch(url);
   if (!res.ok) {
     throw new Error(`Failed to download binary: ${res.statusText}`);
   }
   const buffer = await res.arrayBuffer();
+  verifySha256(buffer, expectedSha256);
   await fs.promises.writeFile(outputPath, Buffer.from(buffer));
 }
 
-const { url, filesToExtract, bootstrapUrl } = getPlatformDownloadInfo();
+const { url, sha256, filesToExtract, bootstrap } = getPlatformDownloadInfo();
 
 if (await shouldDownload(filesToExtract)) {
   await fs.promises.rm(distPath, { force: true, recursive: true });
   await fs.promises.mkdir(distPath, { recursive: true });
 
-  if (bootstrapUrl) {
+  if (bootstrap) {
     const sevenzrPath = path.join(distPath, "7zr.exe");
-    console.log("Downloading 7zr from " + bootstrapUrl);
-    await downloadBinary(bootstrapUrl, sevenzrPath);
+    console.log("Downloading 7zr from " + bootstrap.url);
+    await downloadBinary(bootstrap.url, sevenzrPath, bootstrap.sha256);
   }
 
   console.log("Downloading 7z from " + url);
   const sevenZipPath = path.join(distPath, path.basename(url));
-  await downloadBinary(url, sevenZipPath);
+  await downloadBinary(url, sevenZipPath, sha256);
 
   console.log("Extracting 7z");
   const extractor = url.endsWith(".7z")

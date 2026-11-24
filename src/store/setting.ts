@@ -1,4 +1,4 @@
-import { SettingStoreState, SettingStoreTypes } from "./type";
+import type { SettingStoreState, SettingStoreTypes } from "./type";
 import { createUILockAction } from "./ui";
 import { createPartialStore } from "./vuex";
 import { themes } from "@/domain/theme";
@@ -9,15 +9,15 @@ import {
   showQuestionDialog,
 } from "@/components/Dialog/Dialog";
 import {
-  SavingSetting,
-  ExperimentalSettingType,
-  ToolbarSettingType,
+  type SavingSetting,
+  type ExperimentalSettingType,
+  type ToolbarSettingType,
   EngineId,
-  ConfirmedTips,
-  RootMiscSettingType,
+  type ConfirmedTips,
+  type RootMiscSettingType,
 } from "@/type/preload";
-import { IsEqual } from "@/type/utility";
-import { HotkeySettingType } from "@/domain/hotkeyAction";
+import type { IsEqual } from "@/type/utility";
+import type { HotkeySettingType } from "@/domain/hotkeyAction";
 
 export const settingStoreState: SettingStoreState = {
   openedEditor: undefined,
@@ -49,7 +49,7 @@ export const settingStoreState: SettingStoreState = {
     enableInterrogativeUpspeak: false,
     enableMorphing: false,
     shouldKeepTuningOnTextChange: false,
-    showParameterPanel: false,
+    showSongParameterPanel: false,
   },
   splitTextWhenPaste: "PERIOD_AND_NEW_LINE",
   splitterPosition: {
@@ -61,6 +61,7 @@ export const settingStoreState: SettingStoreState = {
     tweakableSliderByScroll: false,
     engineStartedOnAltPort: false,
     notifyOnGenerate: false,
+    streamingUnrecommended: false,
   },
   engineSettings: {},
   enablePreset: false,
@@ -72,10 +73,12 @@ export const settingStoreState: SettingStoreState = {
     soloAndMute: true,
     panAndGain: true,
   },
-  showSingCharacterPortrait: true,
+  showSongCharacterPortrait: true,
+  defaultLyricMode: "doremi",
   playheadPositionDisplayFormat: "MINUTES_SECONDS",
   enableKatakanaEnglish: true,
-  enableMultiSelect: true,
+  showAudioLength: false,
+  streamingMode: "STABLE",
 };
 
 export const settingStore = createPartialStore<SettingStoreTypes>({
@@ -150,12 +153,15 @@ export const settingStore = createPartialStore<SettingStoreTypes>({
         "enableRubyNotation",
         "enableMemoNotation",
         "skipUpdateVersion",
+        "skipEngineUpdateVersion",
         "undoableTrackOperations",
-        "showSingCharacterPortrait",
+        "showSongCharacterPortrait",
+        "defaultLyricMode",
         "playheadPositionDisplayFormat",
         "openedEditor",
         "enableKatakanaEnglish",
-        "enableMultiSelect",
+        "showAudioLength",
+        "streamingMode",
       ] as const;
 
       // rootMiscSettingKeysに値を足し忘れていたときに型エラーを出す検出用コード
@@ -323,7 +329,7 @@ export const settingStore = createPartialStore<SettingStoreTypes>({
       };
 
       void actions.SET_CONFIRMED_TIPS({
-        confirmedTips: confirmedTips as ConfirmedTips,
+        confirmedTips: confirmedTips,
       });
     },
   },
@@ -364,7 +370,7 @@ export const settingStore = createPartialStore<SettingStoreTypes>({
       async ({ state, actions }, { useGpu, engineId }) => {
         // 対応するGPUがない場合に変更を続行するか問う
         if (useGpu) {
-          showLoadingScreen({ message: "GPUデバイスを確認中です" });
+          showLoadingScreen({ message: "正在检查 GPU 设备" });
 
           const isAvailableGPUMode = await window.backend.isAvailableGPUMode();
 
@@ -373,11 +379,11 @@ export const settingStore = createPartialStore<SettingStoreTypes>({
           if (!isAvailableGPUMode) {
             const result = await showQuestionDialog({
               type: "warning",
-              title: "対応するGPUデバイスが見つかりません",
+              title: "未找到支持的 GPU 设备",
               message:
-                "GPUモードの利用には対応するGPUデバイスが必要です。\n" +
-                "このままGPUモードに変更するとエンジンエラーが発生する可能性があります。本当に変更しますか？",
-              buttons: ["変更しない", "変更する"],
+                "使用 GPU 模式需要支持的 GPU 设备。\n" +
+                "若继续更改为 GPU 模式，可能会发生引擎错误。确定要更改吗？",
+              buttons: ["不更改", "更改"],
               cancel: 0,
             });
             if (result == 0) {
@@ -387,7 +393,7 @@ export const settingStore = createPartialStore<SettingStoreTypes>({
         }
 
         showLoadingScreen({
-          message: "起動モードを変更中です",
+          message: "正在更改启动模式",
         });
 
         void actions.SET_ENGINE_SETTING({
@@ -404,9 +410,9 @@ export const settingStore = createPartialStore<SettingStoreTypes>({
         // FIXME: useGpu設定を保存してからエンジン起動を試すのではなく、逆にしたい
         if (!result.success && useGpu) {
           await showAlertDialog({
-            title: "GPUモードに変更できませんでした",
+            title: "无法更改为 GPU 模式",
             message:
-              "GPUモードでエンジンを起動できなかったためCPUモードに戻します",
+              "无法以 GPU 模式启动引擎，已恢复为 CPU 模式。",
           });
           await actions.CHANGE_USE_GPU({ useGpu: false, engineId });
           return;

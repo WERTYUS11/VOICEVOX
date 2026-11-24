@@ -31,10 +31,10 @@
 </template>
 
 <script setup lang="ts">
-import { QBtn, useDialogPluginComponent } from "quasar";
+import { type QBtn, useDialogPluginComponent } from "quasar";
 import { computed, onMounted, useTemplateRef } from "vue";
-import { QuestionDialogButtonColor } from "../Dialog";
-import { getIcon, getColor, DialogType } from "./common";
+import type { QuestionDialogButtonColor } from "../Dialog";
+import { getIcon, getColor, type DialogType } from "./common";
 import BaseDialog from "@/components/Base/BaseDialog.vue";
 import BaseButton from "@/components/Base/BaseButton.vue";
 import { ExhaustiveError } from "@/type/utility";
@@ -54,9 +54,9 @@ const props = withDefaults(
     default: undefined,
   },
 );
-defineEmits({
-  ...useDialogPluginComponent.emitsObject,
-});
+// NOTE: Vueのバグにより型エラーが発生するため`useDialogPluginComponent`を使わずに直接定義する
+// ref: https://github.com/vuejs/language-tools/issues/6324
+defineEmits<{ ok: [index: number]; hide: [] }>();
 
 const iconName = computed(() => getIcon(props.type));
 const color = computed(() => getColor(props.type));

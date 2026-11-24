@@ -6,6 +6,7 @@
     :disable="uiLocked"
     :class="{ opaque: loading }"
     aria-haspopup="menu"
+    :aria-label="characterButtonAriaLabel"
   >
     <!-- q-imgだとdisableのタイミングで点滅する -->
     <div class="icon-container">
@@ -112,7 +113,7 @@
                   subMenuOpenFlags[characterIndex] && 'selected-background'
                 "
                 role="application"
-                :aria-label="`${characterInfo.metas.speakerName}のスタイル、マウスオーバーするか、右矢印キーを押してスタイル選択を表示できます`"
+                :aria-label="`${characterInfo.metas.speakerName}的风格，悬停或按右方向键可显示风格选择`"
                 tabindex="0"
                 @mouseover="reassignSubMenuOpen(characterIndex)"
                 @mouseleave="reassignSubMenuOpen.cancel()"
@@ -173,11 +174,9 @@
                           />
                         </QAvatar>
                       </QAvatar>
-                      <QItemSection v-if="style.styleName"
-                        >{{ characterInfo.metas.speakerName }}（{{
-                          style.styleName
-                        }}）</QItemSection
-                      >
+                      <QItemSection v-if="style.styleName">{{
+                        style.styleName
+                      }}</QItemSection>
                       <QItemSection v-else>{{
                         characterInfo.metas.speakerName
                       }}</QItemSection>
@@ -195,9 +194,9 @@
 
 <script setup lang="ts">
 import { debounce, QBtn } from "quasar";
-import { computed, Ref, ref } from "vue";
+import { computed, type Ref, ref } from "vue";
 import { useStore } from "@/store";
-import { CharacterInfo, SpeakerId, Voice } from "@/type/preload";
+import type { CharacterInfo, SpeakerId, Voice } from "@/type/preload";
 import { formatCharacterStyleName } from "@/store/utility";
 import { getDefaultStyle } from "@/domain/talk";
 import { useEngineIcons } from "@/composables/useEngineIcons";
@@ -259,6 +258,11 @@ const selectedVoiceInfoText = computed(() => {
   const styleName = selectedStyleInfo.value.styleName;
   return formatCharacterStyleName(speakerName, styleName);
 });
+
+const characterButtonAriaLabel = computed(
+  () =>
+    `更改角色和风格，当前角色和风格为${selectedVoiceInfoText.value}`,
+);
 
 const isSelectedItem = (characterInfo: CharacterInfo) =>
   selectedCharacter.value != undefined &&

@@ -7,7 +7,7 @@
  */
 import fs from "node:fs/promises";
 import path from "node:path";
-import { test, expect, Locator } from "@playwright/test";
+import { test, expect, type Locator } from "@playwright/test";
 import z from "zod";
 
 // Storybook 8.3.5時点でのindex.jsonのスキーマ。
@@ -15,6 +15,7 @@ import z from "zod";
 const storybookIndexSchema = z.object({
   v: z.literal(5),
   entries: z.record(
+    z.string(),
     z.object({
       type: z.string(),
       id: z.string(),
@@ -31,6 +32,23 @@ type Theme = "light" | "dark";
 const toSnapshotFileName = (story: Story, theme: Theme) =>
   `${story.id}-${theme}.png`;
 
+// fetchが成功するまで待つ。
+const fetchStorybookIndex = async (): Promise<Response> => {
+  const timeoutAt = Date.now() + 30 * 1000;
+
+  while (true) {
+    try {
+      return await fetch("http://localhost:7357/index.json");
+    } catch (e) {
+      if (Date.now() >= timeoutAt) {
+        throw e;
+      }
+
+      await new Promise<void>((resolve) => setTimeout(resolve, 500));
+    }
+  }
+};
+
 // テスト対象のStory一覧を取得する。
 // play-fnが付いているStoryはUnit Test用Storyとみなしてスクリーンショットを撮らない
 const getStoriesToTest = (index: StorybookIndex) =>
@@ -45,7 +63,7 @@ let index: StorybookIndex;
 
 try {
   index = storybookIndexSchema.parse(
-    await fetch("http://localhost:7357/index.json").then((res) => res.json()),
+    await fetchStorybookIndex().then((res) => res.json()),
   );
 } catch (e) {
   throw new Error(`获取 Storybook 的 index.json 失败`, {

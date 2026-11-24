@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 import { gotoHome, navigateToSong } from "../../navigators";
-import { ensureNotNullish } from "@/helpers/errorHelper";
+import { ensureNotNullish } from "@/type/utility";
 
 test.beforeEach(gotoHome);
 
@@ -21,7 +21,16 @@ test("ループ範囲をドラッグして追加できる", async ({ page }) => 
   // ドラッグをエミュレート startPos から endPos までドラッグ
   await loopLane.hover({ position: startPos });
   await page.mouse.down();
-  await page.mouse.move(endPos.x, endPos.y);
+  const laneBox = ensureNotNullish(await loopLane.boundingBox());
+  await page.mouse.move(laneBox.x + endPos.x, laneBox.y + endPos.y);
+  await expect(loopLane.locator(".loop-range")).toHaveCount(1);
+  await expect
+    .poll(
+      async () =>
+        ensureNotNullish(await loopLane.locator(".loop-range").boundingBox())
+          .width,
+    )
+    .toBeGreaterThanOrEqual(50);
   await page.mouse.up();
 
   // ループが追加されたことを確認

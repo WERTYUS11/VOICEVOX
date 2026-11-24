@@ -31,7 +31,7 @@
           icon="chevron_left"
           textColor="display"
           class="style-select-button"
-          aria-label="前のスタイル"
+          aria-label="上一个风格"
           @mouseenter="isHoverableItem = false"
           @mouseleave="isHoverableItem = true"
           @click.stop="
@@ -48,7 +48,7 @@
           icon="chevron_right"
           textColor="display"
           class="style-select-button"
-          aria-label="次のスタイル"
+          aria-label="下一个风格"
           @mouseenter="isHoverableItem = false"
           @mouseleave="isHoverableItem = true"
           @click.stop="
@@ -73,7 +73,7 @@
           "
           color="primary"
           class="voice-sample-btn"
-          :aria-label="`サンプルボイス${voiceSampleIndex + 1}`"
+          :aria-label="`示例语音${voiceSampleIndex + 1}`"
           @mouseenter="isHoverableItem = false"
           @mouseleave="isHoverableItem = true"
           @click.stop="
@@ -94,7 +94,12 @@
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import { CharacterInfo, SpeakerId, StyleId, StyleInfo } from "@/type/preload";
+import type {
+  CharacterInfo,
+  SpeakerId,
+  StyleId,
+  StyleInfo,
+} from "@/type/preload";
 import { DEFAULT_STYLE_NAME } from "@/store/utility";
 
 const props = defineProps<{

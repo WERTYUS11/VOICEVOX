@@ -1,4 +1,8 @@
-import { spawn, ChildProcess } from "node:child_process";
+import {
+  spawn,
+  type ChildProcess,
+  type ChildProcessWithoutNullStreams,
+} from "node:child_process";
 import path from "node:path";
 import treeKill from "tree-kill";
 
@@ -14,7 +18,7 @@ import {
 
 import { getConfigManager } from "../electronConfig";
 import { getEngineInfoManager } from "./engineInfoManager";
-import { EngineId, EngineInfo } from "@/type/preload";
+import { EngineId, type EngineInfo } from "@/type/preload";
 import { createLogger } from "@/helpers/log";
 
 const log = createLogger("EngineProcessManager");
@@ -115,8 +119,8 @@ export class EngineProcessManager {
       if (altPort == undefined) {
         log.error(`ENGINE ${engineId}: No Alternative Port Found`);
         dialog.showErrorBox(
-          `${engineInfo.name} の起動に失敗しました`,
-          `${port}番ポートの代わりに利用可能なポートが見つかりませんでした。PCを再起動してください。`,
+          `${engineInfo.name} 启动失败`,
+          `未找到可替代 ${port} 号端口的可用端口。请重启电脑。`,
         );
         app.exit(1);
         throw new Error("No Alternative Port Found");
@@ -161,10 +165,21 @@ export class EngineProcessManager {
     log.info(`ENGINE ${engineId} path: ${enginePath}`);
     log.info(`ENGINE ${engineId} args: ${JSON.stringify(args)}`);
 
-    const engineProcess = spawn(enginePath, args, {
-      cwd: path.dirname(enginePath),
-      env: { ...process.env, VV_OUTPUT_LOG_UTF8: "1" },
-    });
+    let engineProcess: ChildProcessWithoutNullStreams;
+    try {
+      engineProcess = spawn(enginePath, args, {
+        cwd: path.dirname(enginePath),
+        env: { ...process.env, VV_OUTPUT_LOG_UTF8: "1" },
+      });
+    } catch (error) {
+      log.error(`ENGINE ${engineId}: Failed to start process`);
+      log.error(error instanceof Error ? error : String(error));
+      this.onEngineProcessError(
+        engineInfo,
+        error instanceof Error ? error : new Error(String(error)),
+      );
+      return;
+    }
     engineProcessContainer.engineProcess = engineProcess;
 
     engineProcess.stdout?.on("data", (data: Buffer) => {
@@ -196,8 +211,8 @@ export class EngineProcessManager {
       if (!engineProcessContainer.isGracefulShutdown) {
         const errorMessage =
           engineInfos.length === 1
-            ? "音声合成エンジンが異常終了しました。エンジンを再起動してください。"
-            : `${engineInfo.name}が異常終了しました。エンジンを再起動してください。`;
+            ? "语音合成引擎异常退出。请重新启动引擎。"
+            : `${engineInfo.name} 异常退出。请重新启动引擎。`;
         if (!errorNotified) {
           errorNotified = true;
           this.onEngineProcessError(engineInfo, new Error(errorMessage));

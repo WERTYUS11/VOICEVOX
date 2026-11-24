@@ -1,14 +1,3 @@
-/** 入力がnullかundefinedの場合エラーを投げ、それ以外の場合は入力をそのまま返す */
-export const ensureNotNullish = <T>(
-  value: T | null | undefined,
-  message = "Unexpected nullish value",
-): T => {
-  if (value == null) {
-    throw new Error(message);
-  }
-  return value;
-};
-
 /**
  * ユーザーに表示するメッセージを持つエラー。
  * {@link errorToMessages}でユーザー向けのメッセージとして扱われる。
@@ -72,13 +61,11 @@ export const errorToMessages = (
     for (const e of errors) {
       if (e instanceof Error) {
         let message = "";
-        if (
-          !(
-            e.constructor === Error ||
-            e instanceof AggregateError ||
-            e instanceof DisplayableError
-          )
-        ) {
+        if (!(
+          e.constructor === Error ||
+          e instanceof AggregateError ||
+          e instanceof DisplayableError
+        )) {
           message += `${e.name}: `;
         }
         message += e.message;
@@ -111,7 +98,7 @@ export const errorToMessage = (e: unknown): string => {
   const { displayable, internal } = errorToMessages(e);
   const messages = [...displayable];
   if (internal.length > 0) {
-    messages.push("（内部エラーメッセージ）", ...internal);
+    messages.push("（内部错误信息）", ...internal);
   }
   return trim(messages.join("\n"));
 

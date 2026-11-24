@@ -20,7 +20,9 @@ import {
 
 import { DictMock } from "./dictMock";
 import { cloneWithUnwrapProxy } from "@/helpers/cloneWithUnwrapProxy";
-import {
+import { BlobApiResponse } from "@/openapi";
+import { ensureNotNullish } from "@/type/utility";
+import type {
   AccentPhrase,
   AccentPhrasesRequest,
   AudioQuery,
@@ -146,7 +148,12 @@ export function createOpenAPIEngineMock(): DefaultApiInterface {
         frameAudioQuery,
         payload.speaker,
       );
-      return new Blob([buffer], { type: "audio/wav" });
+      return new Blob([new Uint8Array(buffer)], { type: "audio/wav" });
+    },
+
+    async synthesisRaw(payload: SynthesisRequest) {
+      const blob = await ensureNotNullish(mockApi.synthesis)(payload);
+      return new BlobApiResponse(new Response(blob));
     },
 
     // ソング系
@@ -181,7 +188,7 @@ export function createOpenAPIEngineMock(): DefaultApiInterface {
     async singFrameF0(payload: SingFrameF0Request): Promise<Array<number>> {
       const {
         speaker: styleId,
-        bodySingFrameF0SingFrameF0Post: { score, frameAudioQuery },
+        bodySingFrameF0: { score, frameAudioQuery },
       } = cloneWithUnwrapProxy(payload);
 
       const f0 = notesAndFramePhonemesToPitchMock(
@@ -197,7 +204,7 @@ export function createOpenAPIEngineMock(): DefaultApiInterface {
     ): Promise<Array<number>> {
       const {
         speaker: styleId,
-        bodySingFrameVolumeSingFrameVolumePost: { score, frameAudioQuery },
+        bodySingFrameVolume: { score, frameAudioQuery },
       } = cloneWithUnwrapProxy(payload);
 
       const volume = notesAndFramePhonemesAndPitchToVolumeMock(
@@ -213,7 +220,7 @@ export function createOpenAPIEngineMock(): DefaultApiInterface {
       const { speaker: styleId, frameAudioQuery } =
         cloneWithUnwrapProxy(payload);
       const buffer = synthesisFrameAudioQueryMock(frameAudioQuery, styleId);
-      return new Blob([buffer], { type: "audio/wav" });
+      return new Blob([new Uint8Array(buffer)], { type: "audio/wav" });
     },
 
     // 辞書系

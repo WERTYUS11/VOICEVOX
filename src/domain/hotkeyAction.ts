@@ -30,6 +30,7 @@ export const hotkeyActionNameSchema = z.enum([
   "项目另存为",
   "保存项目副本",
   "加载项目",
+  "串联文本并导出",
   "加载文本",
   "重置语调",
   "重置所选重音短语语调",
@@ -162,6 +163,10 @@ export function getDefaultHotkeySettings({
     {
       action: "加载项目",
       combination: HotkeyCombination(!isMac ? "Ctrl O" : "Meta O"),
+    },
+    {
+      action: "串联文本并导出",
+      combination: HotkeyCombination(""),
     },
     {
       action: "加载文本",

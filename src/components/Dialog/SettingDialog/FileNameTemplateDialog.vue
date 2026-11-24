@@ -4,7 +4,10 @@
       <QCardSection>
         <div class="text-h5">导出文件名模式</div>
         <div class="text-body2 text-grey-8">
-          「$キャラ$」您可以使用类似的标签自定义导出的文件名
+          「$キャラ$」等标签可用于自定义导出的文件名
+        </div>
+        <div class="text-body2 text-grey-8">
+          在「$テキスト[20]$」这样加上[字数]，即可按该字数截断（1〜99）。
         </div>
       </QCardSection>
       <QCardActions class="setting-card q-px-md q-py-sm">

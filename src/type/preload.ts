@@ -1,14 +1,13 @@
 import { z } from "zod";
-import { IpcSOData } from "./ipc";
-import { AltPortInfos } from "@/store/type";
-import { Result } from "@/type/result";
+import type { AltPortInfos } from "@/store/type";
+import type { Result } from "@/type/result";
 import {
-  HotkeySettingType,
+  type HotkeySettingType,
   hotkeySettingSchema,
   getDefaultHotkeySettings,
 } from "@/domain/hotkeyAction";
 
-const urlStringSchema = z.string().url().brand("URL");
+const urlStringSchema = z.url().brand("URL");
 export type UrlString = z.infer<typeof urlStringSchema>;
 export const UrlString = (url: string): UrlString => urlStringSchema.parse(url);
 
@@ -58,19 +57,7 @@ export const defaultToolbarButtonSetting: ToolbarSettingType = [
   "REDO",
 ];
 
-export type TextAsset = {
-  Contact: string;
-  HowToUse: string;
-  OssCommunityInfos: string;
-  Policy: string;
-  PrivacyPolicy: string;
-  QAndA: string;
-  OssLicenses: Record<string, string>[];
-  UpdateInfos: UpdateInfo[];
-};
-
 export interface Sandbox {
-  getTextAsset<K extends keyof TextAsset>(textType: K): Promise<TextAsset[K]>;
   getAltPortInfos(): Promise<AltPortInfos>;
   getInitialProjectFilePath(): Promise<string | undefined>;
   showSaveDirectoryDialog(obj: { title: string }): Promise<string | undefined>;
@@ -95,13 +82,23 @@ export interface Sandbox {
   readFile(obj: { filePath: string }): Promise<Result<Uint8Array>>;
   isAvailableGPUMode(): Promise<boolean>;
   isMaximizedWindow(): Promise<boolean>;
-  onReceivedIPCMsg(listeners: {
-    [K in keyof IpcSOData]: (
-      event: unknown,
-      ...args: IpcSOData[K]["args"]
-    ) => Promise<IpcSOData[K]["return"]> | IpcSOData[K]["return"];
+  registerIpcHandler(listeners: {
+    loadProjectFile: (obj: { filePath: string }) => void;
+    detectMaximized: () => void;
+    detectUnmaximized: () => void;
+    detectedEngineError: (obj: { engineId: EngineId }) => void;
+    detectPinned: () => void;
+    detectUnpinned: () => void;
+    detectEnterFullscreen: () => void;
+    detectLeaveFullscreen: () => void;
+    checkEditedAndNotSave: (obj: {
+      nextAction: "close" | "reload" | "switchToWelcome";
+      isMultiEngineOffMode?: boolean;
+    }) => void;
+    detectResized: (obj: { width: number; height: number }) => void;
   }): void;
   closeWindow(): void;
+  launchWelcomeWindow(): void;
   minimizeWindow(): void;
   toggleMaximizeWindow(): void;
   toggleFullScreen(): void;
@@ -135,6 +132,8 @@ export interface Sandbox {
   validateEngineDir(engineDir: string): Promise<EngineDirValidationResult>;
   reloadApp(obj: { isMultiEngineOffMode?: boolean }): Promise<void>;
   getPathForFile(file: File): Promise<string>;
+  getDownloadableDefaultEnginePackageIds(): Promise<EngineId[]>;
+  getEnginePackageUpdateInfosUrl(engineId: EngineId): Promise<UrlString>;
 }
 
 export type AppInfos = {
@@ -142,7 +141,8 @@ export type AppInfos = {
   version: string;
 };
 
-export type StyleType = "talk" | "singing_teacher" | "frame_decode" | "sing";
+export type StyleType =
+  "talk" | "streaming_talk" | "singing_teacher" | "frame_decode" | "sing";
 
 export type StyleInfo = {
   styleName?: string;
@@ -186,9 +186,7 @@ export type Voice = {
 export type Encoding = "UTF-8" | "Shift_JIS";
 
 export type AcceptRetrieveTelemetryStatus =
-  | "Unconfirmed"
-  | "Accepted"
-  | "Refused";
+  "Unconfirmed" | "Accepted" | "Refused";
 
 export type AcceptTermsStatus = "Unconfirmed" | "Accepted" | "Rejected";
 
@@ -198,10 +196,6 @@ export type SplitTextWhenPasteType = "PERIOD_AND_NEW_LINE" | "NEW_LINE" | "OFF";
 
 export type EditorFontType = "default" | "os";
 
-export type SavingSetting = ConfigType["savingSetting"];
-
-export type EngineSettings = Record<EngineId, EngineSettingType>;
-
 export const engineSettingSchema = z.object({
   useGpu: z.boolean().default(false),
   outputSamplingRate: z
@@ -209,6 +203,25 @@ export const engineSettingSchema = z.object({
     .default("engineDefault"),
 });
 export type EngineSettingType = z.infer<typeof engineSettingSchema>;
+
+export const savingSettingSchema = z
+  .object({
+    fileEncoding: z.enum(["UTF-8", "Shift_JIS"]).default("UTF-8"),
+    fileNamePattern: z.string().default(""), // NOTE: ファイル名パターンは拡張子を含まない
+    fixedExportEnabled: z.boolean().default(false),
+    avoidOverwrite: z.boolean().default(false),
+    fixedExportDir: z.string().default(""),
+    exportLab: z.boolean().default(false),
+    exportText: z.boolean().default(false),
+    outputStereo: z.boolean().default(false),
+    audioOutputDevice: z.string().default(""),
+    songTrackFileNamePattern: z.string().default(""),
+  })
+  .prefault({});
+
+export type SavingSetting = z.infer<typeof savingSettingSchema>;
+
+export type EngineSettings = Record<EngineId, EngineSettingType>;
 
 export type DefaultStyleId = {
   engineId: EngineId;
@@ -266,8 +279,7 @@ export type Preset = {
   morphingInfo?: MorphingInfo;
 };
 export type PresetSliderKey =
-  | keyof Omit<Preset, "name" | "morphingInfo">
-  | "morphingRate";
+  keyof Omit<Preset, "name" | "morphingInfo"> | "morphingRate";
 
 export type MorphingInfo = {
   rate: number;
@@ -293,10 +305,7 @@ export type MorphableTargetInfoTable = Record<
 >;
 
 export type HotkeyReturnType =
-  | void
-  | boolean
-  | Promise<void>
-  | Promise<boolean>;
+  void | boolean | Promise<void> | Promise<boolean>;
 
 export const toolbarButtonTagSchema = z.enum([
   "PLAY_CONTINUOUSLY",
@@ -319,11 +328,7 @@ export type ToolbarSettingType = z.infer<typeof toolbarSettingSchema>[];
 export type NativeThemeType = "system" | "light" | "dark";
 
 export type MoraDataType =
-  | "consonant"
-  | "vowel"
-  | "pitch"
-  | "pause"
-  | "voicing";
+  "consonant" | "vowel" | "pitch" | "pause" | "voicing";
 
 export type ThemeColorType =
   | "primary"
@@ -351,7 +356,7 @@ export const experimentalSettingSchema = z.object({
   enableInterrogativeUpspeak: z.boolean().default(false),
   enableMorphing: z.boolean().default(false),
   shouldKeepTuningOnTextChange: z.boolean().default(false),
-  showParameterPanel: z.boolean().default(false),
+  showSongParameterPanel: z.boolean().default(false),
 });
 
 export type ExperimentalSettingType = z.infer<typeof experimentalSettingSchema>;
@@ -360,6 +365,7 @@ export const splitterPositionSchema = z.object({
   portraitPaneWidth: z.number().optional(),
   audioInfoPaneWidth: z.number().optional(),
   audioDetailPaneHeight: z.number().optional(),
+  parameterPanelHeight: z.number().optional(),
 });
 export type SplitterPositionType = z.infer<typeof splitterPositionSchema>;
 
@@ -367,6 +373,7 @@ export type ConfirmedTips = {
   tweakableSliderByScroll: boolean;
   engineStartedOnAltPort: boolean; // エンジンのポート変更の通知
   notifyOnGenerate: boolean; // 音声書き出し時の通知
+  streamingUnrecommended: boolean; // ストリーミング再生で生成が再生に追いつかない場合の通知
 };
 
 // ルート直下にある雑多な設定値
@@ -385,108 +392,100 @@ export const rootMiscSettingSchema = z.object({
   enableMemoNotation: z.boolean().default(false), // メモ記法を有効にするか
   enableRubyNotation: z.boolean().default(false), // ルビ記法を有効にするか
   skipUpdateVersion: z.string().optional(), // アップデートをスキップしたバージョン
+  skipEngineUpdateVersion: z.string().optional(), // エンジンのアップデートをスキップしたバージョン
   undoableTrackOperations: z // ソングエディタでどのトラック操作をUndo可能にするか
     .object({
       soloAndMute: z.boolean().default(true),
       panAndGain: z.boolean().default(true),
     })
-    .default({}),
-  showSingCharacterPortrait: z.boolean().default(true), // ソングエディタで立ち絵を表示するか
+    .prefault({}),
+  showSongCharacterPortrait: z.boolean().default(true), // ソングエディタで立ち絵を表示するか
+  defaultLyricMode: z.enum(["doremi", "la"]).default("doremi"), // デフォルト歌詞の動作モード
   playheadPositionDisplayFormat: z
     .enum(["MINUTES_SECONDS", "MEASURES_BEATS"])
     .default("MINUTES_SECONDS"), // 再生ヘッド位置の表示モード
   enableKatakanaEnglish: z.boolean().default(true), // 未知の英単語をカタカナ読みに変換するかどうか
-  enableMultiSelect: z.boolean().default(true), // 複数選択を有効にするかどうか
+  showAudioLength: z.boolean().default(false), // 音声の長さを表示するかどうか
+  streamingMode: z
+    .enum(["LOW_LATENCY", "BALANCED", "STABLE"])
+    .default("STABLE"), // ストリーミング再生のモード
 });
 export type RootMiscSettingType = z.infer<typeof rootMiscSettingSchema>;
 
 export function getConfigSchema({ isMac }: { isMac: boolean }) {
-  return z
-    .object({
-      inheritAudioInfo: z.boolean().default(true),
-      activePointScrollMode: z
-        .enum(["CONTINUOUSLY", "PAGE", "OFF"])
-        .default("OFF"),
-      savingSetting: z
-        .object({
-          fileEncoding: z.enum(["UTF-8", "Shift_JIS"]).default("UTF-8"),
-          fileNamePattern: z.string().default(""), // NOTE: ファイル名パターンは拡張子を含まない
-          fixedExportEnabled: z.boolean().default(false),
-          avoidOverwrite: z.boolean().default(false),
-          fixedExportDir: z.string().default(""),
-          exportLab: z.boolean().default(false),
-          exportText: z.boolean().default(false),
-          outputStereo: z.boolean().default(false),
-          audioOutputDevice: z.string().default(""),
-          songTrackFileNamePattern: z.string().default(""),
-        })
-        .default({}),
-      hotkeySettings: hotkeySettingSchema
-        .array()
-        .default(getDefaultHotkeySettings({ isMac })),
-      toolbarSetting: toolbarSettingSchema
-        .array()
-        .default(defaultToolbarButtonSetting),
-      engineSettings: z.record(engineIdSchema, engineSettingSchema).default({}),
-      userCharacterOrder: speakerIdSchema.array().default([]),
-      defaultStyleIds: z
-        .object({
-          engineId: engineIdSchema
-            .or(z.literal(EngineId("00000000-0000-0000-0000-000000000000")))
-            .default(EngineId("00000000-0000-0000-0000-000000000000")),
-          speakerUuid: speakerIdSchema,
-          defaultStyleId: styleIdSchema,
-        })
-        .array()
-        .default([]),
-      presets: z
-        .object({
-          items: z
-            .record(
-              presetKeySchema,
-              z.object({
-                name: z.string(),
-                speedScale: z.number(),
-                pitchScale: z.number(),
-                intonationScale: z.number(),
-                volumeScale: z.number(),
-                pauseLengthScale: z.number(),
-                prePhonemeLength: z.number(),
-                postPhonemeLength: z.number(),
-                morphingInfo: z
-                  .object({
-                    rate: z.number(),
-                    targetEngineId: engineIdSchema,
-                    targetSpeakerId: speakerIdSchema,
-                    targetStyleId: styleIdSchema,
-                  })
-                  .optional(),
-              }),
-            )
-            .default({}),
-          keys: presetKeySchema.array().default([]),
-        })
-        .default({}),
-      defaultPresetKeys: z.record(voiceIdSchema, presetKeySchema).default({}),
-      currentTheme: z.string().default("Default"),
-      experimentalSetting: experimentalSettingSchema.default({}),
-      acceptRetrieveTelemetry: z
-        .enum(["Unconfirmed", "Accepted", "Refused"])
-        .default("Unconfirmed"),
-      acceptTerms: z
-        .enum(["Unconfirmed", "Accepted", "Rejected"])
-        .default("Unconfirmed"),
-      confirmedTips: z
-        .object({
-          tweakableSliderByScroll: z.boolean().default(false),
-          engineStartedOnAltPort: z.boolean().default(false),
-          notifyOnGenerate: z.boolean().default(false),
-        })
-        .default({}),
-      registeredEngineDirs: z.string().array().default([]),
-      recentlyUsedProjects: z.string().array().default([]),
-    })
-    .merge(rootMiscSettingSchema);
+  return z.object({
+    inheritAudioInfo: z.boolean().default(true),
+    activePointScrollMode: z
+      .enum(["CONTINUOUSLY", "PAGE", "OFF"])
+      .default("OFF"),
+    savingSetting: savingSettingSchema,
+    hotkeySettings: hotkeySettingSchema
+      .array()
+      .default(getDefaultHotkeySettings({ isMac })),
+    toolbarSetting: toolbarSettingSchema
+      .array()
+      .default(defaultToolbarButtonSetting),
+    engineSettings: z.record(engineIdSchema, engineSettingSchema).default({}),
+    userCharacterOrder: speakerIdSchema.array().default([]),
+    defaultStyleIds: z
+      .object({
+        engineId: engineIdSchema
+          .or(z.literal(EngineId("00000000-0000-0000-0000-000000000000")))
+          .default(EngineId("00000000-0000-0000-0000-000000000000")),
+        speakerUuid: speakerIdSchema,
+        defaultStyleId: styleIdSchema,
+      })
+      .array()
+      .default([]),
+    presets: z
+      .object({
+        items: z
+          .record(
+            presetKeySchema,
+            z.object({
+              name: z.string(),
+              speedScale: z.number(),
+              pitchScale: z.number(),
+              intonationScale: z.number(),
+              volumeScale: z.number(),
+              pauseLengthScale: z.number(),
+              prePhonemeLength: z.number(),
+              postPhonemeLength: z.number(),
+              morphingInfo: z
+                .object({
+                  rate: z.number(),
+                  targetEngineId: engineIdSchema,
+                  targetSpeakerId: speakerIdSchema,
+                  targetStyleId: styleIdSchema,
+                })
+                .optional(),
+            }),
+          )
+          .default({}),
+        keys: presetKeySchema.array().default([]),
+      })
+      .prefault({}),
+    defaultPresetKeys: z.record(voiceIdSchema, presetKeySchema).default({}),
+    currentTheme: z.string().default("Default"),
+    experimentalSetting: experimentalSettingSchema.prefault({}),
+    acceptRetrieveTelemetry: z
+      .enum(["Unconfirmed", "Accepted", "Refused"])
+      .default("Unconfirmed"),
+    acceptTerms: z
+      .enum(["Unconfirmed", "Accepted", "Rejected"])
+      .default("Unconfirmed"),
+    confirmedTips: z
+      .object({
+        tweakableSliderByScroll: z.boolean().default(false),
+        engineStartedOnAltPort: z.boolean().default(false),
+        notifyOnGenerate: z.boolean().default(false),
+        streamingUnrecommended: z.boolean().default(false),
+      })
+      .prefault({}),
+    registeredEngineDirs: z.string().array().default([]),
+    recentlyUsedProjects: z.string().array().default([]),
+    ...rootMiscSettingSchema.shape,
+  });
 }
 export type ConfigType = z.infer<ReturnType<typeof getConfigSchema>>;
 

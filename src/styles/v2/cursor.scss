@@ -18,8 +18,18 @@
   cursor: move;
 }
 
+.cursor-not-allowed {
+  cursor: not-allowed;
+}
+
 .cursor-draw {
   cursor:
     url("/draw-cursor.png") 2 2,
     auto;
+}
+
+.cursor-erase {
+  // TODO: 削除用消しゴム的カーソルが現状ないため、用意するまではcell
+  // crosshairより消す操作だと伝わりやすい
+  cursor: cell;
 }

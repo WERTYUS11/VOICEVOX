@@ -1100,7 +1100,7 @@ replaceInFile("src/store/utility.ts", {
 replaceInFile("tests/unit/backend/common/__snapshots__/configManager.spec.ts.snap", {
    "最近使ったプロジェクトはありません":"没有最近使用过的项目",
    "プロジェクトを名前を付けて保存":"项目另存为", 
-   "テキストを繋げて書き出す":"串联文本并写出",
+   "テキストを繋げて書き出す":"串联文本并导出",
    "プロジェクトを上書き保存":"覆盖并保存项目",
    "プロジェクトの複製を保存":"保存项目副本",
    "テキスト欄からフォーカスを外す":"从文本字段移出焦点",
@@ -1172,6 +1172,7 @@ replaceInFile("src/domain/hotkeyAction.ts", {
    "デフォルトスタイル":"默认样式",
    "拡大率のリセット":"重置放大率",
    "テキストを読み込む":"加载文本",
+   "テキストを繋げて書き出す":"串联文本并导出",
    "音声書き出し":"语音导出",
    "選択音声を書き出し":"导出选定声音",
    "音声を繋げて書き出し":"串联声音并输出",
@@ -1336,6 +1337,423 @@ replaceInFile("src/welcome/components/App.vue", {
    "読み込み中...":"加载中...",
 });
 
+replaceInFile("src/backend/electron/appStateController.ts", {
+  "未保存のデータがある場合、終了すると失われます。終了しますか？":"如果有未保存的数据，退出后将丢失。要退出吗？",
+  "保存の確認に失敗しました":"保存确认失败",
+  "終了しない":"不退出",
+  "終了する":"退出",
+});
+
+replaceInFile("src/backend/electron/engineAndVvppController.ts", {
+  "この操作はコンピュータに損害を与える可能性があります。エンジンの配布元が信頼できない場合は追加しないでください。":"此操作可能会对电脑造成损害。如不信任引擎来源，请不要添加。",
+  "ネットワークエラーにより最新のエンジン情報を取得できませんでした。インターネット接続を確認して、再試行してください。":"因网络错误无法获取最新引擎信息。请检查网络连接后重试。",
+  "エンジン情報の形式がこのバージョンのVOICEVOXに対応していません。VOICEVOXをアップデートしてください。":"引擎信息格式与当前版本的 VOICEVOX 不兼容。请更新 VOICEVOX。",
+  "VVPPファイルを読み込みました。反映には再読み込みが必要です。今すぐ再読み込みしますか？":"已读取 VVPP 文件。需要重新加载才能生效。要立即重新加载吗？",
+  "デフォルトエンジンと同じエンジンはインストールできません。":"无法安装与默认引擎相同的引擎。",
+  "${vvppPath} をインストールできませんでした。":"无法安装 ${vvppPath}。",
+  "${engineId} をアンインストールできませんでした。":"无法卸载 ${engineId}。",
+  "これはデフォルトエンジンではありません。":"这不是默认引擎。",
+  "エンジン追加の確認":"确认添加引擎",
+  "再読み込みが必要です":"需要重新加载",
+  "インストールエラー":"安装错误",
+  "再読み込み":"重新加载",
+  "追加":"添加",
+  "キャンセル":"取消",
+});
+
+replaceInFile("src/backend/electron/main.ts", {
+  "設定ファイルの読み込みに失敗しました。設定ファイルの名前を変更するか、設定をリセットしてください。":"配置文件加载失败。请更改配置文件名或重置设置。",
+  "にある config.json の名前を変えることで解決することがあります（ただし設定がすべてリセットされます）。設定ファイルがあるフォルダを開きますか？":"重命名其中的 config.json 可能可以解决（但所有设置都会被重置）。要打开配置文件所在的文件夹吗？",
+  "マルチエンジン機能が無効です。vvppファイルを使用するには設定からマルチエンジン機能を有効にしてください。":"多引擎功能已禁用。要使用 vvpp 文件，请在设置中启用多引擎功能。",
+  "設定ファイルの読み込みエラー（開発者向け案内）":"配置文件加载错误（开发者指南）",
+  "設定ファイルのフォルダを開いて終了":"打开配置文件文件夹并退出",
+  "スタックトレース: \\n${error.stack}":"堆栈跟踪: \\n${error.stack}",
+  "メインプロセスで原因不明のエラーが発生しました。\\n":"主进程发生了原因不明的错误。\\n",
+  "設定をリセットして続行":"重置设置并继续",
+  "何もせず終了":"不做任何操作并退出",
+  "設定ファイルの読み込みエラー":"配置文件加载错误",
+  "設定ファイルの読み込みに失敗しました。":"配置文件加载失败。",
+  "音声合成エンジンエラー":"语音合成引擎错误",
+  "マルチエンジン機能が無効です":"多引擎功能已禁用",
+  "エラー名: ${name}\\n":"错误名称: ${name}\\n",
+  "メッセージ: ${message}\\n":"消息: ${message}\\n",
+  "いいえ":"否",
+  "はい":"是",
+  "エラー":"错误",
+});
+
+replaceInFile("src/backend/electron/manager/engineInfoManager.ts", {
+  "${engineDir}を読み込めませんでした。このエンジンは削除されます。":"无法加载 ${engineDir}。该引擎将被删除。",
+  "エンジンの読み込みに失敗しました。":"引擎加载失败。",
+});
+
+replaceInFile("src/backend/electron/manager/engineProcessManager.ts", {
+  "${engineInfo.name}が異常終了しました。エンジンを再起動してください。":"${engineInfo.name} 异常退出。请重新启动引擎。",
+  "音声合成エンジンが異常終了しました。エンジンを再起動してください。":"语音合成引擎异常退出。请重新启动引擎。",
+  "${port}番ポートの代わりに利用可能なポートが見つかりませんでした。PCを再起動してください。":"未找到可替代 ${port} 号端口的可用端口。请重启电脑。",
+  "${engineInfo.name} の起動に失敗しました":"${engineInfo.name} 启动失败",
+});
+
+replaceInFile("src/backend/electron/manager/ipcMainHandleManager.ts", {
+  "指定された保存先は${productName}により自動的に削除される可能性があります。\\n他の場所に保存することをおすすめします。":"指定的保存位置可能会被${productName}自动删除。\\n建议保存到其他位置。",
+  "保存場所を変更":"更改保存位置",
+  "無視して保存":"忽略并保存",
+});
+
+replaceInFile("src/backend/electron/manager/vvppManager.ts", {
+  "エンジンの削除に失敗しました。エンジンのフォルダを手動で削除してください。\\n${deletingEngineDir}\\nエラー内容: ${errorToMessage(e)}":"引擎删除失败。请手动删除引擎文件夹。\\n${deletingEngineDir}\\n错误内容: ${errorToMessage(e)}",
+  "エンジンが見つかりませんでした。":"未找到引擎。",
+  "エンジン削除エラー":"引擎删除错误",
+  "エンジン追加エラー":"引擎添加错误",
+});
+
+replaceInFile("src/backend/common/ConfigManager.ts", {
+  "テキストを繋げて書き出す":"串联文本并导出",
+});
+
+replaceInFile("src/backend/electron/renderer/menuBarData.ts", {
+  "デフォルト引擎管理":"默认引擎管理",
+  "マルチ引擎管理":"多引擎管理",
+});
+
+replaceInFile("src/components/Base/BaseTextField.vue", {
+  "すべて選択":"全选",
+  "切り取り":"剪切",
+  "貼り付け":"粘贴",
+  "コピー":"复制",
+});
+
+replaceInFile("src/components/CharacterButton.vue", {
+  "${characterInfo.metas.speakerName}のスタイル、マウスオーバーするか、右矢印キーを押してスタイル選択を表示できます":"${characterInfo.metas.speakerName}的风格，悬停或按右方向键可显示风格选择",
+  "キャラクターとスタイルを変更、現在のキャラクターとスタイルは${selectedVoiceInfoText.value}":"更改角色和风格，当前角色和风格为${selectedVoiceInfoText.value}",
+});
+
+replaceInFile("src/components/Dialog/DictionaryManageDialog/DictionaryManageDialog.vue", {
+  "変更を破棄すると、現在の編集内容はリセットされます。":"若丢弃更改，当前编辑内容将被重置。",
+  "変更を破棄すると、単語の追加はリセットされます。":"若丢弃更改，单词的新增将被重置。",
+  "単語の変更をキャンセルしますか？":"要取消单词的修改吗？",
+  "単語の追加を破棄しますか？":"要丢弃单词的新增吗？",
+  "エンジンの再起動をお試しください。":"请尝试重启引擎。",
+  "削除された単語は元に戻せません。":"已删除的单词无法恢复。",
+  "読み方＆アクセント辞書":"读法与重音字典",
+  "単語の更新に失敗しました":"单词更新失败",
+  "単語の登録に失敗しました":"单词注册失败",
+  "単語の削除に失敗しました":"单词删除失败",
+  "辞書の取得に失敗しました":"字典获取失败",
+  "辞書の同期に失敗しました":"字典同步失败",
+  "単語を削除しますか？":"要删除该单词吗？",
+  "辞書を閉じる":"关闭字典",
+  "単語を追加":"添加单词",
+  "読み込み中・・・":"读取中…",
+  "同期中・・・":"同步中…",
+  "破棄しない":"不丢弃",
+  "破棄する":"丢弃",
+  "削除しない":"不删除",
+  "削除する":"删除",
+});
+
+replaceInFile("src/components/Dialog/DictionaryManageDialog/WordEditor.vue", {
+  "単語を登録しても反映されない場合は優先度を高くしてください。":"如果注册单词后未生效，请提高优先级。",
+  "高くしすぎると意図しない箇所にも反映されることがあります。":"设置过高可能会影响非预期位置。",
+  "語尾のアクセントを考慮するため、「が」が自動で挿入されます。":"为了考虑尾音的重音，会自动插入「が」。",
+  "ひらがなとカタカナ以外の文字が入力されています。":"输入了平假名和片假名以外的字符。",
+  "読みに使える文字はひらがなとカタカナのみです。":"读音只能使用平假名和片假名。",
+  "単語は全角と半角は区別しません。":"单词不区分全角与半角。",
+  "新しい単語の追加":"添加新单词",
+  "プレビューに失敗しました":"预览失败",
+  "エンジンの再起動をお試しください。":"请尝试重启引擎。",
+  "単語は必須です。":"单词为必填项。",
+  "読みは必須です。":"读音为必填项。",
+  "単語の編集":"编辑单词",
+  "アクセント調整":"重音调整",
+  "リセット":"重置",
+  "低い":"低",
+  "高い":"高",
+  "読み":"读音",
+});
+
+replaceInFile("src/components/Dialog/EngineManageDialog.vue", {
+  "選択中のエンジンを删除します。":"将删除所选引擎。",
+  "音声を生成しながら再生":"生成音频的同时播放",
+  "疑問文の自動調整":"自动调整疑问句",
+  "既存エンジン":"现有引擎",
+  "VVPPファイル":"VVPP 文件",
+  "删除する":"删除",
+});
+
+replaceInFile("src/components/Dialog/ExportSongAudioDialog/Presentation.vue", {
+  "音频采样率を変更できます。":"可更改音频采样率。",
+});
+
+replaceInFile("src/components/Dialog/HelpDialog/HelpDialog.vue", {
+  "エンジンの使用条款":"引擎的使用条款",
+});
+
+replaceInFile("src/components/Dialog/OldCharacterTryListenCard.vue", {
+  "サンプルボイス${voiceSampleIndex + 1}":"示例语音${voiceSampleIndex + 1}",
+  "前のスタイル":"上一个风格",
+  "次のスタイル":"下一个风格",
+});
+
+replaceInFile("src/components/Dialog/PresetManageDialog.vue", {
+  "删除する":"删除",
+});
+
+replaceInFile("src/components/Dialog/SettingDialog/FileNameTemplateDialog.vue", {
+  "「$テキスト[20]$」のように[文字数]を付けると、その文字数で切り詰めます（1〜99）。":"在「$テキスト[20]$」这样加上[字数]，即可按该字数截断（1〜99）。",
+  "「$キャラ$」您可以使用类似的标签自定义导出的文件名":"「$キャラ$」等标签可用于自定义导出的文件名",
+});
+
+replaceInFile("src/components/Dialog/SettingDialog/SettingDialog.vue", {
+  "対応引擎で音声を生成しながら再生するときの動作を選べます。音声が途切れる場合は「バランス」や「安定」をお試しください。":"可选择支持的引擎在生成音频的同时播放时的行为。如果音频断断续续，请尝试「平衡」或「稳定」。",
+  "ONの場合、テキスト欄の右側に音声の長さが表示されます。":"开启时，文本框右侧会显示音频长度。",
+  "歌詞が未設定の音符に対して默认で設定される歌詞を設定できます。":"可设置未设置歌词的音符默认使用的歌词。",
+  "ソング：パラメーターパネルの表示":"歌曲：显示参数面板",
+  "音声の長さの表示":"显示音频长度",
+  "ストリーミング再生":"流式播放",
+  "ソング：默认歌詞":"歌曲：默认歌词",
+  "ドレミ（階名）":"DoReMi（音名）",
+  "ら（固定）":"La（固定）",
+  "バランス":"平衡",
+});
+
+replaceInFile("src/components/Dialog/ToolBarCustomDialog.vue", {
+  "工具栏自定义を閉じる":"关闭工具栏自定义",
+});
+
+replaceInFile("src/components/Dialog/UpdateNotificationDialog/Container.vue", {
+  "公式サイトから最新バージョンをダウンロードできます。":"可从官网下载最新版本。",
+  "アップデートのお知らせ":"更新通知",
+  "公式サイトを開く":"打开官网",
+});
+
+replaceInFile("src/components/Dialog/UpdateNotificationDialog/EngineContainer.vue", {
+  "「エンジンの管理」から最新バージョンにアップデートできます。":"可从「引擎管理」更新到最新版本。",
+  "エンジンアップデートのお知らせ":"引擎更新通知",
+  "エンジンの管理を開く":"打开引擎管理",
+  "skipEngineUpdateVersionが不正です: ${skipEngineUpdateVersion}":"skipEngineUpdateVersion 无效：${skipEngineUpdateVersion}",
+});
+
+replaceInFile("src/index.html", {
+  "JavaScriptが無効化されている環境では動作しません。":"在禁用 JavaScript 的环境中无法运行。",
+});
+
+replaceInFile("src/components/Song/ChangeValueDialog/CommonDialog.vue", {
+  "変更する":"更改",
+  "追加する":"添加",
+  "キャンセル":"取消",
+});
+
+replaceInFile("src/components/Song/ChangeValueDialog/TempoChangeDialog.vue", {
+  "テンポの追加":"添加节奏",
+  "テンポの編集":"编辑节奏",
+  "テンポ":"节奏",
+});
+
+replaceInFile("src/components/Song/ChangeValueDialog/TimeSignatureChangeDialog.vue", {
+  "拍子の追加":"添加拍号",
+  "拍子の編集":"编辑拍号",
+  "拍子の分子":"小节拍数量",
+  "拍子の分母":"单位拍音符时值",
+});
+
+replaceInFile("src/components/Song/ExportOverlay.vue", {
+  "レンダリング中・・・":"渲染中...",
+  "を書き出し中・・・":"导出中...",
+  "の書き出しをキャンセル":"取消导出",
+  "labファイル":"lab 文件",
+});
+
+replaceInFile("src/components/Song/menuBarData.ts", {
+  "プロジェクトをエクスポート":"导出项目为",
+  "プロジェクトをインポート":"导入项目",
+  "labファイルを書き出し":"导出 lab 文件",
+  "立ち絵を非表示":"隐藏立绘",
+  "立ち絵を表示":"显示立绘",
+  "音声書き出し":"语音导出",
+  "すべて選択":"全选",
+  "クオンタイズ":"量化",
+  "切り取り":"剪切",
+  "貼り付け":"粘贴",
+  "コピー":"复制",
+});
+
+replaceInFile("src/components/Song/ParameterPanelEditTargetSwitcher.vue", {
+  "音素タイミング編集":"编辑音素时序",
+  "ボリューム編集":"调整音量",
+});
+
+replaceInFile("src/components/Song/ScoreSequencer.vue", {
+  "ピッチ削除ツール":"音高删除工具",
+  "ピッチ描画ツール":"音高绘制工具",
+  "選択優先ツール":"优先选择工具",
+  "編集優先ツール":"优先编辑工具",
+  "すべて選択":"全选",
+  "クオンタイズ":"量化",
+  "シーケンサ":"音序器",
+  "切り取り":"剪切",
+  "貼り付け":"粘贴",
+  "コピー":"复制",
+});
+
+replaceInFile("src/components/Song/SequencerNote.vue", {
+  "フレーズが生成できません。歌詞は日本語1文字までです。":"无法生成乐句。歌词最多只能是1个日文字符。",
+  "ノートが重なっています":"音符重叠",
+  "クオンタイズ":"量化",
+  "切り取り":"剪切",
+  "コピー":"复制",
+});
+
+replaceInFile("src/components/Song/SequencerParameterPanel.vue", {
+  "パラメータ":"参数",
+});
+
+replaceInFile("src/components/Song/SequencerToolPalette.vue", {
+  "ピッチ編集":"音高编辑",
+  "ピッチ削除":"删除音高",
+});
+
+replaceInFile("src/components/Song/SequencerVolumeEditor/Presentation.vue", {
+  "ボリューム描画ツール":"音量绘制工具",
+  "ボリューム削除ツール":"音量删除工具",
+});
+
+replaceInFile("src/components/Song/SequencerVolumeToolPalette.vue", {
+  "ボリューム描画":"音量绘制",
+  "ボリューム削除":"音量删除",
+});
+
+replaceInFile("src/components/Song/SideBar/SideBar.vue", {
+  "すべてのソロを解除":"解除所有独奏",
+  "トラックを削除":"删除音轨",
+  "トラックを追加":"添加音轨",
+  "トラック一覧":"音轨列表",
+});
+
+replaceInFile("src/components/Song/SideBar/TrackItem.vue", {
+  "（不明なキャラクター）":"（不明角色）",
+  "トラック複製":"复制音轨",
+  "トラック追加":"添加音轨",
+  "トラック削除":"删除音轨",
+  "ミュート":"静音",
+  "ソロ":"独奏",
+});
+
+replaceInFile("src/components/Song/SingingSettings/Popover.vue", {
+  "歌い方":"唱法",
+});
+
+replaceInFile("src/components/Song/ToolBar/EditTargetSwitcher.vue", {
+  'ピッチ編集<br />{{ !isMac ? "Ctrl" : "Cmd" }}+クリックで消去':'音高编辑<br />{{ !isMac ? "Ctrl" : "Cmd" }}+点击清除',
+  "ノート編集":"音符编辑",
+});
+
+replaceInFile("src/components/Song/ToolBar/ToolBar.vue", {
+  "スナップ":"SNAP",
+  "元に戻す":"撤销",
+  "やり直す":"重做",
+  "テンポ":"节奏",
+  "再生/停止":"播放/停止",
+});
+
+replaceInFile("src/components/Song/TrackCard/SingerRow.vue", {
+  "読み込み中":"加载中",
+  "歌い方":"唱法",
+});
+
+replaceInFile("src/components/Song/SequencerRuler/LoopLane/Container.vue", {
+  "ループ範囲を作成":"创建循环范围",
+  "ループ範囲を削除":"删除循环范围",
+  "ループ無効":"禁用循环",
+  "ループ有効":"启用循环",
+});
+
+replaceInFile("src/components/Song/SequencerRuler/ValueChangesLane/Container.vue", {
+  "テンポ変化を編集":"编辑节奏变化",
+  "テンポ変化を削除":"删除节奏变化",
+  "テンポ変化を挿入":"插入节奏变化",
+  "拍子変化を編集":"编辑拍号变化",
+  "拍子変化を削除":"删除拍号变化",
+  "拍子変化を挿入":"插入拍号变化",
+  "テンポ：${valueChange.value.tempoChange.bpm}":"节奏：${valueChange.value.tempoChange.bpm}",
+});
+
+replaceInFile("src/components/Talk/AccentPhrase.vue", {
+  "イントネーションと長さをリセット":"重置语调和长度",
+  "イントネーションをリセット":"重置语调",
+  "長さをリセット":"重置长度",
+});
+
+replaceInFile("src/components/Talk/TalkEditor.vue", {
+  "テキストを繋げて書き出す":"串联文本并导出",
+});
+
+replaceInFile("src/composables/useRightClickContextMenu.ts", {
+  "コンテキストメニューアイテムの取得に失敗しました。":"获取上下文菜单项失败。",
+  "切り取り":"剪切",
+  "貼り付け":"粘贴",
+  "コピー":"复制",
+});
+
+replaceInFile("src/helpers/errorHelper.ts", {
+  "（内部エラーメッセージ）":"（内部错误信息）",
+});
+
+replaceInFile("src/helpers/fileHelper.ts", {
+  "何らかの理由で失敗しました。${writeFileResult.message}":"因某些原因失败。${writeFileResult.message}",
+  "指定されたファイルまたはフォルダが見つかりません。":"找不到指定的文件或文件夹。",
+  "ファイルにアクセスする許可がありません。":"没有访问文件的权限。",
+  "空き容量が足りません。":"磁盘空间不足。",
+  "ファイルが開かれています。":"文件已被打开。",
+});
+
+replaceInFile("src/song/domain.ts", {
+  "無名トラック":"无名音轨",
+});
+
+replaceInFile("src/store/audioContext.ts", {
+  "再生デバイスが見つかりません":"找不到播放设备",
+  "エラー":"错误",
+});
+
+replaceInFile("src/store/audioGenerate.ts", {
+  "モーフィングの設定が無効です。":"变形设置无效。",
+});
+
+replaceInFile("src/store/audioPlayer.ts", {
+  "音声が途切れる場合は設定の「ストリーミング再生」を「安定」に変更してください":"音频断断续续时，请在设置中将「流式播放」改为「稳定」",
+});
+
+replaceInFile("src/store/preset.ts", {
+  "デフォルト：${characterName}":"默认：${characterName}",
+});
+
+replaceInFile("src/store/project/saveProjectHelper.ts", {
+  "ファイルの保存に失敗しました。":"文件保存失败。",
+});
+
+replaceInFile("src/store/setting.ts", {
+  "このままGPUモードに変更するとエンジンエラーが発生する可能性があります。本当に変更しますか？":"若继续更改为 GPU 模式，可能会发生引擎错误。确定要更改吗？",
+  "GPUモードでエンジンを起動できなかったためCPUモードに戻します":"无法以 GPU 模式启动引擎，已恢复为 CPU 模式。",
+  "対応するGPUデバイスが見つかりません":"未找到支持的 GPU 设备",
+  "GPUデバイスを確認中です":"正在检查 GPU 设备",
+  "起動モードを変更中です":"正在更改启动模式",
+  "GPUモードに変更できませんでした":"无法更改为 GPU 模式",
+  "GPUモードの利用には対応するGPUデバイスが必要です。\\n":"使用 GPU 模式需要支持的 GPU 设备。\\n",
+  "変更しない":"不更改",
+  "変更する":"更改",
+});
+
+replaceInFile("src/store/song.ts", {
+  "音声の再生を開始できませんでした":"无法开始播放音频",
+  "不明なエラーが発生しました。":"发生未知错误。",
+  "プロジェクトを書き出し":"导出项目",
+  "labファイルを保存":"保存 lab 文件",
+  "音声を保存":"保存语音",
+  "WAV ファイル":"WAV 文件",
+  " - コピー":" - 副本",
+  "エラー":"错误",
+});
 
 
 replaceInFile(".env.production", {

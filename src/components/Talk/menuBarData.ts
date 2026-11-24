@@ -1,7 +1,7 @@
 import { computed } from "vue";
-import { Store } from "@/store";
+import type { Store } from "@/store";
 import { useRootMiscSetting } from "@/composables/useRootMiscSetting";
-import {
+import type {
   MaybeComputedMenuBarContent,
   MenuBarContent,
 } from "@/components/Menu/MenuBar/menuBarData";
@@ -14,7 +14,7 @@ export const useMenuBarData = (store: Store): MaybeComputedMenuBarContent => {
         type: "button",
         label: "语音导出",
         onClick: () => {
-          void store.actions.SHOW_GENERATE_AND_SAVE_ALL_AUDIO_DIALOG();
+          void store.actions.SHOW_GENERATE_AND_SAVE_ALL_AUDIO_FILE_DIALOG();
         },
         disableWhenUiLocked: true,
       },
@@ -22,7 +22,7 @@ export const useMenuBarData = (store: Store): MaybeComputedMenuBarContent => {
         type: "button",
         label: "导出选定声音",
         onClick: () => {
-          void store.actions.SHOW_GENERATE_AND_SAVE_SELECTED_AUDIO_DIALOG();
+          void store.actions.SHOW_GENERATE_AND_SAVE_SELECTED_AUDIO_FILE_DIALOG();
         },
         disableWhenUiLocked: true,
       },
@@ -30,7 +30,7 @@ export const useMenuBarData = (store: Store): MaybeComputedMenuBarContent => {
         type: "button",
         label: "串联声音并输出",
         onClick: () => {
-          void store.actions.SHOW_GENERATE_AND_CONNECT_ALL_AUDIO_DIALOG();
+          void store.actions.SHOW_GENERATE_AND_CONNECT_ALL_AUDIO_FILE_DIALOG();
         },
         disableWhenUiLocked: true,
       },

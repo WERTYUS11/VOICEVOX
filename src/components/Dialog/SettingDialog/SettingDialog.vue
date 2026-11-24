@@ -161,7 +161,7 @@
                 />
                 <ToggleCell
                   title="备忘录功能"
-                  description="开启时，可以通过将文本用 [] 括起来，在文本中写入备忘录。"
+                  description="开启时，可以通过将文本用 [] 括起来，让文本写入备忘录。"
                   :modelValue="enableMemoNotation"
                   @update:modelValue="changeEnableMemoNotation"
                 />
@@ -186,12 +186,6 @@
                     "
                   />
                 </BaseRowCard>
-                <ToggleCell
-                  title="多选"
-                  description="开启时，可以同时选择多个文本框。"
-                  :modelValue="enableMultiSelect"
-                  @update:modelValue="setEnableMultiSelect($event)"
-                />
               </div>
               <!-- Saving Card -->
               <div class="setting-card">
@@ -342,6 +336,12 @@
                   @update:modelValue="changeShowTextLineNumber"
                 />
                 <ToggleCell
+                  title="显示音频长度"
+                  description="开启时，文本框右侧会显示音频长度。"
+                  :modelValue="showAudioLength"
+                  @update:modelValue="changeShowAudioLength"
+                />
+                <ToggleCell
                   title="显示添加文本按钮"
                   description="关闭时，右下角不会显示添加文本按钮。（文本框可通过 Shift + Enter 添加）"
                   :modelValue="showAddAudioItemButton"
@@ -352,6 +352,21 @@
               <!-- Advanced Card -->
               <div class="setting-card">
                 <h5 class="headline">高级设置</h5>
+                <ButtonToggleCell
+                  title="流式播放"
+                  description="可选择支持的引擎在生成音频的同时播放时的行为。如果音频断断续续，请尝试「平衡」或「稳定」。"
+                  :modelValue="streamingMode"
+                  :options="[
+                    { label: '低遅延', value: 'LOW_LATENCY' },
+                    { label: '平衡', value: 'BALANCED' },
+                    { label: '安定', value: 'STABLE' },
+                  ]"
+                  @update:modelValue="
+                    changeStreamingMode(
+                      $event as RootMiscSettingType['streamingMode'],
+                    )
+                  "
+                />
                 <ToggleCell
                   title="多引擎功能"
                   description="开启时，可以利用多个符合 VOICEVOX 标准的引擎。"
@@ -397,6 +412,15 @@
                     description="开启时，如果引擎支持，将未知英文单词转换为片假名读音。"
                   />
                 </BaseTooltip>
+                <ButtonToggleCell
+                  v-model="defaultLyricModeComputed"
+                  title="歌曲：默认歌词"
+                  description="可设置未设置歌词的音符默认使用的歌词。"
+                  :options="[
+                    { label: 'DoReMi（音名）', value: 'doremi' },
+                    { label: 'La（固定）', value: 'la' },
+                  ]"
+                />
                 <BaseRowCard
                   title="歌曲：撤销轨道操作"
                   description="指定“撤销”功能所针对的轨道操作。"
@@ -406,7 +430,11 @@
                       v-for="(value, key) in undoableTrackOperations"
                       :key
                       :checked="value"
-                      :label="undoableTrackOperationsLabels[key]"
+                      :label="
+                        undoableTrackOperationsLabels[
+                          key as keyof typeof undoableTrackOperationsLabels
+                        ]
+                      "
                       @update:checked="
                         (newValue) =>
                           (undoableTrackOperations = {
@@ -455,12 +483,11 @@
                   "
                 />
                 <ToggleCell
-                  v-if="!isProduction"
-                  title="[仅开发时功能] 歌曲：显示参数面板"
+                  title="歌曲：显示参数面板"
                   description="开启时，歌曲编辑器中会显示参数面板。"
-                  :modelValue="experimentalSetting.showParameterPanel"
+                  :modelValue="experimentalSetting.showSongParameterPanel"
                   @update:modelValue="
-                    changeExperimentalSetting('showParameterPanel', $event)
+                    changeExperimentalSetting('showSongParameterPanel', $event)
                   "
                 />
               </div>
@@ -502,7 +529,7 @@ import {
   buildAudioFileNameFromRawData,
   buildSongTrackAudioFileNameFromRawData,
 } from "@/store/utility";
-import {
+import type {
   SavingSetting,
   EngineSettingType,
   ExperimentalSettingType,
@@ -641,6 +668,11 @@ const availableThemeNameComputed = computed(() => {
 
 const [editorFont, changeEditorFont] = useRootMiscSetting(store, "editorFont");
 
+const [streamingMode, changeStreamingMode] = useRootMiscSetting(
+  store,
+  "streamingMode",
+);
+
 const [enableMultiEngine, setEnableMultiEngine] = useRootMiscSetting(
   store,
   "enableMultiEngine",
@@ -649,6 +681,11 @@ const [enableMultiEngine, setEnableMultiEngine] = useRootMiscSetting(
 const [showTextLineNumber, changeShowTextLineNumber] = useRootMiscSetting(
   store,
   "showTextLineNumber",
+);
+
+const [showAudioLength, changeShowAudioLength] = useRootMiscSetting(
+  store,
+  "showAudioLength",
 );
 
 const [_enableKatakanaEnglish, setEnableKatakanaEnglish] = useRootMiscSetting(
@@ -714,10 +751,17 @@ const [
   changeShouldApplyDefaultPresetOnVoiceChanged,
 ] = useRootMiscSetting(store, "shouldApplyDefaultPresetOnVoiceChanged");
 
-const [enableMultiSelect, setEnableMultiSelect] = useRootMiscSetting(
+const [defaultLyricMode, setDefaultLyricMode] = useRootMiscSetting(
   store,
-  "enableMultiSelect",
+  "defaultLyricMode",
 );
+
+const defaultLyricModeComputed = computed({
+  get: () => defaultLyricMode.value,
+  set: (value: "doremi" | "la") => {
+    setDefaultLyricMode(value);
+  },
+});
 
 const canSetAudioOutputDevice = computed(() => {
   return !!HTMLAudioElement.prototype.setSinkId;

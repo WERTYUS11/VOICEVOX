@@ -40,8 +40,8 @@
       </div>
 
       <div class="full-width row" @wheel="setPresetByScroll($event)">
-        <!-- TODO: 同じ预设を選択したときにも複数選択中の他のAudioItemの预设を変更するようにする -->
         <QSelect
+          ref="presetSelect"
           v-model="presetSelectModel"
           :options="selectablePresetList"
           class="col overflow-hidden"
@@ -52,11 +52,25 @@
           transitionShow="none"
           transitionHide="none"
           :disable="uiLocked"
+          @keydown="handlePresetSelectKeydown"
         >
           <template #selected-item="scope">
             <div class="preset-select-label">
               {{ scope.opt.label }}
             </div>
+          </template>
+          <template #option="item">
+            <!-- 選択中の预设を再度選んだときはv-modelが更新されないため、クリックで再適用する（キーボードでの選択はhandlePresetSelectKeydownで扱う） -->
+            <QItem
+              v-bind="item.itemProps"
+              @click="
+                item.selected && reapplyPreset(ensureNotNullish(item.opt.key))
+              "
+            >
+              <QItemSection>
+                <QItemLabel>{{ item.opt.label }}</QItemLabel>
+              </QItemSection>
+            </QItem>
           </template>
           <template #no-option>
             <QItem>
@@ -191,7 +205,12 @@
           :disable="parameter.slider.qSliderProps.disable.value"
           :modelValue="parameter.slider.qSliderProps.modelValue.value"
           @update:modelValue="
-            parameter.slider.qSliderProps['onUpdate:modelValue']
+            (value) => {
+              if (value == undefined) {
+                throw new Error('Undefined value received');
+              }
+              parameter.slider.qSliderProps['onUpdate:modelValue'](value);
+            }
           "
           @change="handleParameterChange(parameter, $event)"
           @wheel="parameter.slider.qSliderProps.onWheel"
@@ -278,7 +297,11 @@
           "
           :modelValue="morphingRateSlider.qSliderProps.modelValue.value"
           @update:modelValue="
-            morphingRateSlider.qSliderProps['onUpdate:modelValue']
+            (value) => {
+              morphingRateSlider.qSliderProps['onUpdate:modelValue'](
+                ensureNotNullish(value),
+              );
+            }
           "
           @change="morphingRateSlider.qSliderProps.onChange"
           @wheel="morphingRateSlider.qSliderProps.onWheel"
@@ -290,12 +313,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watchEffect } from "vue";
-import { QSelectProps } from "quasar";
+import { computed, ref, useTemplateRef, watchEffect } from "vue";
+import type { QSelect, QSelectProps } from "quasar";
 import CharacterButton from "@/components/CharacterButton.vue";
 import { useStore } from "@/store";
 
-import {
+import type {
   AudioKey,
   CharacterInfo,
   MorphingInfo,
@@ -306,13 +329,14 @@ import {
 } from "@/type/preload";
 import {
   previewSliderHelper,
-  PreviewSliderHelper,
-  Props as PreviewSliderHelperProps,
+  type PreviewSliderHelper,
+  type Props as PreviewSliderHelperProps,
 } from "@/helpers/previewSliderHelper";
-import { EngineManifest } from "@/openapi";
+import type { EngineManifest } from "@/openapi";
 import { useDefaultPreset } from "@/composables/useDefaultPreset";
 import { SLIDER_PARAMETERS } from "@/store/utility";
 import { createLogger } from "@/helpers/log";
+import { ensureNotNullish } from "@/type/utility";
 
 const props = defineProps<{
   activeAudioKey: AudioKey;
@@ -336,11 +360,7 @@ const supportedFeatures = computed(
         .supportedFeatures) as EngineManifest["supportedFeatures"] | undefined,
 );
 
-const selectedAudioKeys = computed(() =>
-  store.state.enableMultiSelect
-    ? store.getters.SELECTED_AUDIO_KEYS
-    : [props.activeAudioKey],
-);
+const selectedAudioKeys = computed(() => store.getters.SELECTED_AUDIO_KEYS);
 
 /** パラメーターを制御するための元情報リスト */
 type ParameterConfig = {
@@ -363,7 +383,7 @@ const parameterConfigs = computed<ParameterConfig[]>(() => [
       scrollMinStep: SLIDER_PARAMETERS.speedScale.scrollMinStep,
     },
     onChange: (speedScale: number) =>
-      store.actions.COMMAND_MULTI_SET_AUDIO_SPEED_SCALE({
+      store.actions.COMMAND_MULTI_SET_AUDIO_ITEM_SPEED_SCALE({
         audioKeys: selectedAudioKeys.value,
         speedScale,
       }),
@@ -381,7 +401,7 @@ const parameterConfigs = computed<ParameterConfig[]>(() => [
       scrollStep: SLIDER_PARAMETERS.pitchScale.scrollStep,
     },
     onChange: (pitchScale: number) =>
-      store.actions.COMMAND_MULTI_SET_AUDIO_PITCH_SCALE({
+      store.actions.COMMAND_MULTI_SET_AUDIO_ITEM_PITCH_SCALE({
         audioKeys: selectedAudioKeys.value,
         pitchScale,
       }),
@@ -400,7 +420,7 @@ const parameterConfigs = computed<ParameterConfig[]>(() => [
       scrollMinStep: SLIDER_PARAMETERS.intonationScale.scrollMinStep,
     },
     onChange: (intonationScale: number) =>
-      store.actions.COMMAND_MULTI_SET_AUDIO_INTONATION_SCALE({
+      store.actions.COMMAND_MULTI_SET_AUDIO_ITEM_INTONATION_SCALE({
         audioKeys: selectedAudioKeys.value,
         intonationScale,
       }),
@@ -419,7 +439,7 @@ const parameterConfigs = computed<ParameterConfig[]>(() => [
       scrollMinStep: SLIDER_PARAMETERS.volumeScale.scrollMinStep,
     },
     onChange: (volumeScale: number) =>
-      store.actions.COMMAND_MULTI_SET_AUDIO_VOLUME_SCALE({
+      store.actions.COMMAND_MULTI_SET_AUDIO_ITEM_VOLUME_SCALE({
         audioKeys: selectedAudioKeys.value,
         volumeScale,
       }),
@@ -438,7 +458,7 @@ const parameterConfigs = computed<ParameterConfig[]>(() => [
       scrollMinStep: SLIDER_PARAMETERS.pauseLengthScale.scrollMinStep,
     },
     onChange: (pauseLengthScale: number) =>
-      store.actions.COMMAND_MULTI_SET_AUDIO_PAUSE_LENGTH_SCALE({
+      store.actions.COMMAND_MULTI_SET_AUDIO_ITEM_PAUSE_LENGTH_SCALE({
         audioKeys: selectedAudioKeys.value,
         pauseLengthScale,
       }),
@@ -456,7 +476,7 @@ const parameterConfigs = computed<ParameterConfig[]>(() => [
       scrollMinStep: SLIDER_PARAMETERS.prePhonemeLength.scrollMinStep,
     },
     onChange: (prePhonemeLength: number) =>
-      store.actions.COMMAND_MULTI_SET_AUDIO_PRE_PHONEME_LENGTH({
+      store.actions.COMMAND_MULTI_SET_AUDIO_ITEM_PRE_PHONEME_LENGTH({
         audioKeys: selectedAudioKeys.value,
         prePhonemeLength,
       }),
@@ -474,7 +494,7 @@ const parameterConfigs = computed<ParameterConfig[]>(() => [
       scrollMinStep: SLIDER_PARAMETERS.postPhonemeLength.scrollMinStep,
     },
     onChange: (postPhonemeLength: number) =>
-      store.actions.COMMAND_MULTI_SET_AUDIO_POST_PHONEME_LENGTH({
+      store.actions.COMMAND_MULTI_SET_AUDIO_ITEM_POST_PHONEME_LENGTH({
         audioKeys: selectedAudioKeys.value,
         postPhonemeLength,
       }),
@@ -720,10 +740,29 @@ type PresetSelectModelType = {
 
 // 预设の変更
 const changePreset = (presetKey: PresetKey | undefined) =>
-  store.actions.COMMAND_MULTI_SET_AUDIO_PRESET({
+  store.actions.COMMAND_MULTI_SET_AUDIO_ITEM_PRESET({
     audioKeys: selectedAudioKeys.value,
     presetKey,
   });
+
+// 選択中の预设を再適用する（パラメータを预设値に戻す）
+// 複数選択中の場合は選択中のすべてのAudioItemに適用する
+const reapplyPreset = (presetKey: PresetKey) => {
+  void changePreset(presetKey);
+};
+
+const presetSelect = useTemplateRef<QSelect>("presetSelect");
+
+// キーボード（Enter）で選択中の预设を再度選んだときも再適用する
+// QSelectはkeydownイベントを発火してから選択処理を行うため、ここではハイライト中の項目を見て判断する
+const handlePresetSelectKeydown = (event: KeyboardEvent) => {
+  if (event.key !== "Enter" || event.isComposing) return;
+  const select = presetSelect.value;
+  if (select == undefined) return;
+  const option = selectablePresetList.value[select.getOptionIndex()];
+  if (option == undefined || !select.isOptionSelected(option)) return;
+  reapplyPreset(ensureNotNullish(option.key));
+};
 
 const presetList = computed<{ label: string; key: PresetKey }[]>(() =>
   presetKeys.value
@@ -924,7 +963,7 @@ const updatePreset = async (fullApply: boolean) => {
   });
 
   if (fullApply) {
-    await store.actions.COMMAND_FULLY_APPLY_AUDIO_PRESET({
+    await store.actions.COMMAND_FULLY_APPLY_AUDIO_ITEM_PRESET({
       presetKey: key,
     });
   }

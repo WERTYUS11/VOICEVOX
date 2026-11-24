@@ -1,5 +1,5 @@
 # VOICEVOX更新指南  
-  *最后更新日期2025/11/23*
+  *最后更新日期2026/11/24*
 
 * 在voicevox推出新版本后，此仓库的中文翻译将于一周内更新
 在此期间内需要做的事情是：等待仓库更新。[更新链接](https://github.com/WERTYUS11/VOICEVOX/releases)
